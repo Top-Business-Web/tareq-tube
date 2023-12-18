@@ -14,7 +14,7 @@
         <form class="signup-form" action="{{route('admin.login')}}" method="post" id="LoginForm">
             @csrf
             <label class="inp">
-                <input type="email" name="email" class="input-text" placeholder="&nbsp;">
+                <input type="email" name="gmail" class="input-text" placeholder="&nbsp;">
                 <span class="label">البريد الإلكتروني</span>
                 <span class="input-icon"><i class="fa-solid fa-envelope"></i></span>
             </label>
@@ -23,12 +23,12 @@
                 <span class="label">كلمة المرور</span>
                 <span class="input-icon input-icon-password" data-password><i class="fa-solid fa-eye"></i></span>
             </label>
-            <button class="btn btn-login" id="loginButton">تسجيل الدخول</button>
+            <button type="submit" class="btn btn-login" id="loginButton">تسجيل الدخول</button>
         </form>
     </main>
     <div class="welcome-container">
-        <h1 class="heading-secondary">مرحبا بعودتك <span class="lg">{{($setting->title_ar) ?? 'تطبيق'}}</span></h1>
-        <img src="{{ asset($settings->logo)}}" alt="login" style="max-width:450px;mix-blend-mode: multiply">
+        <h1 class="heading-secondary">مرحبا بعودتك <span class="lg">{{($setting->title_ar ?? '') ?? 'تطبيق'}}</span></h1>
+        <img src="{{ asset($settings->logo ?? '')}}" alt="login" style="max-width:450px;mix-blend-mode: multiply">
     </div>
 </div>
 

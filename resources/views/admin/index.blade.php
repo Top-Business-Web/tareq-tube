@@ -12,7 +12,7 @@
                 <div class="card-body">
                     <div class="d-flex">
                         <div class="text-white">
-                            <h2 class="mb-0 number-font">{{ \App\Models\User::where('type', '=', 'user')->count() }}</h2>
+                            <h2 class="mb-0 number-font"></h2>
                             <p class="text-white mb-0"> جميع المستخدمين</p>
                         </div>
                         <div class="mr-auto">
@@ -27,7 +27,7 @@
                 <div class="card-body">
                     <div class="d-flex">
                         <div class="text-white">
-                            <h2 class="mb-0 number-font">{{ \App\Models\User::where('type', '=', 'driver')->count() }}</h2>
+                            <h2 class="mb-0 number-font"></h2>
                             <p class="text-white mb-0">السائقين</p>
                         </div>
                         <div class="mr-auto">
@@ -42,7 +42,7 @@
                 <div class="card-body">
                     <div class="d-flex">
                         <div class="text-white">
-                            <h2 class="mb-0 number-font">{{ \App\Models\Trip::where('type', '=', 'complete')->count() }}
+                            <h2 class="mb-0 number-font">
                             </h2>
                             <p class="text-white mb-0">الرحلات التي انجزت</p>
                         </div>
@@ -58,7 +58,7 @@
                 <div class="card-body">
                     <div class="d-flex">
                         <div class="text-white">
-                            <h2 class="mb-0 number-font">{{ \App\Models\Trip::where('type', '=', 'new')->count() }}</h2>
+                            <h2 class="mb-0 number-font"></h2>
                             <p class="text-white mb-0">الرحلات الجديدة</p>
                         </div>
                         <div class="mr-auto">
@@ -73,7 +73,7 @@
                 <div class="card-body">
                     <div class="d-flex">
                         <div class="text-white">
-                            <h2 class="mb-0 number-font">{{ \App\Models\Setting::query()->select('km')->first()->km }}</h2>
+                            <h2 class="mb-0 number-font"></h2>
                             <p class="text-white mb-0">سعر الكيلو</p>
                         </div>
                         <div class="mr-auto">

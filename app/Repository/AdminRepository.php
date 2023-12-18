@@ -42,7 +42,7 @@ class AdminRepository implements AdminInterface
     public function delete($request)
     {
         $admin = Admin::where('id', $request->id)->first();
-        if ($admin == auth()->guard('admin')->user()) {
+        if ($admin == auth()-> guard('user')->user()) {
             return response(['message' => "لا يمكن حذف المشرف المسجل به !", 'status' => 501], 200);
         } else {
             if (file_exists($admin->image)) {
@@ -55,7 +55,7 @@ class AdminRepository implements AdminInterface
 
     public function myProfile()
     {
-        $admin = auth()->guard('admin')->user();
+        $admin = auth()-> guard('user')->user();
         return view('admin/admin/profile', compact('admin'));
     }//end fun
 

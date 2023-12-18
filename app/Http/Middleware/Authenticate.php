@@ -19,7 +19,7 @@ class Authenticate extends Middleware
             if(Request::is('admin/*') || Request::is('admin'))
                 return route('admin.login');
             else{
-                toastInfo('يرجي تسجيل الدخول');
+                toastr()->addError('يرجي تسجيل الدخول');
                 return route('/');
             }
         }

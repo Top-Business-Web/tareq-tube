@@ -57,7 +57,6 @@
 
 @include('admin/layouts/scripts')
 @yield('ajaxCalls')
-@toastr_js
-@toastr_render
+
 </body>
 </html>

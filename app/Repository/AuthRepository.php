@@ -9,35 +9,37 @@ class AuthRepository implements AuthInterface
 {
     public function index()
     {
-        if (Auth::guard('admin')->check()) {
+        if (Auth::guard('user')->check()) {
             return redirect('admin');
         }
         return view('admin.auth.login');
     }
 
-    public function login($request): \Illuminate\Http\JsonResponse
+    public function login($request)
     {
         $data = $request->validate(
             [
-                'email' => 'required|exists:admins',
+                'gmail' => 'required|exists:users,gmail',
                 'password' => 'required'
             ],
             [
-                'email.exists' => 'هذا البريد غير مسجل معنا',
-                'email.required' => 'يرجي ادخال البريد الالكتروني',
+                'gmail.exists' => 'هذا البريد غير مسجل معنا',
+                'gmail.required' => 'يرجي ادخال البريد الالكتروني',
                 'password.required' => 'يرجي ادخال كلمة المرور',
             ]
         );
-        if (Auth::guard('admin')->attempt($data)) {
-            return response()->json(200);
+        if (Auth::guard('user')->attempt($data)) {
+            toastr()->addSuccess('تم تسجيل الدخول بنجاح');
+            return redirect()->route('adminHome');
         }
-        return response()->json(405);
+        toastr()->addError('هناك خطا في البيانات');
+//        return redirect()->back();
     }
 
     public function logout()
     {
-        Auth::guard('admin')->logout();
-        toastr()->info('تم تسجيل الخروج');
+        Auth::guard('user')->logout();
+        toastr()->addInfo('تم تسجيل الخروج');
         return redirect('admin/login');
     }
 }

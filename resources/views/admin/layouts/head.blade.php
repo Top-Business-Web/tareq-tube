@@ -42,7 +42,7 @@
 <script src="https://cdn.ckeditor.com/4.20.1/standard/ckeditor.js"></script>
 
 {{--  ckeditor  --}}
-@toastr_css
+
 
 <!-- Switcher CSS -->
 <link href="{{asset('assets/admin')}}/assets/switcher/css/switcher-rtl.css" rel="stylesheet">

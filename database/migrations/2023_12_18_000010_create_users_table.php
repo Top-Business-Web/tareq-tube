@@ -1,6 +1,6 @@
 <?php
 
-namespace Database\Migrations;
+
 
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
@@ -60,6 +60,8 @@ class CreateUsersTable extends Migration
                 ->references('id')->on('languages')
                 ->onDelete('no action')
                 ->onUpdate('no action');
+
+            $table->timestamps();
         });
     }
 

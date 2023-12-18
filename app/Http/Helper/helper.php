@@ -21,7 +21,7 @@ if (!function_exists('get_file')) {
 
 if (!function_exists('admin')) {
     function admin(){
-        return auth()->guard('admin');
+        return auth()-> guard('user');
     }
 }
 if (!function_exists('setting')) {
@@ -32,7 +32,7 @@ if (!function_exists('setting')) {
 
 if (!function_exists('loggedAdmin')) {
     function loggedAdmin($field = null){
-        return auth()->guard('admin')->user()->$field;
+        return auth()-> guard('user')->user()->$field;
     }
 }
 

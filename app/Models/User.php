@@ -10,11 +10,11 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable implements JWTSubject
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory;
 
     protected $fillable = [
         'name',
-        'email',
+        'gmail',
         'phone',
         'password',
         'img',
@@ -31,15 +31,5 @@ class User extends Authenticatable implements JWTSubject
     public function getJWTCustomClaims(): array
     {
         return [];
-    }
-
-    public function trip()
-    {
-        return $this->hasMany(Trip::class);
-    }
-
-    public function driverDocument()
-    {
-        return $this->hasMany(DriverDocuments::class);
     }
 }

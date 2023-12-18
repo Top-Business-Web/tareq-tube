@@ -28,7 +28,7 @@ Route::get('/', function () {
    return redirect()->route('adminHome');
 });
 
-Route::group(['prefix'=>'admin','middleware'=>'auth:admin'],function (){
+Route::group(['prefix'=>'admin','middleware'=>'auth:user'],function (){
     Route::get('/', function () {
         return view('admin/index');
     })->name('adminHome');
