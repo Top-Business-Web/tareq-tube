@@ -17,6 +17,13 @@
         </li>
 
         <li class="slide">
+            <a class="side-menu__item" href="{{ route('admin.index') }}">
+                <i class="fa fa-home side-menu__icon"></i>
+                <span class="side-menu__label">الادمن</span>
+            </a>
+        </li>
+
+        <li class="slide">
             <a class="side-menu__item" href="{{route('admin.logout')}}">
                 <i class="fa fa-lock side-menu__icon"></i>
                 <span class="side-menu__label">تسجيل الخروج</span>

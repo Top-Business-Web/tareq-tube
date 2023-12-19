@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "559646f744c0bb36d518095c1b62e6bd",
+    "content-hash": "02dfaabbdadb650c7c28818bb2405b4e",
     "packages": [
         {
             "name": "a6digital/laravel-default-profile-image",
@@ -7888,6 +7888,54 @@
                 }
             ],
             "time": "2022-07-12T04:48:03+00:00"
+        },
+        {
+            "name": "yemeni-open-source/blade-realtime-input",
+            "version": "5.1.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/YemenOpenSource/blade-realtime-input.git",
+                "reference": "15216925ce2ba072e060aeb1075bca130b8ddc8c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/YemenOpenSource/blade-realtime-input/zipball/15216925ce2ba072e060aeb1075bca130b8ddc8c",
+                "reference": "15216925ce2ba072e060aeb1075bca130b8ddc8c",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/support": "^7.0|^8.0|^9.0",
+                "php": "^7.4|^8.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "YemeniOpenSource\\BladeRealtimeInput\\BladeRealtimeInputServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "YemeniOpenSource\\BladeRealtimeInput\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "muathye",
+                    "email": "muath.ye@gmail.com"
+                }
+            ],
+            "description": "Enjoy realtime input validation by passing your rules in your input itself.",
+            "support": {
+                "issues": "https://github.com/YemenOpenSource/blade-realtime-input/issues",
+                "source": "https://github.com/YemenOpenSource/blade-realtime-input/tree/5.1.2"
+            },
+            "time": "2022-08-15T13:19:04+00:00"
         }
     ],
     "packages-dev": [
