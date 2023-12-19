@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
-use App\Http\Requests\AdminRequest;
-use App\Interfaces\AdminInterface;
+use App\Models\User;
 use App\Models\Admin;
 use Illuminate\Http\Request;
+use App\Interfaces\AdminInterface;
+use App\Http\Requests\AdminRequest;
+use App\Http\Controllers\Controller;
 
 class AdminController extends Controller
 {
@@ -20,6 +21,11 @@ class AdminController extends Controller
     public function index(Request $request)
     {
         return $this->adminInterface->index($request);
+    }
+
+    public function showCreate(Request $request)
+    {
+        return $this->adminInterface->showCreate($request);
     }
 
     public function delete(Request $request)
@@ -37,18 +43,18 @@ class AdminController extends Controller
         return $this->adminInterface->create();
     }
 
-    public function store(AdminRequest $request)
+    public function storeAdmin(AdminRequest $request)
     {
-        return $this->adminInterface->store($request);
+        return $this->adminInterface->storeAdmin($request);
     }
 
-    public function edit(Admin $admin)
+    public function showEdit($id)
     {
-        return $this->adminInterface->edit($admin);
+        return $this->adminInterface->showEdit($id);
     }
 
-    public function update(AdminRequest $request, $id)
+    public function updateAdmin(AdminRequest $request, $id)
     {
-        return $this->adminInterface->update($request, $id);
+        return $this->adminInterface->updateAdmin($request, $id);
     }
 }//end class

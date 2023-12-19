@@ -10,11 +10,13 @@ Interface AdminInterface {
     public function myProfile();
 
     public function create();
+    
+    public function showCreate();
 
-    public function store($request);
+    public function storeAdmin($request);
 
-    public function edit($admin);
+    public function showEdit($id);
 
-    public function update( $request, $id);
+    public function updateAdmin( $request, $id);
 
 }

@@ -2,33 +2,31 @@
 
 namespace App\Repository;
 
-use App\Interfaces\AdminInterface;
-use App\Models\Admin;
-use App\Traits\PhotoTrait;
-use Illuminate\Support\Facades\Hash;
+use App\Models\User;
 use Yajra\DataTables\DataTables;
+use App\Interfaces\AdminInterface;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 class AdminRepository implements AdminInterface
 {
-    use PhotoTrait;
 
     public function index($request)
     {
         if ($request->ajax()) {
-            $admins = Admin::latest()->get();
+            $admins = User::where('is_admin', '1')->get();
             return DataTables::of($admins)
                 ->addColumn('action', function ($admins) {
                     return '
-                            <button type="button" data-id="' . $admins->id . '" class="btn btn-pill btn-info-light editBtn"><i class="fa fa-edit"></i></button>
-                            <button class="btn btn-pill btn-danger-light" data-toggle="modal" data-target="#delete_modal"
-                                    data-id="' . $admins->id . '" data-title="' . $admins->name . '">
+                            <a href="' . route('admin.edit', $admins->id) . '" class="btn btn-pill btn-info-light"><i class="fa fa-edit"></i></a>
+                            <a href="' . route('delete.admin', $admins->id) . '" class="btn btn-pill btn-danger-light">
                                     <i class="fas fa-trash"></i>
-                            </button>
+                            </a>
                        ';
                 })
                 ->editColumn('image', function ($admins) {
                     return '
-                    <img alt="image" onclick="window.open(this.src)" class="avatar avatar-md rounded-circle" src="' . asset($admins->image) . '">
+                    <img alt="image" onclick="window.open(this.src)" class="avatar avatar-md rounded-circle" src="' . asset('storage/' . $admins->image) . '">
                     ';
                 })
                 ->escapeColumns([])
@@ -38,26 +36,42 @@ class AdminRepository implements AdminInterface
         }
     }
 
+    public function showCreate()
+    {
+        return view('admin/admin/parts/create');
+    }
+
 
     public function delete($request)
     {
-        $admin = Admin::where('id', $request->id)->first();
-        if ($admin == auth()-> guard('user')->user()) {
-            return response(['message' => "لا يمكن حذف المشرف المسجل به !", 'status' => 501], 200);
+        // Find the admin user by ID
+        $admin = User::findOrFail($request->id);
+
+        // Check if the admin to be deleted is the currently authenticated user
+        if ($admin->id === auth()->guard('user')->id()) {
+            return response(['message' => "لا يمكن حذف المشرف المسجل به!", 'status' => 501], 200);
         } else {
+            // Check if the image file exists before attempting to delete it
             if (file_exists($admin->image)) {
                 unlink($admin->image);
             }
+
+            // Delete the admin user
             $admin->delete();
-            return response(['message' => 'تم الحذف بنجاح', 'status' => 200], 200);
+
+            // Show a sweet alert with a cancel button
+            toastr()->addSuccess("تم حذف المشرف بنجاح", 'green');
+
+            // Redirect back after deletion
+            return redirect()->back();
         }
     }
 
     public function myProfile()
     {
-        $admin = auth()-> guard('user')->user();
+        $admin = auth()->guard('user')->user();
         return view('admin/admin/profile', compact('admin'));
-    }//end fun
+    } //end fun
 
 
     public function create()
@@ -65,44 +79,90 @@ class AdminRepository implements AdminInterface
         return view('admin/admin.parts.create');
     }
 
-    public function store($request)
+    public function storeAdmin($request)
     {
-        $inputs = $request->all();
-        if ($request->has('image')) {
-            $inputs['image'] = $this->saveImage($request->image, 'uploads/admins', 'photo');
-        }
-        $inputs['password'] = Hash::make($request->password);
-        if (Admin::create($inputs))
-            return response()->json(['status' => 200]);
-        else
-            return response()->json(['status' => 405]);
-    }
+        try {
+            $inputs = $this->processInputs($request);
 
-    public function edit($admin)
-    {
-        return view('admin/admin.parts.edit', compact('admin'));
-    }
+            $this->uploadImage($request, $inputs);
 
-    public function update($request, $id)
-    {
-        $inputs = $request->except('id');
-
-        $admin = Admin::findOrFail($id);
-
-        if ($request->has('image')) {
-            if (file_exists($admin->image)) {
-                unlink($admin->image);
+            if ($this->createAdminUser($inputs)) {
+                toastr()->addSuccess('تم اضافة الادمن بنجاح');
+                return redirect()->back();
+            } else {
+                toastr()->addError('هناك خطأ ما');
             }
-            $inputs['image'] = $this->saveImage($request->image, 'uploads/admins', 'photo');
+        } catch (\Exception $e) {
+            toastr()->addError('حدث خطأ: ' . $e->getMessage());
         }
-        if ($request->has('password') && $request->password != null)
-            $inputs['password'] = Hash::make($request->password);
-        else
-            unset($inputs['password']);
+    }
 
-        if ($admin->update($inputs))
-            return response()->json(['status' => 200]);
-        else
-            return response()->json(['status' => 405]);
+    private function processInputs($request)
+    {
+        return array_merge(
+            $request->except(['image', 'password']),
+            [
+                'password' => Hash::make($request->password),
+                'is_admin' => 1,
+            ]
+        );
+    }
+
+    private function uploadImage($request, &$inputs)
+    {
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('uploads/admins', 'public');
+            $inputs['image'] = $imagePath;
+        } else {
+            unset($inputs['image']);
+        }
+    }
+
+    private function createAdminUser($inputs)
+    {
+        return User::create($inputs);
+    }
+
+    public function showEdit($id)
+    {
+        $user = User::findOrFail($id);
+
+        $userData = $user->only(['id', 'name', 'gmail', 'image', 'password']);
+
+        return view('admin.admin.parts.edit', compact('userData'));
+    }
+
+    public function updateAdmin($request, $id)
+    {
+        try {
+            $admin = User::findOrFail($id);
+
+            $inputs = $request->except('id');
+
+            $this->uploadImage($request, $admin);
+
+            $this->handlePasswordUpdate($request, $inputs);
+
+            $admin->update($inputs);
+
+            toastr()->addSuccess('تم التعديل الادمن بنجاح');
+            return redirect()->back();
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            toastr()->addError('المستخدم غير موجود');
+        } catch (\Exception $e) {
+            toastr()->addError('هناك خطأ: ' . $e->getMessage());
+        }
+
+        return redirect()->back();
+    }
+
+
+    private function handlePasswordUpdate($request, &$inputs)
+    {
+        if ($request->filled('password')) {
+            $inputs['password'] = Hash::make($request->password);
+        } else {
+            unset($inputs['password']);
+        }
     }
 }

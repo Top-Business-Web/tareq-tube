@@ -11,13 +11,13 @@
             <div class="card">
                 <div class="card-header">
                     <h3 class="card-title"> مشرفين {{($setting->name_en) ?? ''}}</h3>
-                    <div class="">
+                    <a class="" href="{{ route('admin.create') }}">
                         <button class="btn btn-secondary btn-icon text-white addBtn">
 									<span>
 										<i class="fe fe-plus"></i>
 									</span> اضافة جديد
                         </button>
-                    </div>
+                    </a>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
@@ -90,18 +90,10 @@
             {data: 'id', name: 'id'},
             {data: 'image', name: 'image'},
             {data: 'name', name: 'name'},
-            {data: 'email', name: 'email'},
+            {data: 'gmail', name: 'gmail'},
             {data: 'action', name: 'action', orderable: false, searchable: false},
         ]
-        showData('{{route('admins.index')}}', columns);
-        // Delete Using Ajax
-        deleteScript('{{route('delete_admin')}}');
-        // Add Using Ajax
-        showAddModal('{{route('admins.create')}}');
-        addScript();
-        // Add Using Ajax
-        showEditModal('{{route('admins.edit',':id')}}');
-        editScript();
+        showData('{{route('admin.index')}}', columns);
     </script>
 @endsection
 
