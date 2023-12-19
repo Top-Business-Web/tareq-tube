@@ -28,11 +28,6 @@ class CreateCoponsUserTable extends Migration
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('copon_id')->nullable();
 
-            $table->index(["user_id"], 'fk_copons_user_users1_idx');
-
-            $table->index(["copon_id"], 'fk_copons_user_copons1_idx');
-
-
             $table->foreign('user_id', 'fk_copons_user_users1_idx')
                 ->references('id')->on('users')
                 ->onDelete('no action')

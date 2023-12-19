@@ -31,11 +31,6 @@ class CreateUserActionsTable extends Migration
             $table->tinyInteger('status')->default('0');
             $table->unsignedBigInteger('potints')->nullable();
 
-            $table->index(["user_id"], 'fk_user_actions_users1_idx');
-
-            $table->index(["tube_id"], 'fk_user_actions_tubes1_idx');
-
-
             $table->foreign('user_id', 'fk_user_actions_users1_idx')
                 ->references('id')->on('users')
                 ->onDelete('no action')

@@ -35,15 +35,6 @@ class CreateTubesTable extends Migration
             $table->unsignedBigInteger('target')->nullable();
             $table->tinyInteger('status')->nullable()->default('0');
 
-            $table->index(["sub_count"], 'fk_tubes_config_count1_idx');
-
-            $table->index(["second_count"], 'fk_tubes_config_count2_idx');
-
-            $table->index(["view_count"], 'fk_tubes_config_count3_idx');
-
-            $table->index(["user_id"], 'fk_tubes_users1_idx');
-
-
             $table->foreign('sub_count', 'fk_tubes_config_count1_idx')
                 ->references('id')->on('config_count')
                 ->onDelete('no action')

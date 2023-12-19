@@ -30,9 +30,6 @@ class CreateWithdrawRequestTable extends Migration
             $table->enum('status', ['pending', 'progress', 'done'])->nullable();
             $table->unsignedBigInteger('price')->nullable();
 
-            $table->index(["user_id"], 'fk_withdraw_request_users1_idx');
-
-
             $table->foreign('user_id', 'fk_withdraw_request_users1_idx')
                 ->references('id')->on('users')
                 ->onDelete('no action')

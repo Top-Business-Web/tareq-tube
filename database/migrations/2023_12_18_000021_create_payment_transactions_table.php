@@ -29,11 +29,6 @@ class CreatePaymentTransactionsTable extends Migration
             $table->unsignedBigInteger('payment_id')->nullable();
             $table->unsignedTinyInteger('status')->nullable()->default('0');
 
-            $table->index(["payment_id"], 'fk_payment_transactions_payments1_idx');
-
-            $table->index(["user_id"], 'fk_payment_transactions_users1_idx');
-
-
             $table->foreign('payment_id', 'fk_payment_transactions_payments1_idx')
                 ->references('id')->on('payments')
                 ->onDelete('no action')

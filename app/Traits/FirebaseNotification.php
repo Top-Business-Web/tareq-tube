@@ -3,7 +3,7 @@
 namespace App\Traits;
 
 use App\Models\Notification;
-use App\Models\PhoneToken;
+use App\Models\DeviceToken;
 use App\Models\User;
 
 trait FirebaseNotification
@@ -20,21 +20,21 @@ trait FirebaseNotification
 
         if ($user_id != null && $type == 'user') {
             $userIds = User::where('id', '=', $user_id)->pluck('id')->toArray();
-            $tokens = PhoneToken::whereIn('user_id', $userIds)->pluck('token')->toArray();
+            $tokens = DeviceToken::whereIn('user_id', $userIds)->pluck('token')->toArray();
 
         } elseif ($user_id != null && $type == 'driver') {
             $userIds = User::where('id', '=', $user_id)->pluck('id')->toArray();
-            $tokens = PhoneToken::whereIn('user_id', $userIds)->pluck('token')->toArray();
+            $tokens = DeviceToken::whereIn('user_id', $userIds)->pluck('token')->toArray();
         } elseif ($user_id == null && $type == 'all_user') {
             $usersIds = User::where('type', '=', 'user')->pluck('id')->toArray();
-            $tokens = PhoneToken::whereIn('user_id', $usersIds)->pluck('token')->toArray();
+            $tokens = DeviceToken::whereIn('user_id', $usersIds)->pluck('token')->toArray();
         } elseif ($user_id == null && $type == 'all_driver') {
             $usersIds = User::where('type', '=', 'driver')
                 ->where('status', '=', true)->pluck('id')->toArray();
-            $tokens = PhoneToken::whereIn('user_id', $usersIds)->pluck('token')->toArray();
+            $tokens = DeviceToken::whereIn('user_id', $usersIds)->pluck('token')->toArray();
         } else {
             $userIds = User::pluck('id')->toArray();
-            $tokens = PhoneToken::whereIn('user_id', $userIds)->pluck('token')->toArray();
+            $tokens = DeviceToken::whereIn('user_id', $userIds)->pluck('token')->toArray();
         }
 
         if ($create === true) {
