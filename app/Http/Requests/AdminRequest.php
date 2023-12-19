@@ -25,7 +25,7 @@ class AdminRequest extends FormRequest
     public function rules()
     {
         return [
-            'email'     => 'required|email|unique:admins,email,'.$this->id,
+            'gmail'     => 'required|email|unique:users,gmail,'.$this->id,
             'name'      => 'required',
             'password'  => 'required_without:id'.request()->isMethod('put') ? '' : '|min:6',
             'image'     => 'mimes:jpeg,jpg,png,gif,webp',
@@ -37,8 +37,8 @@ class AdminRequest extends FormRequest
         return [
             'image.mimes'                => 'صيغة الصورة غير مسموحة',
             'name.required'              => 'يجب ادخال الاسم',
-            'email.required'             => 'يجب ادخال الإيميل',
-            'email.unique'               => 'الإيميل مستخدم من قبل',
+            'gmail.required'             => 'يجب ادخال الإيميل',
+            'gmail.unique'               => 'الإيميل مستخدم من قبل',
             'password.required_without'  => 'يجب ادخال كلمة مرور',
             'password.min'               => 'الحد الادني لكلمة المرور : 6 أحرف',
         ];

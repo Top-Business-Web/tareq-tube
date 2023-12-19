@@ -36,6 +36,7 @@ class User extends Authenticatable implements JWTSubject
         'limit',
         'msg_limit',
         'youtube_link',
+
     ];
 
     public function getJWTIdentifier()
