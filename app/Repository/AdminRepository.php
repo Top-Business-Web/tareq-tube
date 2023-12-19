@@ -6,7 +6,6 @@ use App\Models\User;
 use Yajra\DataTables\DataTables;
 use App\Interfaces\AdminInterface;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Storage;
 
 class AdminRepository implements AdminInterface
 {
