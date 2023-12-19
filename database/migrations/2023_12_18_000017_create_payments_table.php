@@ -32,11 +32,6 @@ class CreatePaymentsTable extends Migration
             $table->unsignedBigInteger('user_id')->nullable();
             $table->unsignedBigInteger('model_id')->nullable();
 
-            $table->index(["user_id"], 'fk_payments_users1_idx');
-
-            $table->index(["model_id"], 'fk_payments_packages1_idx');
-
-
             $table->foreign('user_id', 'fk_payments_users1_idx')
                 ->references('id')->on('users')
                 ->onDelete('no action')

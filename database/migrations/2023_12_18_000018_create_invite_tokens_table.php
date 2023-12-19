@@ -30,11 +30,6 @@ class CreateInviteTokensTable extends Migration
             $table->unsignedBigInteger('to_user_id')->nullable();
             $table->unsignedTinyInteger('status')->nullable()->default('0');
 
-            $table->index(["from_user_id"], 'fk_invite_tokens_users1_idx');
-
-            $table->index(["to_user_id"], 'fk_invite_tokens_users2_idx');
-
-
             $table->foreign('from_user_id', 'fk_invite_tokens_users1_idx')
                 ->references('id')->on('users')
                 ->onDelete('no action')

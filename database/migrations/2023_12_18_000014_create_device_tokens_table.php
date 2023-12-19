@@ -25,12 +25,9 @@ class CreateDeviceTokensTable extends Migration
         Schema::create($this->tableName, function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->bigIncrements('id');
-            $table->enum('type', ['phone', 'android']);
+            $table->string('type');
             $table->text('token');
             $table->unsignedBigInteger('user_id')->nullable();
-
-            $table->index(["user_id"], 'fk_notifications_users1_idx');
-
 
             $table->foreign('user_id', 'fk_notifications_users1_idx')
                 ->references('id')->on('users')
