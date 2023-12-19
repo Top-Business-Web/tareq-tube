@@ -1,11 +1,12 @@
 <?php
 
 
-use App\Http\Controllers\Admin\AdminController;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Artisan;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\UserController;
-use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\PackageController;
 
 Route::group(['prefix'=>'admin'],function (){
     Route::get('login', [AuthController::class,'index'])->name('admin.login');
@@ -37,8 +38,13 @@ Route::group(['prefix'=>'admin','middleware'=>'auth:user'],function (){
     Route::POST('user/delete',[UserController::class,'delete'])->name('user_delete');
     Route::POST('change-status-user',[UserController::class,'changeStatusUser'])->name('changeStatusUser');
 
-    #============================ city =====================================
-
+    #============================ Package =====================================
+    Route::get('packages', [PackageController::class, 'index'])->name('package.index');
+    Route::get('package/create', [PackageController::class, 'showCreate'])->name('package.create');
+    Route::post('package/store', [PackageController::class, 'storePackage'])->name('package.store');
+    Route::get('package/{id}/edit', [PackageController::class, 'showEditPage'])->name('package.edit');
+    Route::put('package/update/{id}', [PackageController::class, 'updatePackage'])->name('package.update');
+    Route::get('package/{id}/delete',[PackageController::class,'deletePackage'])->name('package.delete');
 
 
     #============================ Slider =====================================
