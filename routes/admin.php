@@ -1,13 +1,18 @@
 <?php
 
 
-use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Artisan;
-use App\Http\Controllers\Admin\AuthController;
-use App\Http\Controllers\Admin\UserController;
-use App\Http\Controllers\Admin\AdminController;
-use App\Http\Controllers\Admin\CityController;
-use App\Http\Controllers\Admin\PackageController;
+use Illuminate\Support\Facades\{
+    Route,
+    Artisan,
+};
+use App\Http\Controllers\Admin\{
+    AuthController,
+    UserController,
+    AdminController,
+    CityController,
+    InterestController,
+    PackageController
+};
 
 Route::group(['prefix' => 'admin'], function () {
     Route::get('login', [AuthController::class, 'index'])->name('admin.login');
@@ -57,7 +62,13 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:user'], function () {
     Route::get('city/{id}/delete', [CityController::class, 'deleteCity'])->name('city.delete');
 
 
-    #============================ setting ==================================
+    #============================ Interest ==================================
+    Route::get('interests', [InterestController::class, 'index'])->name('interest.index');
+    Route::get('interest/create', [InterestController::class, 'showCreate'])->name('interest.create');
+    Route::post('interest/store', [InterestController::class, 'storeInterest'])->name('interest.store');
+    Route::get('interest/{id}/edit', [InterestController::class, 'showEditInterest'])->name('interest.edit');
+    Route::put('interest/update/{id}', [InterestController::class, 'updateInterest'])->name('interest.update');
+    Route::get('interest/{id}/delete', [InterestController::class, 'deleteInterest'])->name('interest.delete');
 
     #============================ Notification =====================================
 
