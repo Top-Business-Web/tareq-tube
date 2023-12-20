@@ -74,8 +74,6 @@ class PackageRepository implements PackageInterface
 
             toastr()->addSuccess('تم التعديل الباقة بنجاح');
             return redirect()->back();
-        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-            toastr()->addError('المستخدم غير موجود');
         } catch (\Exception $e) {
             toastr()->addError('هناك خطأ: ' . $e->getMessage());
         }

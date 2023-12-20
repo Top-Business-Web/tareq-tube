@@ -74,8 +74,6 @@ class CityRepository implements CityInterface
 
             toastr()->addSuccess('تم التعديل المدينة بنجاح');
             return redirect()->back();
-        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-            toastr()->addError('المستخدم غير موجود');
         } catch (\Exception $e) {
             toastr()->addError('هناك خطأ: ' . $e->getMessage());
         }
