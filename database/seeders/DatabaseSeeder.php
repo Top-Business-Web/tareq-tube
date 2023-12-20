@@ -21,7 +21,8 @@ class DatabaseSeeder extends Seeder
             PackageSeeder::class,
             InterestSeeder::class,
             PackageUserSeeder::class,
-            ConfigCountSeeder::class
+            ConfigCountSeeder::class,
+            SliderSeeder::class
         ]);
     }
 }

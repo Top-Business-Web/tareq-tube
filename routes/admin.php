@@ -13,7 +13,8 @@ use App\Http\Controllers\Admin\{
     ConfigCountController,
     InterestController,
     PackageController,
-    PackageUserController
+    PackageUserController,
+    SliderController
 };
 
 Route::group(['prefix' => 'admin'], function () {
@@ -83,6 +84,14 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:user'], function () {
     Route::get('config_count/{id}/edit', [ConfigCountController::class, 'showEditConfigCount'])->name('config_count.edit');
     Route::put('config_count/update/{id}', [ConfigCountController::class, 'updateConfigCount'])->name('config_count.update');
     Route::get('config_count/{id}/delete', [ConfigCountController::class, 'deleteConfigCount'])->name('config_count.delete');
+
+    #============================ Slider =====================================
+    Route::get('sliders', [SliderController::class, 'index'])->name('slider.index');
+    Route::get('slider/create', [SliderController::class, 'showCreate'])->name('slider.create');
+    Route::post('slider/store', [SliderController::class, 'storeSlider'])->name('slider.store');
+    Route::get('slider/{id}/edit', [SliderController::class, 'showEditSlider'])->name('slider.edit');
+    Route::put('slider/update/{id}', [SliderController::class, 'updateSlider'])->name('slider.update');
+    Route::get('slider/{id}/delete', [SliderController::class, 'deleteSlider'])->name('slider.delete');
 
 });
 
