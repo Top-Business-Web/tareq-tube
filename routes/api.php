@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\User\AuthController;
+use App\Http\Controllers\Api\User\ConfigController;
 use App\Http\Controllers\Api\User\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -26,7 +27,18 @@ Route::group(['prefix' => 'auth'],function (){
 
 ######################### START USER ROUTES ###################################
 Route::group(['middleware' => 'jwt'],function (){
-    Route::get('onBoarding',[UserController::class,'onBoarding']);
+
+    Route::get('/getHome',[UserController::class,'getHome']);
+    Route::get('/configCount',[UserController::class,'configCount']);
+
+    //--------------------- User Actions -----------------------
+    Route::post('/addTube',[UserController::class,'addTube']);
+    Route::post('/addMessage',[UserController::class,'addMessage']);
+
+
+
+
+    //----------------------- Auth User ------------------------
     Route::post('logout',[AuthController::class,'logout']);
     Route::post('deleteUser',[AuthController::class,'deleteUser']);
 });
@@ -35,5 +47,7 @@ Route::group(['middleware' => 'jwt'],function (){
 
 
 ######################### START GENERAL ROUTES ################################
+Route::get('getInterests',[ConfigController::class,'getInterests']);
+Route::get('getCities',[ConfigController::class,'getCities']);
 
 ########################### END GENERAL ROUTES ################################
