@@ -2,15 +2,27 @@
 
 namespace App\Providers;
 
-use App\Interfaces\AdminInterface;
+use Illuminate\Support\ServiceProvider;
 use App\Interfaces\Api\User\UserRepositoryInterface;
 use App\Repository\Api\User\UserRepository as UserApiRepository;
-use App\Interfaces\AuthInterface;
-use App\Interfaces\UserInterface;
-use App\Repository\AdminRepository;
-use App\Repository\AuthRepository;
-use App\Repository\UserRepository;
-use Illuminate\Support\ServiceProvider;
+
+use App\Interfaces\{
+    AuthInterface,
+    CityInterface,
+    InterestInterface,
+    PackageInterface,
+    UserInterface,
+    AdminInterface
+};
+use App\Repository\{
+    AdminRepository,
+    AuthRepository,
+    CityRepository,
+    InterestRepository,
+    UserRepository,
+    PackageRepository
+};
+
 
 
 class RepositoryServiceProvider extends ServiceProvider
@@ -26,6 +38,9 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(AuthInterface::class,AuthRepository::class);
         $this->app->bind(AdminInterface::class,AdminRepository::class);
         $this->app->bind(UserInterface::class,UserRepository::class);
+        $this->app->bind(PackageInterface::class,PackageRepository::class);
+        $this->app->bind(CityInterface::class,CityRepository::class);
+        $this->app->bind(InterestInterface::class,InterestRepository::class);
         // ----------------------------------------------------------------
 
 
