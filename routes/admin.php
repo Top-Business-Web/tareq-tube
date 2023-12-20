@@ -6,18 +6,19 @@ use Illuminate\Support\Facades\Artisan;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\CityController;
 use App\Http\Controllers\Admin\PackageController;
 
-Route::group(['prefix'=>'admin'],function (){
-    Route::get('login', [AuthController::class,'index'])->name('admin.login');
-    Route::POST('login', [AuthController::class,'login'])->name('admin.login');
+Route::group(['prefix' => 'admin'], function () {
+    Route::get('login', [AuthController::class, 'index'])->name('admin.login');
+    Route::POST('login', [AuthController::class, 'login'])->name('admin.login');
 });
 
 Route::get('/', function () {
-   return redirect()->route('adminHome');
+    return redirect()->route('adminHome');
 });
 
-Route::group(['prefix'=>'admin','middleware'=>'auth:user'],function (){
+Route::group(['prefix' => 'admin', 'middleware' => 'auth:user'], function () {
     Route::get('/', function () {
         return view('admin/index');
     })->name('adminHome');
@@ -28,15 +29,15 @@ Route::group(['prefix'=>'admin','middleware'=>'auth:user'],function (){
     Route::post('admin/store', [AdminController::class, 'storeAdmin'])->name('admin.store');
     Route::get('admin/{id}/edit', [AdminController::class, 'showEdit'])->name('admin.edit');
     Route::put('admin/update/{id}', [AdminController::class, 'updateAdmin'])->name('admin.update');
-    Route::get('admin/{id}/delete',[AdminController::class,'delete'])->name('delete.admin');
-    Route::get('my_profile',[AdminController::class,'myProfile'])->name('myProfile');
-    Route::get('logout', [AuthController::class,'logout'])->name('admin.logout');
+    Route::get('admin/{id}/delete', [AdminController::class, 'delete'])->name('delete.admin');
+    Route::get('my_profile', [AdminController::class, 'myProfile'])->name('myProfile');
+    Route::get('logout', [AuthController::class, 'logout'])->name('admin.logout');
 
     #============================ users ====================================
-    Route::get('userPerson',[UserController::class,'indexPerson'])->name('userPerson.index');
-    Route::get('userCompany',[UserController::class,'indexCompany'])->name('userCompany.index');
-    Route::POST('user/delete',[UserController::class,'delete'])->name('user_delete');
-    Route::POST('change-status-user',[UserController::class,'changeStatusUser'])->name('changeStatusUser');
+    Route::get('userPerson', [UserController::class, 'indexPerson'])->name('userPerson.index');
+    Route::get('userCompany', [UserController::class, 'indexCompany'])->name('userCompany.index');
+    Route::POST('user/delete', [UserController::class, 'delete'])->name('user_delete');
+    Route::POST('change-status-user', [UserController::class, 'changeStatusUser'])->name('changeStatusUser');
 
     #============================ Package =====================================
     Route::get('packages', [PackageController::class, 'index'])->name('package.index');
@@ -44,11 +45,16 @@ Route::group(['prefix'=>'admin','middleware'=>'auth:user'],function (){
     Route::post('package/store', [PackageController::class, 'storePackage'])->name('package.store');
     Route::get('package/{id}/edit', [PackageController::class, 'showEditPage'])->name('package.edit');
     Route::put('package/update/{id}', [PackageController::class, 'updatePackage'])->name('package.update');
-    Route::get('package/{id}/delete',[PackageController::class,'deletePackage'])->name('package.delete');
+    Route::get('package/{id}/delete', [PackageController::class, 'deletePackage'])->name('package.delete');
 
 
-    #============================ Slider =====================================
-
+    #============================ City =====================================
+    Route::get('cities', [CityController::class, 'index'])->name('city.index');
+    Route::get('city/create', [CityController::class, 'showCreate'])->name('city.create');
+    Route::post('city/store', [CityController::class, 'storeCity'])->name('city.store');
+    Route::get('city/{id}/edit', [CityController::class, 'showEditCity'])->name('city.edit');
+    Route::put('city/update/{id}', [CityController::class, 'updateCity'])->name('city.update');
+    Route::get('city/{id}/delete', [CityController::class, 'deleteCity'])->name('city.delete');
 
 
     #============================ setting ==================================
@@ -69,14 +75,5 @@ Route::get('/clear', function () {
     Artisan::call('key:generate');
     Artisan::call('config:clear');
     Artisan::call('optimize:clear');
-    return response()->json(['status' => 'success','code' =>1000000000]);
+    return response()->json(['status' => 'success', 'code' => 1000000000]);
 });
-
-
-
-
-
-
-
-
-
