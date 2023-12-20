@@ -6,10 +6,12 @@ use App\Interfaces\AdminInterface;
 use App\Interfaces\Api\User\UserRepositoryInterface;
 use App\Repository\Api\User\UserRepository as UserApiRepository;
 use App\Interfaces\AuthInterface;
+use App\Interfaces\CityInterface;
 use App\Interfaces\PackageInterface;
 use App\Interfaces\UserInterface;
 use App\Repository\AdminRepository;
 use App\Repository\AuthRepository;
+use App\Repository\CityRepository;
 use App\Repository\PackageRepository;
 use App\Repository\UserRepository;
 use Illuminate\Support\ServiceProvider;
@@ -29,6 +31,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(AdminInterface::class,AdminRepository::class);
         $this->app->bind(UserInterface::class,UserRepository::class);
         $this->app->bind(PackageInterface::class,PackageRepository::class);
+        $this->app->bind(CityInterface::class,CityRepository::class);
         // ----------------------------------------------------------------
 
 
