@@ -33,6 +33,7 @@ Route::group(['middleware' => 'jwt'],function (){
 
     //--------------------- User Actions -----------------------
     Route::post('/addTube',[UserController::class,'addTube']);
+    Route::post('/addMessage',[UserController::class,'addMessage']);
 
 
 

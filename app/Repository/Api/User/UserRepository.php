@@ -2,7 +2,9 @@
 
 namespace App\Repository\Api\User;
 
+use App\Http\Resources\MessageResource;
 use App\Http\Resources\SliderResource;
+use App\Http\Resources\TubeResource;
 use App\Http\Resources\UserResource;
 use App\Interfaces\Api\User\UserRepositoryInterface;
 use App\Models\City;
@@ -172,13 +174,13 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
 
     public function getHome(): JsonResponse
     {
-        $subscribe_count = Tube::where('user_id', Auth::user()->id)
+        $subscribe_count = Tube::where('user_id', Auth::guard('user-api')->user()->id)
             ->where('type', 'sub')
             ->count();
-        $views_count = Tube::where('user_id', Auth::user()->id)
+        $views_count = Tube::where('user_id', Auth::guard('user-api')->user()->id)
             ->where('type', 'view')
             ->count();
-        $message_count = Message::where('user_id', Auth::user()->id)->count();
+        $message_count = Message::where('user_id', Auth::guard('user-api')->user()->id)->count();
         $data = [
             'sliders' => SliderResource::collection(Slider::get()),
             'user' => new UserResource(\Auth::user()),
@@ -202,63 +204,104 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
 
     public function addTube(Request $request): JsonResponse
     {
-        $user = Auth::user();
-        $setting = Setting::first();
-        $limit = $user->limit;
-        $userPoint = $user->points;
+        try {
+            $user = Auth::guard('user-api')->user();
+            $userPoint = $user->points;
 
-        $validator = Validator::make($request->all(), [
-            'type' => 'required|in:sub,view',
-            'url' => 'required|url',
-            'sub_count' => 'required_if:type,sub',
-            'view_count' => 'required',
-            'second_count' => 'required',
-        ]);
+            $validator = Validator::make($request->all(), [
+                'type' => 'required|in:sub,view',
+                'url' => 'required|url',
+                'sub_count' => 'required_if:type,sub',
+                'view_count' => 'required',
+                'second_count' => 'required',
+            ]);
 
-        if ($validator->fails()){
-            $error = $validator->errors()->first();
-            return self::returnResponseDataApi(null,$error,422);
-        }
-
-        $sub_count = 0;
-        if ($request->has('sub_count') && $request->sub_count != '') {
-            $sub_count = ConfigCount::find($request->sub_count)->point;
-        }
-        $view_count = ConfigCount::find($request->view_count)->point;
-        $second_count = ConfigCount::find($request->second_count)->point;
-        $pointsNeed = $second_count + $view_count + $sub_count;
-
-        if ($user->limit > 0) {
-            if ($userPoint >= $pointsNeed) {
-                $createTube = new Tube();
-                $createTube->type = $request->type;
-                $createTube->points = $pointsNeed;
-                $createTube->user_id = $user->id;
-                $createTube->url = $request->url;
-                $createTube->sub_count = $request->sub_count;
-                $createTube->second_count = $request->second_count;
-                $createTube->view_count = $request->view_count;
-                $createTube->target = 0;
-                $createTube->status = 0;
-
-                if ($createTube->save()) {
-                    $user->points -= $pointsNeed;
-                    $user->limit -= 1;
-                    $user->save();
-
-                    return self::returnResponseDataApi($createTube, 'تم الانشاء بنجاح', 201);
-                } else {
-                    return self::returnResponseDataApi(null, 'هناك خطا ما', 500);
-
-                }
-
-
-            } else {
-                return self::returnResponseDataApi(null, 'نقاطك لا تكفي لاتمام العملية تحتاج الي ' . $pointsNeed - $userPoint . ' من النقاط ', 422);
+            if ($validator->fails()) {
+                $error = $validator->errors()->first();
+                return self::returnResponseDataApi(null, $error, 422);
             }
-        } else {
-            return self::returnResponseDataApi(null, 'تم الانتهاء من الباقة الحالية قم بشراء باقة جديدة', 422);
+
+            $sub_count = 0;
+            if ($request->has('sub_count') && $request->sub_count != '') {
+                $sub_count = ConfigCount::find($request->sub_count)->point;
+            }
+            $view_count = ConfigCount::find($request->view_count)->point;
+            $second_count = ConfigCount::find($request->second_count)->point;
+            $pointsNeed = $second_count + $view_count + $sub_count;
+
+            if ($user->limit > 0) {
+                if ($userPoint >= $pointsNeed) {
+                    $createTube = new Tube();
+                    $createTube->type = $request->type;
+                    $createTube->points = $pointsNeed;
+                    $createTube->user_id = $user->id;
+                    $createTube->url = $request->url;
+                    $createTube->sub_count = $request->sub_count;
+                    $createTube->second_count = $request->second_count;
+                    $createTube->view_count = $request->view_count;
+                    $createTube->target = 0;
+                    $createTube->status = 0;
+
+                    if ($createTube->save()) {
+                        $user->points -= $pointsNeed;
+                        $user->limit -= 1;
+                        $user->save();
+
+                        return self::returnResponseDataApi(new TubeResource($createTube), 'تم الانشاء بنجاح', 201);
+                    } else {
+                        return self::returnResponseDataApi(null, 'هناك خطا ما', 500);
+                    }
+
+                } else {
+                    return self::returnResponseDataApi(null, 'نقاطك لا تكفي لاتمام العملية تحتاج الي ' . $pointsNeed - $userPoint . ' من النقاط ', 422);
+                }
+            } else {
+                return self::returnResponseDataApi(null, 'تم الانتهاء من الباقة الحالية قم بشراء باقة جديدة', 422);
+            }
+        } catch (\Exception $e) {
+            return self::returnResponseDataApi(null, $e->getMessage(), 500);
         }
 
     } // add subscribe
+
+    public function addMessage(Request $request): JsonResponse
+    {
+        try {
+            $user = Auth::guard('user-api')->user();
+
+            $validator = Validator::make($request->all(), [
+                'url' => 'required|url',
+                'description' => 'required',
+                'city_id' => 'required',
+                'intrest_id' => 'required',
+            ]);
+
+            if ($validator->fails()) {
+                $error = $validator->errors()->first();
+                return self::returnResponseDataApi(null, $error, 422);
+            }
+
+            if ($user->msg_limit > 0){
+                $addMessage = new Message();
+                $addMessage->url = $request->url;
+                $addMessage->user_id = Auth::guard('user-api')->user()->id;
+                $addMessage->content = $request->description;
+                $addMessage->city_id = $request->city_id;
+                $addMessage->intrest_id = $request->intrest_id;
+
+                if ($addMessage->save()){
+                    $user->msg_limit -= 1;
+                    $user->save();
+
+                    return self::returnResponseDataApi(new MessageResource($addMessage), 'تم انشاء الرسالة بنجاح', 201);
+
+                }
+            }else {
+                return self::returnResponseDataApi(null, 'لا يوجد باقة رسائل لديك  قم بشراء باقة رسائل', 422);
+            }
+
+        }catch (\Exception $e) {
+            return self::returnResponseDataApi(null,$e->getMessage(),500);
+        }
+    }
 }
