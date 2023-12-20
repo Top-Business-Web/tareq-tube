@@ -10,5 +10,10 @@ use Illuminate\Database\Eloquent\Model;
 class ConfigCount extends Model
 {
     protected $table = 'config_count';
-    protected $guarded = [];
+    
+    protected $fillable = [
+        'type',
+        'count',
+        'point'
+    ];
 }

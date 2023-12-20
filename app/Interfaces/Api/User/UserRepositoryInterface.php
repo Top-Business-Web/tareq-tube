@@ -22,6 +22,7 @@ interface UserRepositoryInterface
     public function configCount(Request $request): JsonResponse;
 
     public function addTube(Request $request): JsonResponse;
+
     public function addMessage(Request $request): JsonResponse;
 
 }

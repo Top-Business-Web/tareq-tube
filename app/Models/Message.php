@@ -17,7 +17,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Message extends Model
 {
     protected $table = 'msg';
-    protected $guarded = [];
+
 
     public function city(): BelongsTo
     {

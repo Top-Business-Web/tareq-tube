@@ -13,12 +13,14 @@ use App\Interfaces\{
     PackageInterface,
     UserInterface,
     AdminInterface,
+    ConfigCountInterface,
     PackageUserInterface
 };
 use App\Repository\{
     AdminRepository,
     AuthRepository,
     CityRepository,
+    ConfigCountRepository,
     InterestRepository,
     UserRepository,
     PackageRepository,
@@ -44,6 +46,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(PackageUserInterface::class,PackageUserRepository::class);
         $this->app->bind(CityInterface::class,CityRepository::class);
         $this->app->bind(InterestInterface::class,InterestRepository::class);
+        $this->app->bind(ConfigCountInterface::class,ConfigCountRepository::class);
         // ----------------------------------------------------------------
 
 
