@@ -23,5 +23,7 @@ interface UserRepositoryInterface
 
     public function addTube(Request $request): JsonResponse;
 
+    public function addMessage(Request $request): JsonResponse;
+
 }
 //Made By https://github.com/eldapour (eldapour)
