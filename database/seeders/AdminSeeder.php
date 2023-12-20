@@ -21,39 +21,21 @@ class AdminSeeder extends Seeder
                 'image' => '1.jpg',
                 'gmail' => 'abdullah@admin.com',
                 'password' => Hash::make('123456'),
-                'google_id' => 1234,
-                'city_id' => 1,
                 'is_admin' => 1,
-                'points' => 0,
-                'limit' => 1,
-                'msg_limit' => 1,
-                'youtube_link' => 'https://youtube.com/'
             ],
             [
                 'name' => 'eldapour',
                 'image' => '1.jpg',
                 'gmail' => 'eldapour@admin.com',
                 'password' => Hash::make('123456'),
-                'google_id' => 1234,
-                'city_id' => 2,
                 'is_admin' => 1,
-                'points' => 0,
-                'limit' => 1,
-                'msg_limit' => 1,
-                'youtube_link' => 'https://youtube.com/'
             ],
             [
                 'name' => 'ahmed',
                 'image' => '1.jpg',
                 'gmail' => 'ahmed@admin.com',
                 'password' => Hash::make('123456'),
-                'google_id' => 1234,
-                'city_id' => 3,
                 'is_admin' => 1,
-                'points' => 0,
-                'limit' => 1,
-                'msg_limit' => 1,
-                'youtube_link' => 'https://youtube.com/'
             ],
         ];
 

@@ -11,7 +11,8 @@ use App\Http\Controllers\Admin\{
     AdminController,
     CityController,
     InterestController,
-    PackageController
+    PackageController,
+    PackageUserController
 };
 
 Route::group(['prefix' => 'admin'], function () {
@@ -51,6 +52,10 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:user'], function () {
     Route::get('package/{id}/edit', [PackageController::class, 'showEditPage'])->name('package.edit');
     Route::put('package/update/{id}', [PackageController::class, 'updatePackage'])->name('package.update');
     Route::get('package/{id}/delete', [PackageController::class, 'deletePackage'])->name('package.delete');
+
+    #============================ Packages Users =====================================
+    Route::get('packages_users', [PackageUserController::class, 'index'])->name('package_user.index');
+    Route::get('package_user/{id}/delete', [PackageUserController::class, 'deletePackageUser'])->name('package_user.delete');
 
 
     #============================ City =====================================

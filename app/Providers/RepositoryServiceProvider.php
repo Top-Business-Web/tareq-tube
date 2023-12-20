@@ -12,7 +12,8 @@ use App\Interfaces\{
     InterestInterface,
     PackageInterface,
     UserInterface,
-    AdminInterface
+    AdminInterface,
+    PackageUserInterface
 };
 use App\Repository\{
     AdminRepository,
@@ -20,7 +21,8 @@ use App\Repository\{
     CityRepository,
     InterestRepository,
     UserRepository,
-    PackageRepository
+    PackageRepository,
+    PackageUserRepository
 };
 
 
@@ -39,6 +41,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(AdminInterface::class,AdminRepository::class);
         $this->app->bind(UserInterface::class,UserRepository::class);
         $this->app->bind(PackageInterface::class,PackageRepository::class);
+        $this->app->bind(PackageUserInterface::class,PackageUserRepository::class);
         $this->app->bind(CityInterface::class,CityRepository::class);
         $this->app->bind(InterestInterface::class,InterestRepository::class);
         // ----------------------------------------------------------------
