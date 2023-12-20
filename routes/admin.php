@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\{
     UserController,
     AdminController,
     CityController,
+    ConfigCountController,
     InterestController,
     PackageController,
     PackageUserController
@@ -75,8 +76,13 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:user'], function () {
     Route::put('interest/update/{id}', [InterestController::class, 'updateInterest'])->name('interest.update');
     Route::get('interest/{id}/delete', [InterestController::class, 'deleteInterest'])->name('interest.delete');
 
-    #============================ Notification =====================================
-
+    #============================ Config Count =====================================
+    Route::get('config_count', [ConfigCountController::class, 'index'])->name('config_count.index');
+    Route::get('config_count/create', [ConfigCountController::class, 'showCreate'])->name('config_count.create');
+    Route::post('config_count/store', [ConfigCountController::class, 'storeConfigCount'])->name('config_count.store');
+    Route::get('config_count/{id}/edit', [ConfigCountController::class, 'showEditConfigCount'])->name('config_count.edit');
+    Route::put('config_count/update/{id}', [ConfigCountController::class, 'updateConfigCount'])->name('config_count.update');
+    Route::get('config_count/{id}/delete', [ConfigCountController::class, 'deleteConfigCount'])->name('config_count.delete');
 
 });
 

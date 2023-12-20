@@ -53,4 +53,5 @@ return [
     'partners' => 'Our Partners',
     'careers' => 'Careers',
 
+
 ];

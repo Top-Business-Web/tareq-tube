@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\ConfigCount;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -19,7 +20,8 @@ class DatabaseSeeder extends Seeder
             AdminSeeder::class,
             PackageSeeder::class,
             InterestSeeder::class,
-            PackageUserSeeder::class
+            PackageUserSeeder::class,
+            ConfigCountSeeder::class
         ]);
     }
 }

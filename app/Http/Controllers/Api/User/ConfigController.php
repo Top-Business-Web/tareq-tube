@@ -7,7 +7,7 @@ use App\Interfaces\Api\User\UserRepositoryInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
-class UserController extends Controller
+class ConfigController extends Controller
 {
     protected UserRepositoryInterface $userRepositoryInterface;
 
@@ -15,20 +15,13 @@ class UserController extends Controller
     {
         $this->userRepositoryInterface = $userRepositoryInterface;
     } // constructor
-
-    public function getHome(): JsonResponse
+    public function getInterests(): JsonResponse
     {
-        return $this->userRepositoryInterface->getHome();
-    }
+        return $this->userRepositoryInterface->getInterests();
+    } // getInterests
 
-    public function configCount(Request $request): JsonResponse
+    public function getCities(): JsonResponse
     {
-        return $this->userRepositoryInterface->configCount($request);
-    }
-
-    public function addTube(Request $request): JsonResponse
-    {
-        return $this->userRepositoryInterface->addTube($request);
-    }
-
+        return $this->userRepositoryInterface->getCities();
+    } // getCities
 }

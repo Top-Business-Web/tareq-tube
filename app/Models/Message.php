@@ -6,10 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * @method static get()
+ * @method static where(string $string, $id)
  */
-class OnBoarding extends Model
+class Message extends Model
 {
-    protected $table = 'on_boarding';
-
+    protected $table = 'msg';
     protected $guarded = [];
 }
