@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\{
     CityController,
     ConfigCountController,
     InterestController,
+    MsgController,
     PackageController,
     PackageUserController,
     SliderController
@@ -92,6 +93,10 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:user'], function () {
     Route::get('slider/{id}/edit', [SliderController::class, 'showEditSlider'])->name('slider.edit');
     Route::put('slider/update/{id}', [SliderController::class, 'updateSlider'])->name('slider.update');
     Route::get('slider/{id}/delete', [SliderController::class, 'deleteSlider'])->name('slider.delete');
+
+    #============================ Message =====================================
+    Route::get('messages', [MsgController::class, 'index'])->name('message.index');
+    Route::get('messages/{id}/delete', [MsgController::class, 'deleteMessage'])->name('message.delete');
 
 });
 
