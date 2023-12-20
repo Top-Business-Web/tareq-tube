@@ -22,19 +22,19 @@ class Tube extends Model
     protected $table = 'tubes';
     protected $guarded = [];
 
-    public function sub_count(): BelongsTo
+    public function subCount(): BelongsTo
     {
-        return $this->belongsTo(ConfigCount::class,'sub_count','id');
+        return $this->belongsTo(ConfigCount::class,'sub_count','id')->select('id','type','count','point');
     }
 
-    public function second_count(): BelongsTo
+    public function secondCount(): BelongsTo
     {
-        return $this->belongsTo(ConfigCount::class,'second_count','id');
+        return $this->belongsTo(ConfigCount::class,'second_count','id')->select('id','type','count','point');
     }
 
-    public function view_count(): BelongsTo
+    public function viewCount(): BelongsTo
     {
-        return $this->belongsTo(ConfigCount::class,'view_count','id');
+        return $this->belongsTo(ConfigCount::class,'view_count','id')->select('id','type','count','point');
     }
 
 }

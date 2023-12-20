@@ -31,4 +31,9 @@ class UserController extends Controller
         return $this->userRepositoryInterface->addTube($request);
     }
 
+    public function addMessage(Request $request): JsonResponse
+    {
+        return $this->userRepositoryInterface->addMessage($request);
+    }
+
 }
