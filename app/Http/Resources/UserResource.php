@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Setting;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class UserResource extends JsonResource
@@ -21,14 +22,14 @@ class UserResource extends JsonResource
             'gmail' => $this->gmail,
             'password' => $this->password,
             'google_id' => $this->google_id,
-            'city_id' =>$this->city_id,
-            'is_admin' => $this->is_admin,
-            'intrest_id' => $this->intrest_id,
+            'city' =>$this->city,
+            'interest' => $this->interest,
             'points' => $this->points,
+            'balance' => $this->points / Setting::first('point_price')->point_price,
             'limit' => $this->limit,
             'msg_limit' => $this->msg_limit,
             'youtube_link' => $this->youtube_link,
-            'token' => 'Bearer ' . $this->token,
+            'token' =>  $request->header('Authorization') ??  'Bearer ' .$this->token,
             'created_at' => $this->created_at->format('Y-m-d'),
             'updated_at' => $this->created_at->format('Y-m-d'),
         ];

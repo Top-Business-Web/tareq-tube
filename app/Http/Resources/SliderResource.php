@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class CityResource extends JsonResource
+class SliderResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,8 +16,8 @@ class CityResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'name' => $this->name,
-            'areas' => AreaResource::collection($this->area)
+            'image' => asset($this->image),
+            'url' => $this->url,
         ];
     }
 }
