@@ -7,9 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * @method static get()
  */
-class OnBoarding extends Model
+class ConfigCount extends Model
 {
-    protected $table = 'on_boarding';
-
+    protected $table = 'config_count';
     protected $guarded = [];
 }

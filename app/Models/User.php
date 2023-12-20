@@ -53,4 +53,14 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->hasOne(DeviceToken::class,'user_id','id');
     }
+
+    public function interest()
+    {
+        return $this->belongsTo(Interest::class,'intrest_id','id')->select('id','name');
+    }
+
+    public function city()
+    {
+        return $this->belongsTo(City::class,'city_id','id')->select('id','name');
+    }
 }
