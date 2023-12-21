@@ -26,6 +26,8 @@ class DatabaseSeeder extends Seeder
             MsgSeeder::class,
             NotificationSeeder::class,
             CouponSeeder::class,
+            TubeSeeder::class,
+            UserActionSeeder::class,
         ]);
     }
 }
