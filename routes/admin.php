@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\{
     AdminController,
     CityController,
     ConfigCountController,
+    CouponController,
     InterestController,
     MsgController,
     NotificationController,
@@ -106,6 +107,14 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:user'], function () {
     Route::get('notification/{id}/edit', [NotificationController::class, 'showEditNotification'])->name('notification.edit');
     Route::put('notification/update/{id}', [NotificationController::class, 'updateNotification'])->name('notification.update');
     Route::get('notification/{id}/delete', [NotificationController::class, 'deleteNotification'])->name('notification.delete');
+
+    #============================ Coupon =====================================
+    Route::get('coupons', [CouponController::class, 'index'])->name('coupon.index');
+    Route::get('coupon/create', [CouponController::class, 'showCreate'])->name('coupon.create');
+    Route::post('coupon/store', [CouponController::class, 'storeCoupon'])->name('coupon.store');
+    Route::get('coupon/{id}/edit', [CouponController::class, 'showEditCoupon'])->name('coupon.edit');
+    Route::put('coupon/update/{id}', [CouponController::class, 'updateCoupon'])->name('coupon.update');
+    Route::get('coupon/{id}/delete', [CouponController::class, 'deleteCoupon'])->name('coupon.delete');
 
 });
 

@@ -25,6 +25,7 @@ class DatabaseSeeder extends Seeder
             SliderSeeder::class,
             MsgSeeder::class,
             NotificationSeeder::class,
+            CouponSeeder::class,
         ]);
     }
 }
