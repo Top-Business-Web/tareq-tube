@@ -29,7 +29,7 @@ class CreateUserActionsTable extends Migration
             $table->unsignedBigInteger('tube_id')->nullable();
             $table->enum('type', ['view', 'sub']);
             $table->tinyInteger('status')->default('0');
-            $table->unsignedBigInteger('potints')->nullable();
+            $table->unsignedBigInteger('points')->nullable();
 
             $table->foreign('user_id', 'fk_user_actions_users1_idx')
                 ->references('id')->on('users')
