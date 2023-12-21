@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
             ConfigCountSeeder::class,
             SliderSeeder::class,
             MsgSeeder::class,
+            NotificationSeeder::class,
         ]);
     }
 }
