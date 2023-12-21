@@ -14,6 +14,7 @@ use App\Interfaces\{
     UserInterface,
     AdminInterface,
     ConfigCountInterface,
+    CouponInterface,
     MessageInterface,
     NotificationInterface,
     PackageUserInterface,
@@ -24,6 +25,7 @@ use App\Repository\{
     AuthRepository,
     CityRepository,
     ConfigCountRepository,
+    CouponRepository,
     InterestRepository,
     MessageRepository,
     NotificationRepository,
@@ -56,6 +58,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(SliderInterface::class,SliderRepository::class);
         $this->app->bind(MessageInterface::class,MessageRepository::class);
         $this->app->bind(NotificationInterface::class,NotificationRepository::class);
+        $this->app->bind(CouponInterface::class,CouponRepository::class);
         // ----------------------------------------------------------------
 
 
