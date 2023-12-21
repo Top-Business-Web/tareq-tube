@@ -13,6 +13,7 @@ use App\Http\Controllers\Admin\{
     ConfigCountController,
     InterestController,
     MsgController,
+    NotificationController,
     PackageController,
     PackageUserController,
     SliderController
@@ -97,6 +98,14 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:user'], function () {
     #============================ Message =====================================
     Route::get('messages', [MsgController::class, 'index'])->name('message.index');
     Route::get('messages/{id}/delete', [MsgController::class, 'deleteMessage'])->name('message.delete');
+
+    #============================ Notification =====================================
+    Route::get('notifications', [NotificationController::class, 'index'])->name('notification.index');
+    Route::get('notification/create', [NotificationController::class, 'showCreate'])->name('notification.create');
+    Route::post('notification/store', [NotificationController::class, 'storeNotification'])->name('notification.store');
+    Route::get('notification/{id}/edit', [NotificationController::class, 'showEditNotification'])->name('notification.edit');
+    Route::put('notification/update/{id}', [NotificationController::class, 'updateNotification'])->name('notification.update');
+    Route::get('notification/{id}/delete', [NotificationController::class, 'deleteNotification'])->name('notification.delete');
 
 });
 
