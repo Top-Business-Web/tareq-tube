@@ -17,7 +17,8 @@ use App\Http\Controllers\Admin\{
     NotificationController,
     PackageController,
     PackageUserController,
-    SliderController
+    SliderController,
+    UserActionController,
 };
 
 Route::group(['prefix' => 'admin'], function () {
@@ -115,6 +116,10 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:user'], function () {
     Route::get('coupon/{id}/edit', [CouponController::class, 'showEditCoupon'])->name('coupon.edit');
     Route::put('coupon/update/{id}', [CouponController::class, 'updateCoupon'])->name('coupon.update');
     Route::get('coupon/{id}/delete', [CouponController::class, 'deleteCoupon'])->name('coupon.delete');
+
+    #============================ User Action =====================================
+    Route::get('user_actions', [UserActionController::class, 'index'])->name('userAction.index');
+    Route::get('user_actions/{id}/delete', [UserActionController::class, 'deleteUserAction'])->name('userAction.delete');
 
 });
 

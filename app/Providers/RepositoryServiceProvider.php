@@ -18,7 +18,8 @@ use App\Interfaces\{
     MessageInterface,
     NotificationInterface,
     PackageUserInterface,
-    SliderInterface
+    SliderInterface,
+    UserActionInterface
 };
 use App\Repository\{
     AdminRepository,
@@ -32,7 +33,8 @@ use App\Repository\{
     UserRepository,
     PackageRepository,
     PackageUserRepository,
-    SliderRepository
+    SliderRepository,
+    UserActionRepository
 };
 
 
@@ -59,6 +61,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(MessageInterface::class,MessageRepository::class);
         $this->app->bind(NotificationInterface::class,NotificationRepository::class);
         $this->app->bind(CouponInterface::class,CouponRepository::class);
+        $this->app->bind(UserActionInterface::class,UserActionRepository::class);
         // ----------------------------------------------------------------
 
 

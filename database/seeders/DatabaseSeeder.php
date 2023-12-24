@@ -21,11 +21,11 @@ class DatabaseSeeder extends Seeder
             PackageSeeder::class,
             InterestSeeder::class,
             PackageUserSeeder::class,
-            ConfigCountSeeder::class,
             SliderSeeder::class,
             MsgSeeder::class,
             NotificationSeeder::class,
             CouponSeeder::class,
+            ConfigCountSeeder::class,
             TubeSeeder::class,
             UserActionSeeder::class,
         ]);
