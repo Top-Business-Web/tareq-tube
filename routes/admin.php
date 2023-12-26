@@ -19,6 +19,7 @@ use App\Http\Controllers\Admin\{
     PackageUserController,
     SliderController,
     UserActionController,
+    TubeController
 };
 
 Route::group(['prefix' => 'admin'], function () {
@@ -120,6 +121,10 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:user'], function () {
     #============================ User Action =====================================
     Route::get('user_actions', [UserActionController::class, 'index'])->name('userAction.index');
     Route::get('user_actions/{id}/delete', [UserActionController::class, 'deleteUserAction'])->name('userAction.delete');
+
+    #============================ Tube =====================================
+    Route::get('tubes', [TubeController::class, 'index'])->name('tube.index');
+    Route::get('tube/{id}/delete', [TubeController::class, 'deleteTube'])->name('tube.delete');
 
 });
 
