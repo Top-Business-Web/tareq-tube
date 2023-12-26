@@ -3,6 +3,8 @@
 namespace App\Repository\Api\User;
 
 use App\Http\Resources\MessageResource;
+use App\Http\Resources\MyTubeResource;
+use App\Http\Resources\NotificationResource;
 use App\Http\Resources\SliderResource;
 use App\Http\Resources\TubeResource;
 use App\Http\Resources\UserResource;
@@ -13,6 +15,7 @@ use App\Models\DeviceToken;
 use App\Models\Interest;
 use App\Models\InviteToken;
 use App\Models\Message;
+use App\Models\Notification;
 use App\Models\Setting;
 use App\Models\Slider;
 use App\Models\Tube;
@@ -20,7 +23,6 @@ use App\Models\User;
 use App\Repository\Api\ResponseApi;
 use App\Traits\FirebaseNotification;
 use App\Traits\PhotoTrait;
-use Illuminate\Database\Query\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -84,7 +86,6 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
                 // create user
                 $createUser = new User();
                 $createUser->name = $request->name ?? 'User';
-                $createUser->image = $request->image ?? null;
                 $createUser->gmail = $request->gmail;
                 $createUser->password = Hash::make('123456');
                 $createUser->google_id = $request->google_id ?? null;
@@ -162,44 +163,71 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
 
     public function getInterests(): JsonResponse
     {
-        $interests = Interest::select('id', 'name')->get();
-        return self::returnResponseDataApi($interests, 'تم الحصول علي البيانات بنجاح');
+        try {
+            $interests = Interest::select('id', 'name')->get();
+            return self::returnResponseDataApi($interests, 'تم الحصول علي البيانات بنجاح');
+        } catch (\Exception $e) {
+            return self::returnResponseDataApi(null, $e->getMessage(), 500);
+        }
     } // getInterest
 
     public function getCities(): JsonResponse
     {
-        $cities = City::select('id', 'name')->get();
-        return self::returnResponseDataApi($cities, 'تم الحصول علي البيانات بنجاح');
+        try {
+            $cities = City::select('id', 'name')->get();
+            return self::returnResponseDataApi($cities, 'تم الحصول علي البيانات بنجاح');
+        } catch (\Exception $e) {
+            return self::returnResponseDataApi(null, $e->getMessage(), 500);
+        }
+    } // getInterest
+
+    public function setting(): JsonResponse
+    {
+        try {
+            $data = Setting::first();
+            return self::returnResponseDataApi($data, 'تم الحصول علي البيانات بنجاح');
+        } catch (\Exception $e) {
+            return self::returnResponseDataApi(null, $e->getMessage(), 500);
+        }
     } // getInterest
 
     public function getHome(): JsonResponse
     {
-        $subscribe_count = Tube::where('user_id', Auth::guard('user-api')->user()->id)
-            ->where('type', 'sub')
-            ->count();
-        $views_count = Tube::where('user_id', Auth::guard('user-api')->user()->id)
-            ->where('type', 'view')
-            ->count();
-        $message_count = Message::where('user_id', Auth::guard('user-api')->user()->id)->count();
-        $data = [
-            'sliders' => SliderResource::collection(Slider::get()),
-            'user' => new UserResource(\Auth::user()),
-            'subscribe_count' => $subscribe_count,
-            'views_count' => $views_count,
-            'message_count' => $message_count,
-        ];
-        return self::returnResponseDataApi($data, 'تم الحصول علي البيانات بنجاح');
+
+        try {
+            $subscribe_count = Tube::where('user_id', Auth::guard('user-api')->user()->id)
+                ->where('type', 'sub')
+                ->count();
+            $views_count = Tube::where('user_id', Auth::guard('user-api')->user()->id)
+                ->where('type', 'view')
+                ->count();
+            $message_count = Message::where('user_id', Auth::guard('user-api')->user()->id)->count();
+            $data = [
+                'sliders' => SliderResource::collection(Slider::get()),
+                'user' => new UserResource(\Auth::user()),
+                'subscribe_count' => $subscribe_count,
+                'views_count' => $views_count,
+                'message_count' => $message_count,
+            ];
+            return self::returnResponseDataApi($data, 'تم الحصول علي البيانات بنجاح');
+        } catch (\Exception $e) {
+            return self::returnResponseDataApi(null, $e->getMessage(), 500);
+        }
     } // get HomePage
 
     public function configCount(Request $request): JsonResponse
     {
-        $data = ConfigCount::query()
-            ->when($request->type, function ($query, $type) {
-                return $query->where('type', $type);
-            })
-            ->select('id', 'type', 'count', 'point')
-            ->get();
-        return self::returnResponseDataApi($data, 'تم الحصول علي البيانات بنجاح');
+        try {
+            $data = ConfigCount::query()
+                ->when($request->type, function ($query, $type) {
+                    return $query->where('type', $type);
+                })
+                ->select('id', 'type', 'count', 'point')
+                ->get();
+            return self::returnResponseDataApi($data, 'تم الحصول علي البيانات بنجاح');
+        } catch (\Exception $e) {
+            return self::returnResponseDataApi(null, $e->getMessage(), 500);
+        }
     }
 
     public function addTube(Request $request): JsonResponse
@@ -281,7 +309,7 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
                 return self::returnResponseDataApi(null, $error, 422);
             }
 
-            if ($user->msg_limit > 0){
+            if ($user->msg_limit > 0) {
                 $addMessage = new Message();
                 $addMessage->url = $request->url;
                 $addMessage->user_id = Auth::guard('user-api')->user()->id;
@@ -289,19 +317,92 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
                 $addMessage->city_id = $request->city_id;
                 $addMessage->intrest_id = $request->intrest_id;
 
-                if ($addMessage->save()){
+                if ($addMessage->save()) {
                     $user->msg_limit -= 1;
                     $user->save();
-
                     return self::returnResponseDataApi(new MessageResource($addMessage), 'تم انشاء الرسالة بنجاح', 201);
+                } else {
+                    return self::returnResponseDataApi(null, 'هناك خطا ما', 500);
 
                 }
-            }else {
+            } else {
                 return self::returnResponseDataApi(null, 'لا يوجد باقة رسائل لديك  قم بشراء باقة رسائل', 422);
             }
 
-        }catch (\Exception $e) {
-            return self::returnResponseDataApi(null,$e->getMessage(),500);
+        } catch (\Exception $e) {
+            return self::returnResponseDataApi(null, $e->getMessage(), 500);
+        }
+    } // end add Message
+
+    public function notification(): JsonResponse
+    {
+        try {
+            $data = Notification::where('user_id', Auth::user()->id)
+                ->orWhere('user_id', null)->get();
+
+            return self::returnResponseDataApi(NotificationResource::collection($data), 'تم الحصول علي البيانات بنجاح');
+        } catch (\Exception $e) {
+            return self::returnResponseDataApi(null, $e->getMessage(), 500);
+        }
+
+    } // end notification
+
+    public function mySubscribe(): JsonResponse
+    {
+        try {
+            $tubes = Tube::where('user_id', Auth::guard('user-api')->user()->id)
+                ->where('type', 'sub')
+                ->get();
+            return self::returnResponseDataApi(MyTubeResource::collection($tubes), 'تم الحصول علي البيانات بنجاح');
+        } catch (\Exception $e) {
+            return self::returnResponseDataApi(null, $e->getMessage(), 500);
+        }
+
+    } // my subscribe
+
+    public function myViews(): JsonResponse
+    {
+        try {
+            $tubes = Tube::where('user_id', Auth::guard('user-api')->user()->id)
+                ->where('type', 'view')
+                ->get();
+
+            return self::returnResponseDataApi(MyTubeResource::collection($tubes), 'تم الحصول علي البيانات بنجاح');
+        } catch (\Exception $e) {
+            return self::returnResponseDataApi(null, $e->getMessage(), 500);
+        }
+    } // my views
+
+    public function myProfile(): JsonResponse
+    {
+        try {
+            $user = Auth::guard('user-api')->user();
+            return self::returnResponseDataApi(new UserResource($user), 'تم الحصول علي البيانات بنجاح');
+        } catch (\Exception $e) {
+            return self::returnResponseDataApi(null, $e->getMessage(), 500);
+        }
+    } // my profile
+
+    public function addChannel(Request $request): JsonResponse
+    {
+        try {
+            $user = User::find(Auth::guard('user-api')->user()->id);
+            $validator = Validator::make($request->all(),[
+                'youtube_link' => 'required|active_url|url',
+            ]);
+
+            if ($validator->fails()){
+                $error = $validator->errors()->first();
+                return self::returnResponseDataApi(null,$error,422);
+            }
+
+            $user->youtube_link = $request->youtube_link;
+            if ($user->save()){
+                return self::returnResponseDataApi(new UserResource($user),'تم اضافة لينك القناة بنجاح');
+            }
+
+        } catch (\Exception $e) {
+            return self::returnResponseDataApi(null, $e->getMessage(), 500);
         }
     }
 }

@@ -24,4 +24,11 @@ class ConfigController extends Controller
     {
         return $this->userRepositoryInterface->getCities();
     } // getCities
+
+    public function setting(): JsonResponse
+    {
+        return $this->userRepositoryInterface->setting();
+    } // getCities
+
+
 }
