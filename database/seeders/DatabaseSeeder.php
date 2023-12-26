@@ -28,6 +28,7 @@ class DatabaseSeeder extends Seeder
             ConfigCountSeeder::class,
             TubeSeeder::class,
             UserActionSeeder::class,
+            ModelPriceSeeder::class,
         ]);
     }
 }
