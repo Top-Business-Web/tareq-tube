@@ -18,92 +18,99 @@
 
         <li class="slide">
             <a class="side-menu__item" href="{{ route('admin.index') }}">
-                <i class="fa fa-home side-menu__icon"></i>
+                <i class="fa fa-user-secret side-menu__icon"></i>
                 <span class="side-menu__label">الادمن</span>
             </a>
         </li>
 
         <li class="slide">
             <a class="side-menu__item" href="{{ route('package.index') }}">
-                <i class="fa fa-home side-menu__icon"></i>
+                <i class="fa fa-cube side-menu__icon"></i>
                 <span class="side-menu__label">الباقات</span>
             </a>
         </li>
 
         <li class="slide">
             <a class="side-menu__item" href="{{ route('city.index') }}">
-                <i class="fa fa-home side-menu__icon"></i>
+                <i class="fa fa-city side-menu__icon"></i>
                 <span class="side-menu__label">المدن</span>
             </a>
         </li>
 
         <li class="slide">
             <a class="side-menu__item" href="{{ route('interest.index') }}">
-                <i class="fa fa-home side-menu__icon"></i>
+                <i class="fa fa-heart side-menu__icon"></i>
                 <span class="side-menu__label">الاهتمامات</span>
             </a>
         </li>
 
         <li class="slide">
             <a class="side-menu__item" href="{{ route('package_user.index') }}">
-                <i class="fa fa-home side-menu__icon"></i>
+                <i class="fa fa-users side-menu__icon"></i>
                 <span class="side-menu__label">باقات المستخدمين</span>
             </a>
         </li>
 
         <li class="slide">
             <a class="side-menu__item" href="{{ route('config_count.index') }}">
-                <i class="fa fa-home side-menu__icon"></i>
+                <i class="fa fa-dollar-sign side-menu__icon"></i>
                 <span class="side-menu__label">اسعار العمليات</span>
             </a>
         </li>
 
         <li class="slide">
             <a class="side-menu__item" href="{{ route('slider.index') }}">
-                <i class="fa fa-home side-menu__icon"></i>
+                <i class="fa fa-image side-menu__icon"></i>
                 <span class="side-menu__label">الصورة المتحركة</span>
             </a>
         </li>
 
         <li class="slide">
             <a class="side-menu__item" href="{{ route('message.index') }}">
-                <i class="fa fa-home side-menu__icon"></i>
+                <i class="fa fa-paper-plane side-menu__icon"></i>
                 <span class="side-menu__label">الرسائل</span>
             </a>
         </li>
 
         <li class="slide">
             <a class="side-menu__item" href="{{ route('notification.index') }}">
-                <i class="fa fa-home side-menu__icon"></i>
+                <i class="fa fa-comment side-menu__icon"></i>
                 <span class="side-menu__label">الاشعارات</span>
             </a>
         </li>
 
         <li class="slide">
             <a class="side-menu__item" href="{{ route('coupon.index') }}">
-                <i class="fa fa-home side-menu__icon"></i>
+                <i class="fa fa-money-bill side-menu__icon"></i>
                 <span class="side-menu__label">الكوبونات</span>
             </a>
         </li>
 
         <li class="slide">
             <a class="side-menu__item" href="{{ route('userAction.index') }}">
-                <i class="fa fa-home side-menu__icon"></i>
+               <i class="fa fa-person-running side-menu__icon"></i>
                 <span class="side-menu__label">تفاعل المستخدمين</span>
             </a>
         </li>
 
         <li class="slide">
             <a class="side-menu__item" href="{{ route('tube.index') }}">
-                <i class="fa fa-home side-menu__icon"></i>
+                <i class="fa fa-tv side-menu__icon"></i>
                 <span class="side-menu__label"> قنوات المستخدمين</span>
             </a>
         </li>
 
         <li class="slide">
             <a class="side-menu__item" href="{{ route('modelPrice.index') }}">
-                <i class="fa fa-home side-menu__icon"></i>
+                <i class="fa fa-credit-card side-menu__icon"></i>
                 <span class="side-menu__label"> اسعار الباقات</span>
+            </a>
+        </li>
+
+        <li class="slide">
+            <a class="side-menu__item" href="{{ route('setting.edit') }}">
+                <i class="fa fa-wrench side-menu__icon"></i>
+                <span class="side-menu__label">الاعدادات</span>
             </a>
         </li>
 
@@ -113,6 +120,7 @@
                 <span class="side-menu__label">تسجيل الخروج</span>
             </a>
         </li>
+        
 
     </ul>
 </aside>

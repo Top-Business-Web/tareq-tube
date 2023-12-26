@@ -3,7 +3,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
 <!-- FAVICON -->
-<link rel="shortcut icon" type="image/x-icon" href="{{  asset('assets/uploads/hero.png')}}"/>
+<link rel="shortcut icon" type="image/x-icon" href="{{  asset('assets/uploads/tarek.png')}}"/>
 
 <!-- TITLE -->
 <title>@yield('title')</title>
