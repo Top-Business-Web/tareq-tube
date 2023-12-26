@@ -19,7 +19,8 @@ use App\Http\Controllers\Admin\{
     PackageUserController,
     SliderController,
     UserActionController,
-    TubeController
+    TubeController,
+    ModelPriceController
 };
 
 Route::group(['prefix' => 'admin'], function () {
@@ -125,6 +126,14 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:user'], function () {
     #============================ Tube =====================================
     Route::get('tubes', [TubeController::class, 'index'])->name('tube.index');
     Route::get('tube/{id}/delete', [TubeController::class, 'deleteTube'])->name('tube.delete');
+
+    #============================ Model Price =====================================
+    Route::get('model_prices', [ModelPriceController::class, 'index'])->name('modelPrice.index');
+    Route::get('model_price/create', [ModelPriceController::class, 'showCreate'])->name('modelPrice.create');
+    Route::post('model_price/store', [ModelPriceController::class, 'storeModelPrice'])->name('modelPrice.store');
+    Route::get('model_price/{id}/edit', [ModelPriceController::class, 'showEditModelPrice'])->name('modelPrice.edit');
+    Route::put('model_price/update/{id}', [ModelPriceController::class, 'updateModelPrice'])->name('modelPrice.update');
+    Route::get('model_price/{id}/delete', [ModelPriceController::class, 'deleteModelPrice'])->name('modelPrice.delete');
 
 });
 

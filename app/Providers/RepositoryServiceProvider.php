@@ -21,6 +21,7 @@ use App\Interfaces\{
     SliderInterface,
     UserActionInterface,
     TubeInterface,
+    ModelPriceInterface
 };
 use App\Repository\{
     AdminRepository,
@@ -36,7 +37,8 @@ use App\Repository\{
     PackageUserRepository,
     SliderRepository,
     UserActionRepository,
-    TubeRepository
+    TubeRepository,
+    ModelPriceRepository
 };
 
 
@@ -65,6 +67,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(CouponInterface::class,CouponRepository::class);
         $this->app->bind(UserActionInterface::class,UserActionRepository::class);
         $this->app->bind(TubeInterface::class,TubeRepository::class);
+        $this->app->bind(ModelPriceInterface::class,ModelPriceRepository::class);
         // ----------------------------------------------------------------
 
 
