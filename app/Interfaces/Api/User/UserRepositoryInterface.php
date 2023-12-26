@@ -49,6 +49,12 @@ interface UserRepositoryInterface
      * @return JsonResponse
      */
     public function addTube(Request $request): JsonResponse;
+    /**
+     * addMessage function
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
     public function addMessage(Request $request): JsonResponse;
 
     /**
