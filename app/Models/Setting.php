@@ -11,5 +11,14 @@ class Setting extends Model
 
     protected $table = 'setting';
 
-    protected $guarded = [];
+    protected $fillable = [
+        'logo',
+        'phone',
+        'limit_user',
+        'point_user',
+        'vat',
+        'privacy',
+        'point_price',
+        'token_price'
+    ];
 }

@@ -20,7 +20,8 @@ use App\Http\Controllers\Admin\{
     SliderController,
     UserActionController,
     TubeController,
-    ModelPriceController
+    ModelPriceController,
+    SettingController,
 };
 
 Route::group(['prefix' => 'admin'], function () {
@@ -134,6 +135,10 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:user'], function () {
     Route::get('model_price/{id}/edit', [ModelPriceController::class, 'showEditModelPrice'])->name('modelPrice.edit');
     Route::put('model_price/update/{id}', [ModelPriceController::class, 'updateModelPrice'])->name('modelPrice.update');
     Route::get('model_price/{id}/delete', [ModelPriceController::class, 'deleteModelPrice'])->name('modelPrice.delete');
+
+    #============================ Setting =====================================
+    Route::get('setting/edit', [SettingController::class, 'showEditSetting'])->name('setting.edit');
+    Route::put('setting/update/{id}', [SettingController::class, 'updateSetting'])->name('setting.update');
 
 });
 
