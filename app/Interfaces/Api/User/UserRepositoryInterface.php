@@ -65,9 +65,26 @@ interface UserRepositoryInterface
      * @return JsonResponse
      */
     public function notification(): JsonResponse;
+
+    /**
+     * @return JsonResponse
+     */
     public function mySubscribe(): JsonResponse;
+
+    /**
+     * @return JsonResponse
+     */
     public function myViews(): JsonResponse;
+
+    /**
+     * @return JsonResponse
+     */
     public function myProfile(): JsonResponse;
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
     public function addChannel(Request $request): JsonResponse;
 
 }
