@@ -10,9 +10,15 @@ use App\Http\Controllers\Admin\{
     UserController,
     AdminController,
     CityController,
+    ConfigCountController,
+    CouponController,
     InterestController,
+    MsgController,
+    NotificationController,
     PackageController,
-    PackageUserController
+    PackageUserController,
+    SliderController,
+    UserActionController,
 };
 
 Route::group(['prefix' => 'admin'], function () {
@@ -75,8 +81,45 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:user'], function () {
     Route::put('interest/update/{id}', [InterestController::class, 'updateInterest'])->name('interest.update');
     Route::get('interest/{id}/delete', [InterestController::class, 'deleteInterest'])->name('interest.delete');
 
-    #============================ Notification =====================================
+    #============================ Config Count =====================================
+    Route::get('config_count', [ConfigCountController::class, 'index'])->name('config_count.index');
+    Route::get('config_count/create', [ConfigCountController::class, 'showCreate'])->name('config_count.create');
+    Route::post('config_count/store', [ConfigCountController::class, 'storeConfigCount'])->name('config_count.store');
+    Route::get('config_count/{id}/edit', [ConfigCountController::class, 'showEditConfigCount'])->name('config_count.edit');
+    Route::put('config_count/update/{id}', [ConfigCountController::class, 'updateConfigCount'])->name('config_count.update');
+    Route::get('config_count/{id}/delete', [ConfigCountController::class, 'deleteConfigCount'])->name('config_count.delete');
 
+    #============================ Slider =====================================
+    Route::get('sliders', [SliderController::class, 'index'])->name('slider.index');
+    Route::get('slider/create', [SliderController::class, 'showCreate'])->name('slider.create');
+    Route::post('slider/store', [SliderController::class, 'storeSlider'])->name('slider.store');
+    Route::get('slider/{id}/edit', [SliderController::class, 'showEditSlider'])->name('slider.edit');
+    Route::put('slider/update/{id}', [SliderController::class, 'updateSlider'])->name('slider.update');
+    Route::get('slider/{id}/delete', [SliderController::class, 'deleteSlider'])->name('slider.delete');
+
+    #============================ Message =====================================
+    Route::get('messages', [MsgController::class, 'index'])->name('message.index');
+    Route::get('messages/{id}/delete', [MsgController::class, 'deleteMessage'])->name('message.delete');
+
+    #============================ Notification =====================================
+    Route::get('notifications', [NotificationController::class, 'index'])->name('notification.index');
+    Route::get('notification/create', [NotificationController::class, 'showCreate'])->name('notification.create');
+    Route::post('notification/store', [NotificationController::class, 'storeNotification'])->name('notification.store');
+    Route::get('notification/{id}/edit', [NotificationController::class, 'showEditNotification'])->name('notification.edit');
+    Route::put('notification/update/{id}', [NotificationController::class, 'updateNotification'])->name('notification.update');
+    Route::get('notification/{id}/delete', [NotificationController::class, 'deleteNotification'])->name('notification.delete');
+
+    #============================ Coupon =====================================
+    Route::get('coupons', [CouponController::class, 'index'])->name('coupon.index');
+    Route::get('coupon/create', [CouponController::class, 'showCreate'])->name('coupon.create');
+    Route::post('coupon/store', [CouponController::class, 'storeCoupon'])->name('coupon.store');
+    Route::get('coupon/{id}/edit', [CouponController::class, 'showEditCoupon'])->name('coupon.edit');
+    Route::put('coupon/update/{id}', [CouponController::class, 'updateCoupon'])->name('coupon.update');
+    Route::get('coupon/{id}/delete', [CouponController::class, 'deleteCoupon'])->name('coupon.delete');
+
+    #============================ User Action =====================================
+    Route::get('user_actions', [UserActionController::class, 'index'])->name('userAction.index');
+    Route::get('user_actions/{id}/delete', [UserActionController::class, 'deleteUserAction'])->name('userAction.delete');
 
 });
 

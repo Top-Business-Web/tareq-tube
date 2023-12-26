@@ -20,7 +20,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Tube extends Model
 {
     protected $table = 'tubes';
-    protected $guarded = [];
+  
+    protected $fillable = [
+      'type',
+      'count',
+      'point'
+    ];
+
 
     public function subCount(): BelongsTo
     {

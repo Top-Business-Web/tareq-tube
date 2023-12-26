@@ -60,5 +60,4 @@ class UserController extends Controller
     {
         return $this->userRepositoryInterface->addChannel($request);
     } // my views
-
 }

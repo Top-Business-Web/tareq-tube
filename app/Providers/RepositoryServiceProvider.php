@@ -13,16 +13,28 @@ use App\Interfaces\{
     PackageInterface,
     UserInterface,
     AdminInterface,
-    PackageUserInterface
+    ConfigCountInterface,
+    CouponInterface,
+    MessageInterface,
+    NotificationInterface,
+    PackageUserInterface,
+    SliderInterface,
+    UserActionInterface
 };
 use App\Repository\{
     AdminRepository,
     AuthRepository,
     CityRepository,
+    ConfigCountRepository,
+    CouponRepository,
     InterestRepository,
+    MessageRepository,
+    NotificationRepository,
     UserRepository,
     PackageRepository,
-    PackageUserRepository
+    PackageUserRepository,
+    SliderRepository,
+    UserActionRepository
 };
 
 
@@ -44,6 +56,12 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(PackageUserInterface::class,PackageUserRepository::class);
         $this->app->bind(CityInterface::class,CityRepository::class);
         $this->app->bind(InterestInterface::class,InterestRepository::class);
+        $this->app->bind(ConfigCountInterface::class,ConfigCountRepository::class);
+        $this->app->bind(SliderInterface::class,SliderRepository::class);
+        $this->app->bind(MessageInterface::class,MessageRepository::class);
+        $this->app->bind(NotificationInterface::class,NotificationRepository::class);
+        $this->app->bind(CouponInterface::class,CouponRepository::class);
+        $this->app->bind(UserActionInterface::class,UserActionRepository::class);
         // ----------------------------------------------------------------
 
 
