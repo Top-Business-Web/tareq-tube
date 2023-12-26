@@ -18,7 +18,7 @@ class UserResource extends JsonResource
         return [
 
             'name' => $this->name,
-            'image' => $this->image,
+            'image' => asset('storage/'.$this->image),
             'gmail' => $this->gmail,
             'password' => $this->password,
             'google_id' => $this->google_id,
@@ -32,6 +32,6 @@ class UserResource extends JsonResource
             'token' =>  $request->header('Authorization') ??  'Bearer ' .$this->token,
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
             'updated_at' => $this->created_at->format('Y-m-d H:i:s'),
-        ];
+        ]; //end UserResource 26-12-2023
     }
 }
