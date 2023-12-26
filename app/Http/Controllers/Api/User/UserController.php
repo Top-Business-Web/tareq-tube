@@ -54,7 +54,7 @@ class UserController extends Controller
     public function myProfile(): JsonResponse
     {
         return $this->userRepositoryInterface->myProfile();
-    } // my views
+    } // my profile
 
     public function addChannel(Request $request): JsonResponse
     {
