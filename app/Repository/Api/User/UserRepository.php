@@ -87,6 +87,7 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
                 $createUser = new User();
                 $createUser->name = $request->name ?? 'User';
                 $createUser->gmail = $request->gmail;
+                $createUser->image = $request->image;
                 $createUser->password = Hash::make('123456');
                 $createUser->google_id = $request->google_id ?? null;
                 $createUser->intrest_id = $request->intrest_id;
@@ -110,7 +111,7 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
                         ['type' => $request->device_type, 'token' => $request->token]
                     );
 
-                    InviteToken::create([
+                    InviteToken::query()->create([
                         'token' => self::randomToken(60),
                         'from_user_id' => $createUser->id,
                         'status' => 0
