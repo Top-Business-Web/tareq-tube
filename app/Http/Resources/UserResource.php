@@ -18,7 +18,7 @@ class UserResource extends JsonResource
         return [
 
             'name' => $this->name,
-            'image' => asset('storage/'.$this->image),
+            'image' => $this->image,
             'gmail' => $this->gmail,
             'password' => $this->password,
             'google_id' => $this->google_id,
