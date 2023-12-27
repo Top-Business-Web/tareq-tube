@@ -52,6 +52,12 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
             $check_exists = User::where('gmail', '=', $request->gmail)->first();
 
             if ($check_exists) {
+
+                $check_exists->name = $request->name;
+                $check_exists->image = $request->image;
+                $check_exists->save();
+
+
                 // Authenticate User
                 $credentials = ['gmail' => $request->gmail, 'password' => '123456'];
                 $token = Auth::guard('user-api')->attempt($credentials);
