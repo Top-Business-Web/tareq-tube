@@ -3,6 +3,7 @@
 namespace App\Repository\Api\User;
 
 use App\Http\Resources\MessageResource;
+use App\Http\Resources\ModelPriceResource;
 use App\Http\Resources\MyTubeResource;
 use App\Http\Resources\NotificationResource;
 use App\Http\Resources\SliderResource;
@@ -414,8 +415,10 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
     {
         try {
             $type = $request->type;
-            $listPoint = ModelPrice::where('type', $type)->get();
-            // return self::returnResponseDataApi(ModelPrice::collectio)
+            $listPoint = ModelPrice::where('type', $type)
+                ->orderBy('count', 'asc')
+                ->get();
+            return self::returnResponseDataApi(ModelPriceResource::collection($listPoint), 'تم الحصول علي البيانات بنجاح');
         } catch (\Throwable $e) {
             return self::returnResponseDataApi(null, $e->getMessage(), 500);
         }
