@@ -15,10 +15,10 @@ class ModelPriceResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'name' => $this->name,
-            'image' => $this->image,
-            'gmail' => $this->gmail,
-            'password' => $this->password,
+            'id' => $this->id,
+            'type' => $this->type,
+            'count' => $this->count,
+            'price' => $this->price,
         ];
     }
 }
