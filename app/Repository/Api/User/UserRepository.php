@@ -415,7 +415,7 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
         try {
             $type = $request->type;
             $listPoint = ModelPrice::where('type', $type)->get();
-            return self::returnResponseDataApi(ModelPrice::collectio)
+            // return self::returnResponseDataApi(ModelPrice::collectio)
         } catch (\Throwable $e) {
             return self::returnResponseDataApi(null, $e->getMessage(), 500);
         }
