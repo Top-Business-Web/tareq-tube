@@ -400,5 +400,5 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
         } catch (\Exception $e) {
             return self::returnResponseDataApi(null, $e->getMessage(), 500);
         }
-    }
+    } // add channel
 }
