@@ -243,7 +243,7 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
                 'type' => 'required|in:sub,view',
                 'url' => 'required|url',
                 'sub_count' => 'required_if:type,sub',
-                'view_count' => 'required',
+                'view_count' => 'required_if:type,view',
                 'second_count' => 'required',
             ]);
 
@@ -253,10 +253,13 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
             }
 
             $sub_count = 0;
+            $view_count = 0;
             if ($request->has('sub_count') && $request->sub_count != '') {
                 $sub_count = ConfigCount::find($request->sub_count)->point;
             }
-            $view_count = ConfigCount::find($request->view_count)->point;
+            if ($request->has('view_count') && $request->view_count != '') {
+                $view_count = ConfigCount::find($request->view_count)->point;
+            }
             $second_count = ConfigCount::find($request->second_count)->point;
             $pointsNeed = $second_count + $view_count + $sub_count;
 
