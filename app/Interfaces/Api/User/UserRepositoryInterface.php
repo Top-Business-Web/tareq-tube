@@ -88,5 +88,11 @@ interface UserRepositoryInterface
      */
     public function addChannel(Request $request): JsonResponse;
 
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function getPageCoinsOrMsg(Request $request): JsonResponse;
+
 }
 //Made By https://github.com/eldapour (eldapour)

@@ -39,6 +39,7 @@ Route::group(['middleware' => 'jwt'], function () {
     Route::get('/mySubscribe', [UserController::class, 'mySubscribe']);
     Route::get('/myViews', [UserController::class, 'myViews']);
     Route::get('/myProfile', [UserController::class, 'myProfile']);
+    Route::get('/buyCoins', [UserController::class, 'getPageCoinsOrMsg']);
 
 
     //----------------------- Auth User ------------------------

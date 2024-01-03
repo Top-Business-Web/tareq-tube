@@ -15,6 +15,7 @@ use App\Models\DeviceToken;
 use App\Models\Interest;
 use App\Models\InviteToken;
 use App\Models\Message;
+use App\Models\ModelPrice;
 use App\Models\Notification;
 use App\Models\Setting;
 use App\Models\Slider;
@@ -408,4 +409,15 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
             return self::returnResponseDataApi(null, $e->getMessage(), 500);
         }
     } // add channel
+
+    public function getPageCoinsOrMsg(Request $request): JsonResponse
+    {
+        try {
+            $type = $request->type;
+            $listPoint = ModelPrice::where('type', $type)->get();
+            return self::returnResponseDataApi(ModelPrice::collectio)
+        } catch (\Throwable $e) {
+            return self::returnResponseDataApi(null, $e->getMessage(), 500);
+        }
+    }
 }
