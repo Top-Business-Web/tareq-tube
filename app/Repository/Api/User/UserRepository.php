@@ -74,7 +74,6 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
                 );
 
                 return self::returnResponseDataApi(new UserResource($user), "تم تسجيل الدخول بنجاح", 200);
-
             } else {
 
                 // Validation Rules
@@ -128,11 +127,9 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
                     return self::returnResponseDataApi(new UserResource($createUser), 'هناك خطا ما حاول في وقت لاحق', 422);
                 }
             }
-
         } catch (\Exception $exception) {
             return self::returnResponseDataApi(null, $exception->getMessage(), 500);
         }
-
     } // end login with Google
 
     public function logout(): JsonResponse
@@ -157,7 +154,6 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
             $user = Auth::guard('user-api')->user();
             DeviceToken::query()->where('user_id', $user->id)->delete();
             InviteToken::query()->where('from_user_id', $user->id)->first()->delete();
-
 
             $user->delete();
             Auth::guard('user-api')->logout();
@@ -202,13 +198,13 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
     {
 
         try {
-            $subscribe_count = Tube::where('user_id', Auth::guard('user-api')->user()->id)
+            $subscribe_count = Tube::query()->where('user_id', Auth::guard('user-api')->user()->id)
                 ->where('type', 'sub')
                 ->count();
-            $views_count = Tube::where('user_id', Auth::guard('user-api')->user()->id)
+            $views_count = Tube::query()->where('user_id', Auth::guard('user-api')->user()->id)
                 ->where('type', 'view')
                 ->count();
-            $message_count = Message::where('user_id', Auth::guard('user-api')->user()->id)->count();
+            $message_count = Message::query()->where('user_id', Auth::guard('user-api')->user()->id)->count();
             $data = [
                 'sliders' => SliderResource::collection(Slider::get()),
                 'user' => new UserResource(\Auth::user()),
@@ -286,7 +282,6 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
                     } else {
                         return self::returnResponseDataApi(null, 'هناك خطا ما', 500);
                     }
-
                 } else {
                     return self::returnResponseDataApi(null, 'نقاطك لا تكفي لاتمام العملية تحتاج الي ' . $pointsNeed - $userPoint . ' من النقاط ', 422);
                 }
@@ -296,7 +291,6 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
         } catch (\Exception $e) {
             return self::returnResponseDataApi(null, $e->getMessage(), 500);
         }
-
     } // add subscribe
 
     public function addMessage(Request $request): JsonResponse
@@ -330,12 +324,10 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
                     return self::returnResponseDataApi(new MessageResource($addMessage), 'تم انشاء الرسالة بنجاح', 201);
                 } else {
                     return self::returnResponseDataApi(null, 'هناك خطا ما', 500);
-
                 }
             } else {
                 return self::returnResponseDataApi(null, 'لا يوجد باقة رسائل لديك  قم بشراء باقة رسائل', 422);
             }
-
         } catch (\Exception $e) {
             return self::returnResponseDataApi(null, $e->getMessage(), 500);
         }
@@ -344,33 +336,31 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
     public function notification(): JsonResponse
     {
         try {
-            $data = Notification::where('user_id', Auth::user()->id)
+            $data = Notification::query()->where('user_id', Auth::user()->id)
                 ->orWhere('user_id', null)->get();
 
             return self::returnResponseDataApi(NotificationResource::collection($data), 'تم الحصول علي البيانات بنجاح');
         } catch (\Exception $e) {
             return self::returnResponseDataApi(null, $e->getMessage(), 500);
         }
-
     } // end notification
 
     public function mySubscribe(): JsonResponse
     {
         try {
-            $tubes = Tube::where('user_id', Auth::guard('user-api')->user()->id)
+            $tubes = Tube::query()->where('user_id', Auth::guard('user-api')->user()->id)
                 ->where('type', 'sub')
                 ->get();
             return self::returnResponseDataApi(MyTubeResource::collection($tubes), 'تم الحصول علي البيانات بنجاح');
         } catch (\Exception $e) {
             return self::returnResponseDataApi(null, $e->getMessage(), 500);
         }
-
     } // my subscribe
 
     public function myViews(): JsonResponse
     {
         try {
-            $tubes = Tube::where('user_id', Auth::guard('user-api')->user()->id)
+            $tubes = Tube::query()->where('user_id', Auth::guard('user-api')->user()->id)
                 ->where('type', 'view')
                 ->get();
 
@@ -394,22 +384,21 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
     {
         try {
             $user = User::find(Auth::guard('user-api')->user()->id);
-            $validator = Validator::make($request->all(),[
+            $validator = Validator::make($request->all(), [
                 'youtube_link' => 'required|active_url|url',
             ]);
 
-            if ($validator->fails()){
+            if ($validator->fails()) {
                 $error = $validator->errors()->first();
-                return self::returnResponseDataApi(null,$error,422);
+                return self::returnResponseDataApi(null, $error, 422);
             }
 
             $user->youtube_link = $request->youtube_link;
-            if ($user->save()){
-                return self::returnResponseDataApi(new UserResource($user),'تم اضافة لينك القناة بنجاح');
+            if ($user->save()) {
+                return self::returnResponseDataApi(new UserResource($user), 'تم اضافة لينك القناة بنجاح');
             }
-
         } catch (\Exception $e) {
             return self::returnResponseDataApi(null, $e->getMessage(), 500);
         }
-    }
+    } // add channel
 }
