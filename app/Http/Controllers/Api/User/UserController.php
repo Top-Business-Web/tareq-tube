@@ -60,4 +60,9 @@ class UserController extends Controller
     {
         return $this->userRepositoryInterface->addChannel($request);
     } // my views
+
+    public function getPageCoinsOrMsg(Request $request): JsonResponse
+    {
+        return $this->userRepositoryInterface->getPageCoinsOrMsg($request);
+    } // my views
 }
