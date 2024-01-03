@@ -29,9 +29,11 @@ class UserResource extends JsonResource
             'limit' => $this->limit,
             'msg_limit' => $this->msg_limit,
             'youtube_link' => $this->youtube_link,
+            'youtube_name' => $this->youtube_name,
+            'youtube_image' => $this->youtube_image,
             'token' =>  $request->header('Authorization') ??  'Bearer ' .$this->token,
-            'created_at' => $this->created_at->format('Y-m-d H:i:s'),
-            'updated_at' => $this->created_at->format('Y-m-d H:i:s'),
+            // 'created_at' => $this->created_at->format('Y-m-d H:i:s'),
+            // 'updated_at' => $this->created_at->format('Y-m-d H:i:s'),
         ]; //end UserResource 26-12-2023
     }
 }
