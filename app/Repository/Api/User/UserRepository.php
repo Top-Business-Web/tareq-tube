@@ -386,6 +386,8 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
             $user = User::find(Auth::guard('user-api')->user()->id);
             $validator = Validator::make($request->all(), [
                 'youtube_link' => 'required|active_url|url',
+                'youtube_name' => 'required',
+                'youtube_image' => 'required|active_url|url',
             ]);
 
             if ($validator->fails()) {
@@ -394,6 +396,8 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
             }
 
             $user->youtube_link = $request->youtube_link;
+            $user->youtube_name = $request->youtube_name;
+            $user->youtube_image = $request->youtube_image;
             if ($user->save()) {
                 return self::returnResponseDataApi(new UserResource($user), 'تم اضافة لينك القناة بنجاح');
             }

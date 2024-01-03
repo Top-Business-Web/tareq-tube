@@ -37,6 +37,8 @@ class CreateUsersTable extends Migration
             $table->unsignedBigInteger('limit')->nullable();
             $table->unsignedBigInteger('msg_limit')->nullable();
             $table->text('youtube_link')->nullable();
+            $table->text('youtube_name')->nullable();
+            $table->text('youtube_image')->nullable();
 
             $table->foreign('city_id', 'fk_users_cities1_idx')
                 ->references('id')->on('cities')

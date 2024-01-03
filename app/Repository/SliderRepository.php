@@ -23,7 +23,7 @@ class SliderRepository implements SliderInterface
                 })
                 ->editColumn('image', function ($sliders) {
                     return '
-                    <img alt="image" onclick="window.open(this.src)" class="avatar avatar-md rounded-circle" src="' . asset($sliders->image) . '">
+                    <img alt="image" onclick="window.open(this.src)" class="avatar avatar-md rounded-circle" src="' . asset('storage/'.$sliders->image) . '">
                     ';
                 })
                 ->editColumn('url', function ($sliders) {

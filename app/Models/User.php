@@ -36,6 +36,8 @@ class User extends Authenticatable implements JWTSubject
         'limit',
         'msg_limit',
         'youtube_link',
+        'youtube_name',
+        'youtube_image',
 
     ];
 
