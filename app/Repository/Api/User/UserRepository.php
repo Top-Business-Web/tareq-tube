@@ -2,10 +2,12 @@
 
 namespace App\Repository\Api\User;
 
+use App\Http\Resources\InviteFriendResource;
 use App\Http\Resources\MessageResource;
 use App\Http\Resources\ModelPriceResource;
 use App\Http\Resources\MyTubeResource;
 use App\Http\Resources\NotificationResource;
+use App\Http\Resources\PackageResource;
 use App\Http\Resources\SliderResource;
 use App\Http\Resources\TubeResource;
 use App\Http\Resources\UserResource;
@@ -18,6 +20,7 @@ use App\Models\InviteToken;
 use App\Models\Message;
 use App\Models\ModelPrice;
 use App\Models\Notification;
+use App\Models\Package;
 use App\Models\Setting;
 use App\Models\Slider;
 use App\Models\Tube;
@@ -119,7 +122,7 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
                     );
 
                     InviteToken::query()->create([
-                        'token' => self::randomToken(60),
+                        'token' => self::randomToken(10),
                         'from_user_id' => $createUser->id,
                         'status' => 0
                     ]);
@@ -419,6 +422,28 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
                 ->orderBy('count', 'asc')
                 ->get();
             return self::returnResponseDataApi(ModelPriceResource::collection($listPoint), 'تم الحصول علي البيانات بنجاح');
+        } catch (\Throwable $e) {
+            return self::returnResponseDataApi(null, $e->getMessage(), 500);
+        }
+    }
+
+    public function getLinkInvite(): JsonResponse
+    {
+        try {
+            $user = Auth::user()->points;
+            $tokenPrice = Setting::query()->value('token_price');
+            $token = InviteToken::query()->value('token');
+            return self::returnResponseDataApi(new InviteFriendResource(['user' => $user, 'tokenPrice' => $tokenPrice, 'token' => $token]), 'تم الحصول على البيانات بنجاح');
+        } catch (\Throwable $e) {
+            return self::returnResponseDataApi(null, $e->getMessage(), 500);
+        }
+    }
+
+    public function getVipList(): JsonResponse
+    {
+        try {
+            $packages = Package::query()->select('id', 'name', 'price', 'days')->get();
+            return self::returnResponseDataApi(PackageResource::collection($packages), 'تم الحصول على البيانات بنجاح');
         } catch (\Throwable $e) {
             return self::returnResponseDataApi(null, $e->getMessage(), 500);
         }

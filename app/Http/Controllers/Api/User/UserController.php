@@ -65,4 +65,14 @@ class UserController extends Controller
     {
         return $this->userRepositoryInterface->getPageCoinsOrMsg($request);
     } // my views
+
+    public function getLinkInvite(): JsonResponse
+    {
+        return $this->userRepositoryInterface->getLinkInvite();
+    } // get Link Invite
+
+    public function getVipList(): JsonResponse
+    {
+        return $this->userRepositoryInterface->getVipList();
+    } // get Vip List
 }

@@ -40,6 +40,8 @@ Route::group(['middleware' => 'jwt'], function () {
     Route::get('/myViews', [UserController::class, 'myViews']);
     Route::get('/myProfile', [UserController::class, 'myProfile']);
     Route::get('/buyCoinsOrMsg', [UserController::class, 'getPageCoinsOrMsg']);
+    Route::get('/getLinkInvite', [UserController::class, 'getLinkInvite']);
+    Route::get('/getVipList', [UserController::class, 'getVipList']);
 
 
     //----------------------- Auth User ------------------------
