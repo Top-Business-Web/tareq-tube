@@ -422,7 +422,7 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
                 ->orderBy('count', 'asc')
                 ->get();
             return self::returnResponseDataApi(ModelPriceResource::collection($listPoint), 'تم الحصول علي البيانات بنجاح');
-        } catch (\Throwable $e) {
+        } catch (\Exception $e) {
             return self::returnResponseDataApi(null, $e->getMessage(), 500);
         }
     }
@@ -434,7 +434,7 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
             $tokenPrice = Setting::query()->value('token_price');
             $token = InviteToken::query()->value('token');
             return self::returnResponseDataApi(new InviteFriendResource(['user' => $user, 'tokenPrice' => $tokenPrice, 'token' => $token]), 'تم الحصول على البيانات بنجاح');
-        } catch (\Throwable $e) {
+        } catch (\Exception $e) {
             return self::returnResponseDataApi(null, $e->getMessage(), 500);
         }
     }
@@ -442,9 +442,11 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
     public function getVipList(): JsonResponse
     {
         try {
-            $packages = Package::query()->select('id', 'name', 'price', 'days')->get();
+            $packages = Package::query()->select('id', 'name', 'price', 'days')
+                ->orderBy('days')
+                ->get();
             return self::returnResponseDataApi(PackageResource::collection($packages), 'تم الحصول على البيانات بنجاح');
-        } catch (\Throwable $e) {
+        } catch (\Exception $e) {
             return self::returnResponseDataApi(null, $e->getMessage(), 500);
         }
     }
