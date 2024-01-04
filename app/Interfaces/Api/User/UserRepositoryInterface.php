@@ -94,5 +94,15 @@ interface UserRepositoryInterface
      */
     public function getPageCoinsOrMsg(Request $request): JsonResponse;
 
+    /**
+     * @return JsonResponse
+     */
+    public function getLinkInvite(): JsonResponse;
+
+    /**
+     * @return JsonResponse
+     */
+    public function getVipList(): JsonResponse;
+
 }
 //Made By https://github.com/eldapour (eldapour)
