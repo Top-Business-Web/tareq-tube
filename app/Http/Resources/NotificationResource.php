@@ -14,12 +14,15 @@ class NotificationResource extends JsonResource
      */
     public function toArray($request)
     {
+        $timeAgo = optional($this->created_at)->diffForHumans();
         return [
             'id' => $this->id,
             'title' => $this->title,
             'description' => $this->description,
-            'created_at' => $this->created_at->format('Y-m-d H:i:s'),
-            'updated_at' => $this->updated_at->format('Y-m-d H:i:s'),
+            'time_elapsed' => $timeAgo,
+            'created_at' => optional($this->created_at)->format('Y-m-d H:i:s'),
+            'updated_at' => optional($this->updated_at)->format('Y-m-d H:i:s'),
         ];
     }
 }
+
