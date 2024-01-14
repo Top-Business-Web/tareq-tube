@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -16,34 +17,28 @@ class PackageSeeder extends Seeder
     {
         $data = [
             [
-                'name' => '50 point',
-                'price' => 225,
-                'days' => 1,
+                'name' => 'شهر',
+                'price' => 369,
+                'days' => 30,
+                'created_at' => Carbon::now()
             ],
             [
-                'name' => '20 point',
-                'price' => 444,
-                'days' => 1,
+                'name' => 'شهرين',
+                'price' => 599,
+                'days' => 60,
+                'created_at' => Carbon::now()
             ],
             [
-                'name' => '30 point',
-                'price' => 255,
-                'days' => 1,
+                'name' => 'اسبوع',
+                'price' => 119,
+                'days' => 7,
+                'created_at' => Carbon::now()
             ],
             [
-                'name' => '10 point',
-                'price' => 150,
-                'days' => 1,
-            ],
-            [
-                'name' => '60 point',
-                'price' => 200,
-                'days' => 1,
-            ],
-            [
-                'name' => '70 point',
-                'price' => 221,
-                'days' => 1,
+                'name' => 'اسبوعين',
+                'price' => 219,
+                'days' => 14,
+                'created_at' => Carbon::now()
             ],
         ];
 

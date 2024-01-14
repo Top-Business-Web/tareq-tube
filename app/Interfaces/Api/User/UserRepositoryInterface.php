@@ -104,5 +104,13 @@ interface UserRepositoryInterface
      */
     public function getVipList(): JsonResponse;
 
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function addPointSpin(Request $request): JsonResponse;
+    public function checkPointSpin(): JsonResponse;
+    public function addPointCopun(Request $request): JsonResponse;
+    public function getVideosList(): JsonResponse;
 }
 //Made By https://github.com/eldapour (eldapour)

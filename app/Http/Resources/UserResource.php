@@ -32,8 +32,6 @@ class UserResource extends JsonResource
             'youtube_name' => $this->youtube_name,
             'youtube_image' => $this->youtube_image,
             'token' =>  $request->header('Authorization') ??  'Bearer ' .$this->token,
-            // 'created_at' => $this->created_at->format('Y-m-d H:i:s'),
-            // 'updated_at' => $this->created_at->format('Y-m-d H:i:s'),
         ]; //end UserResource 26-12-2023
     }
 }
