@@ -14,6 +14,8 @@ use App\Http\Resources\UserResource;
 use App\Interfaces\Api\User\UserRepositoryInterface;
 use App\Models\City;
 use App\Models\ConfigCount;
+use App\Models\Coupon;
+use App\Models\CouponUser;
 use App\Models\DeviceToken;
 use App\Models\Interest;
 use App\Models\InviteToken;
@@ -25,9 +27,12 @@ use App\Models\Setting;
 use App\Models\Slider;
 use App\Models\Tube;
 use App\Models\User;
+use App\Models\UserSpin;
 use App\Repository\Api\ResponseApi;
 use App\Traits\FirebaseNotification;
 use App\Traits\PhotoTrait;
+use Carbon\Carbon;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -38,6 +43,10 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
 {
     use PhotoTrait, FirebaseNotification;
 
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
     public function loginWithGoogle(Request $request): JsonResponse
     {
         try {
@@ -137,6 +146,9 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
         }
     } // end login with Google
 
+    /**
+     * @return JsonResponse
+     */
     public function logout(): JsonResponse
     {
         try {
@@ -153,9 +165,13 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
         }
     } // logout
 
+    /**
+     * @return JsonResponse
+     */
     public function deleteAccount(): JsonResponse
     {
         try {
+            /** @var \App\Models\User $user * */
             $user = Auth::guard('user-api')->user();
             DeviceToken::query()->where('user_id', $user->id)->delete();
             InviteToken::query()->where('from_user_id', $user->id)->first()->delete();
@@ -169,6 +185,9 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
         }
     } // deleteAccount
 
+    /**
+     * @return JsonResponse
+     */
     public function getInterests(): JsonResponse
     {
         try {
@@ -179,6 +198,9 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
         }
     } // getInterest
 
+    /**
+     * @return JsonResponse
+     */
     public function getCities(): JsonResponse
     {
         try {
@@ -189,6 +211,9 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
         }
     } // getInterest
 
+    /**
+     * @return JsonResponse
+     */
     public function setting(): JsonResponse
     {
         try {
@@ -199,6 +224,9 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
         }
     } // getInterest
 
+    /**
+     * @return JsonResponse
+     */
     public function getHome(): JsonResponse
     {
 
@@ -223,6 +251,10 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
         }
     } // get HomePage
 
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
     public function configCount(Request $request): JsonResponse
     {
         try {
@@ -238,9 +270,14 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
         }
     }
 
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
     public function addTube(Request $request): JsonResponse
     {
         try {
+            /** @var \App\Models\User $user * */
             $user = Auth::guard('user-api')->user();
             $userPoint = $user->points;
 
@@ -301,9 +338,14 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
         }
     } // add subscribe
 
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
     public function addMessage(Request $request): JsonResponse
     {
         try {
+            /** @var \App\Models\User $user * */
             $user = Auth::guard('user-api')->user();
 
             $validator = Validator::make($request->all(), [
@@ -341,6 +383,9 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
         }
     } // end add Message
 
+    /**
+     * @return JsonResponse
+     */
     public function notification(): JsonResponse
     {
         try {
@@ -353,6 +398,9 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
         }
     } // end notification
 
+    /**
+     * @return JsonResponse
+     */
     public function mySubscribe(): JsonResponse
     {
         try {
@@ -365,6 +413,9 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
         }
     } // my subscribe
 
+    /**
+     * @return JsonResponse
+     */
     public function myViews(): JsonResponse
     {
         try {
@@ -378,6 +429,9 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
         }
     } // my views
 
+    /**
+     * @return JsonResponse
+     */
     public function myProfile(): JsonResponse
     {
         try {
@@ -388,6 +442,10 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
         }
     } // my profile
 
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
     public function addChannel(Request $request): JsonResponse
     {
         try {
@@ -408,12 +466,18 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
             $user->youtube_image = $request->youtube_image;
             if ($user->save()) {
                 return self::returnResponseDataApi(new UserResource($user), 'تم اضافة لينك القناة بنجاح');
+            } else {
+                return self::returnResponseDataApi(null, 'هناك خطا ما', 500);
             }
         } catch (\Exception $e) {
             return self::returnResponseDataApi(null, $e->getMessage(), 500);
         }
     } // add channel
 
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
     public function getPageCoinsOrMsg(Request $request): JsonResponse
     {
         try {
@@ -425,8 +489,11 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
         } catch (\Exception $e) {
             return self::returnResponseDataApi(null, $e->getMessage(), 500);
         }
-    }
+    } //  getPageCoinsOrMsg
 
+    /**
+     * @return JsonResponse
+     */
     public function getLinkInvite(): JsonResponse
     {
         try {
@@ -437,8 +504,11 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
         } catch (\Exception $e) {
             return self::returnResponseDataApi(null, $e->getMessage(), 500);
         }
-    }
+    } // getLinkInvite
 
+    /**
+     * @return JsonResponse
+     */
     public function getVipList(): JsonResponse
     {
         try {
@@ -449,5 +519,147 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
         } catch (\Exception $e) {
             return self::returnResponseDataApi(null, $e->getMessage(), 500);
         }
-    }
+    }  // getVipList
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function addPointSpin(Request $request): JsonResponse
+    {
+        try {
+
+            if (!$this->checkPointSpinPool()) {
+                return self::returnResponseDataApi(['status' => 0], 'عجلة الحظ غير متاحة', 200);
+            }
+            $validator = Validator::make($request->all(), [
+                'points' => 'required|numeric',
+            ]);
+
+            if ($validator->fails()) {
+                $error = $validator->errors()->first();
+                return self::returnResponseDataApi(null, $error, 422);
+            }
+
+            $user = User::find(Auth::user()->id);
+
+            $spin = new UserSpin();
+            $spin->user_id = $user->id;
+            $spin->points = $request->points;
+            $spin->day = Carbon::now()->format('Y-m-d');
+
+            if ($spin->save()) {
+                $user->points += $request->points;
+                if ($user->save()) {
+                    return self::returnResponseDataApi(new UserResource($user), 'تم اضافة النقاط بنجاح', 200);
+                } else {
+                    return self::returnResponseDataApi(null, 'هناك خطا ما حاول في وقت لاحق', 500);
+                }
+            } else {
+                return self::returnResponseDataApi(null, 'هناك خطا ما حاول في وقت لاحق', 500);
+            }
+        } catch (Exception $e) {
+            return self::returnResponseDataApi(null, $e->getMessage(), 500);
+        }
+    }  // addPointSpin
+
+    public function checkPointSpin(): JsonResponse
+    {
+        try {
+            $user = User::find(Auth::user()->id);
+            $checkSpin = UserSpin::query()
+                ->where('user_id', $user->id)
+                ->orderBy('created_at')
+                ->first();
+            if ($checkSpin) {
+                $oldDay = Carbon::parse($checkSpin->created_at)->addDay();
+                $checkDay = $oldDay < Carbon::now();
+                if ($checkDay) {
+                    return self::returnResponseDataApi(['status' => 1], 'عجلة الحظ متاحة', 200);
+                } else {
+                    return self::returnResponseDataApi(['status' => 0], 'عجلة الحظ غير متاحة', 200);
+                }
+            } else {
+                return self::returnResponseDataApi(['status' => 1], 'عجلة الحظ متاحة', 200);
+            }
+        } catch (Exception $e) {
+            return self::returnResponseDataApi(null, $e->getMessage(), 500);
+        }
+    } // checkPointSpin
+
+    public function checkPointSpinPool(): bool
+    {
+
+        $user = User::find(Auth::user()->id);
+        $checkSpin = UserSpin::query()
+            ->where('user_id', $user->id)
+            ->orderBy('created_at')
+            ->first();
+        if ($checkSpin) {
+            $oldDay = Carbon::parse($checkSpin->created_at)->addDay();
+            $checkDay = $oldDay < Carbon::now();
+            if ($checkDay) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return true;
+        }
+    } // checkPointSpinPool
+
+    public function addPointCopun(Request $request): JsonResponse
+    {
+        try {
+            $user = User::find(Auth::user()->id);
+            $validator = Validator::make($request->all(), [
+                'copun' => 'required|exists:copons,code'
+            ]);
+
+            if ($validator->fails()) {
+                $error = $validator->errors()->first();
+                return self::returnResponseDataApi(null, $error, 422);
+            }
+
+            $copon = Coupon::query()->where('code', $request->copun)->first();
+
+            if ($copon) {
+                // user used coupons count
+                $usersCoponCount = CouponUser::query()->where('copon_id', $copon->id)->count();
+                // check if user used coupon
+                $checkUserCopon = CouponUser::query()
+                    ->where('copon_id', $copon->id)
+                    ->where('user_id', $user->id)
+                    ->first();
+                if ($checkUserCopon){
+                    return self::returnResponseDataApi(null, 'تم استخدام هذا الكوبون من قبل', 422);
+                }
+
+                if ($usersCoponCount >= $copon->limit) {
+                    return self::returnResponseDataApi(null, 'تم تخطي حد الاستخدام لهذا الكوبون', 422);
+                }
+
+                $createCouponUser = new CouponUser();
+                $createCouponUser->user_id = $user->id;
+                $createCouponUser->copon_id = $copon->id;
+                $createCouponUser->save();
+
+                $user->points += $copon->points;
+                $user->save();
+                return self::returnResponseDataApi(new UserResource($user), 'تم الحصول علي النقاط بنجاح', 500);
+            } else {
+                return self::returnResponseDataApi(null, 'الكوبون غير صحيح', 422);
+            }
+        } catch (Exception $e) {
+            return self::returnResponseDataApi(null, $e->getMessage(), 500);
+        }
+    }//
+
+    public function getVideosList(): JsonResponse
+    {
+        try {
+        } catch (Exception $e) {
+            return self::returnResponseDataApi(null, $e->getMessage(), 500);
+        }
+    } // getVideosList
 }

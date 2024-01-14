@@ -75,4 +75,19 @@ class UserController extends Controller
     {
         return $this->userRepositoryInterface->getVipList();
     } // get Vip List
+
+    public function addPointSpin(Request $request): JsonResponse
+    {
+        return $this->userRepositoryInterface->addPointSpin($request);
+    } // addPointSpin
+
+    public function checkPointSpin(): JsonResponse
+    {
+        return $this->userRepositoryInterface->checkPointSpin();
+    } // addPointSpin
+
+    public function addPointCopun(Request $request): JsonResponse
+    {
+        return $this->userRepositoryInterface->addPointCopun($request);
+    } // addPointSpin
 }
