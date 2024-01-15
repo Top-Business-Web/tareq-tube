@@ -5,6 +5,7 @@ namespace App\Repository\Api\User;
 use App\Http\Resources\InviteFriendResource;
 use App\Http\Resources\MessageResource;
 use App\Http\Resources\ModelPriceResource;
+use App\Http\Resources\MyMessageResource;
 use App\Http\Resources\MyTubeResource;
 use App\Http\Resources\NotificationResource;
 use App\Http\Resources\PackageResource;
@@ -27,6 +28,7 @@ use App\Models\Setting;
 use App\Models\Slider;
 use App\Models\Tube;
 use App\Models\User;
+use App\Models\UserAction;
 use App\Models\UserSpin;
 use App\Repository\Api\ResponseApi;
 use App\Traits\FirebaseNotification;
@@ -443,6 +445,44 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
     } // my profile
 
     /**
+     * @return JsonResponse
+     */
+    public function myMessages(): JsonResponse
+    {
+        try {
+            $user = Auth::guard('user-api')->user();
+            $messages = Message::query()->where('user_id', $user->id)->get();
+            if ($messages->count() > 0) {
+                return self::returnResponseDataApi(MyMessageResource::collection($messages), 'تم الحصول علي البيانات بنجاح');
+            } else {
+                return self::returnResponseDataApi(null, 'لا يوجد رسائل حتي الان', 422);
+            }
+        } catch (\Exception $e) {
+            return self::returnResponseDataApi(null, $e->getMessage(), 500);
+        }
+    }
+
+    public function getMessages(): JsonResponse
+    {
+        try {
+            $user = Auth::guard('user-api')->user();
+            $messages = Message::query()
+                ->where('city_id', $user->city_id)
+                ->where('intrest_id', $user->intrest_id)
+                ->get();
+            if ($messages->count() > 0) {
+                return self::returnResponseDataApi(MessageResource::collection($messages), 'تم الحصول علي البيانات بنجاح');
+            }else {
+                return self::returnResponseDataApi(null, 'لا يوجد رسائل حتي الان', 422);
+            }
+
+        } catch (\Exception $e) {
+            return self::returnResponseDataApi(null, $e->getMessage(), 500);
+        }
+
+    }
+
+    /**
      * @param Request $request
      * @return JsonResponse
      */
@@ -563,6 +603,9 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
         }
     }  // addPointSpin
 
+    /**
+     * @return JsonResponse
+     */
     public function checkPointSpin(): JsonResponse
     {
         try {
@@ -587,6 +630,9 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
         }
     } // checkPointSpin
 
+    /**
+     * @return bool
+     */
     public function checkPointSpinPool(): bool
     {
 
@@ -608,6 +654,10 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
         }
     } // checkPointSpinPool
 
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
     public function addPointCopun(Request $request): JsonResponse
     {
         try {
@@ -631,7 +681,7 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
                     ->where('copon_id', $copon->id)
                     ->where('user_id', $user->id)
                     ->first();
-                if ($checkUserCopon){
+                if ($checkUserCopon) {
                     return self::returnResponseDataApi(null, 'تم استخدام هذا الكوبون من قبل', 422);
                 }
 
@@ -646,7 +696,7 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
 
                 $user->points += $copon->points;
                 $user->save();
-                return self::returnResponseDataApi(new UserResource($user), 'تم الحصول علي النقاط بنجاح', 500);
+                return self::returnResponseDataApi(new UserResource($user), 'تم الحصول علي النقاط بنجاح', 200);
             } else {
                 return self::returnResponseDataApi(null, 'الكوبون غير صحيح', 422);
             }
@@ -655,11 +705,40 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
         }
     }//
 
-    public function getVideosList(): JsonResponse
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function getTubeRandom(Request $request): JsonResponse
     {
         try {
+            $user = User::find(Auth::user()->id);
+            $validator = Validator::make($request->all(), [
+                'type' => 'required|in:view,sub'
+            ], [
+                'type.required' => 'حقل النوع مطلوب'
+            ]);
+
+            if ($validator->fails()) {
+                $error = $validator->errors()->first();
+                return self::returnResponseDataApi(null, $error, 422);
+            }
+
+            $userVideos = UserAction::query()
+                ->where('user_id', $user->id)
+                ->where('type', $request->type)
+                ->pluck('tube_id')->toArray();
+
+            $videos = Tube::query()
+                ->whereNotIn('id', $userVideos)
+                ->where('type', $request->type)
+                ->get();
+            $randomVideo = $videos->random();
+
+
+            return self::returnResponseDataApi(new TubeResource($randomVideo), 'تم الحصول على البيانات بنجاح', 200);
         } catch (Exception $e) {
             return self::returnResponseDataApi(null, $e->getMessage(), 500);
         }
-    } // getVideosList
+    } // getTubeRandom
 }

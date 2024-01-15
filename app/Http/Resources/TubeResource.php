@@ -25,8 +25,8 @@ class TubeResource extends JsonResource
             "second_count" => $this->secondCount,
             "view_count" => $this->viewCount,
             "user" => new UserResource(\Auth::guard('user-api')->user()),
-            "created_at" => $this->created_at->format('Y-m-d H:i:s'),
-            "updated_at" => $this->updated_at->format('Y-m-d H:i:s'),
+            "created_at" => ($this->created_at) ? $this->created_at->format('Y-m-d H:i:s') : '',
+            "updated_at" => ($this->updated_at) ? $this->updated_at->format('Y-m-d H:i:s') : '',
         ];
     }
 }

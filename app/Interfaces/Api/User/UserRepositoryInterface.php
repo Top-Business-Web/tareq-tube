@@ -49,6 +49,7 @@ interface UserRepositoryInterface
      * @return JsonResponse
      */
     public function addTube(Request $request): JsonResponse;
+
     /**
      * addMessage function
      *
@@ -76,6 +77,16 @@ interface UserRepositoryInterface
      * @return JsonResponse
      */
     public function myViews(): JsonResponse;
+
+    /**
+     * @return JsonResponse
+     */
+    public function myMessages(): JsonResponse;
+
+    /**
+     * @return JsonResponse
+     */
+    public function getMessages(): JsonResponse;
 
     /**
      * @return JsonResponse
@@ -109,8 +120,22 @@ interface UserRepositoryInterface
      * @return JsonResponse
      */
     public function addPointSpin(Request $request): JsonResponse;
+
+    /**
+     * @return JsonResponse
+     */
     public function checkPointSpin(): JsonResponse;
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
     public function addPointCopun(Request $request): JsonResponse;
-    public function getVideosList(): JsonResponse;
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function getTubeRandom(Request $request): JsonResponse;
 }
 //Made By https://github.com/eldapour (eldapour)

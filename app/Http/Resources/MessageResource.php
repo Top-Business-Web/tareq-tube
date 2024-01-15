@@ -15,14 +15,14 @@ class MessageResource extends JsonResource
     public function toArray($request)
     {
         return [
-            "id" => 4,
+            "id" => $this->id,
             "url" => $this->url,
             "content" => $this->content,
             "city" => $this->city,
             "interest" => $this->intrest,
             "user" => new UserResource(\Auth::guard('user-api')->user()),
-            "created_at" => $this->created_at->format('Y-m-d H:i:s'),
-            "updated_at" => $this->updated_at->format('Y-m-d H:i:s'),
+            "created_at" => ($this->created_at) ? $this->created_at->format('Y-m-d H:i:s') : '',
+            "updated_at" => ($this->updated_at) ? $this->updated_at->format('Y-m-d H:i:s') : '',
         ];
     }
 }

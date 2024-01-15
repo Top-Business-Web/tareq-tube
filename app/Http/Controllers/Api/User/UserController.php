@@ -66,15 +66,15 @@ class UserController extends Controller
         return $this->userRepositoryInterface->getPageCoinsOrMsg($request);
     } // my views
 
-    public function getLinkInvite(): JsonResponse
-    {
-        return $this->userRepositoryInterface->getLinkInvite();
-    } // get Link Invite
-
     public function getVipList(): JsonResponse
     {
         return $this->userRepositoryInterface->getVipList();
     } // get Vip List
+
+    public function getLinkInvite(): JsonResponse
+    {
+        return $this->userRepositoryInterface->getLinkInvite();
+    } // get Link Invite
 
     public function addPointSpin(Request $request): JsonResponse
     {
@@ -89,5 +89,21 @@ class UserController extends Controller
     public function addPointCopun(Request $request): JsonResponse
     {
         return $this->userRepositoryInterface->addPointCopun($request);
-    } // addPointSpin
+    } // addPointCopun
+
+    public function getTubeRandom(Request $request): JsonResponse
+    {
+        return $this->userRepositoryInterface->getTubeRandom($request);
+    } // get tube random
+
+    public function myMessages()
+    {
+        return $this->userRepositoryInterface->myMessages();
+    } // user messages
+
+    public function getMessages()
+    {
+        return $this->userRepositoryInterface->getMessages();
+    } // get messages
+
 }
