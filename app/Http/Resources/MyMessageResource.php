@@ -16,7 +16,8 @@ class MyMessageResource extends JsonResource
     {
         return [
             "id" => $this->id,
-            "content" => $this->content . ' ' . $this->url,
+            "content" => $this->content,
+            "url" => $this->url,
             "created_at" => optional($this->created_at)->diffForHumans(),
         ];
     }
