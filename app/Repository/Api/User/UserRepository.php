@@ -452,7 +452,11 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
         try {
             $user = Auth::guard('user-api')->user();
             $messages = Message::query()->where('user_id', $user->id)->get();
-            return self::returnResponseDataApi($messages, 'تم الحصول علي البيانات بنجاح');
+            if ($messages->count() > 0) {
+                return self::returnResponseDataApi(MyMessageResource::collection($messages), 'تم الحصول علي البيانات بنجاح');
+            } else {
+                return self::returnResponseDataApi([], 'تم الحصول علي البيانات بنجاح');
+            }
         } catch (\Exception $e) {
             return self::returnResponseDataApi(null, $e->getMessage(), 500);
         }
@@ -468,7 +472,7 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
                 ->get();
             if ($messages->count() > 0) {
                 return self::returnResponseDataApi(MessageResource::collection($messages), 'تم الحصول علي البيانات بنجاح');
-            } else {
+            }else {
                 return self::returnResponseDataApi(null, 'لا يوجد رسائل حتي الان', 422);
             }
 
