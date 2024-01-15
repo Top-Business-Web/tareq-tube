@@ -30,14 +30,16 @@ Route::group(['middleware' => 'jwt'], function () {
     Route::get('/configCount', [UserController::class, 'configCount']);
 
     //--------------------- User Actions -----------------------
-    //= ROUTE POST
+    //= ROUTE POST DATA
     Route::post('/addTube', [UserController::class, 'addTube']);
     Route::post('/addMessage', [UserController::class, 'addMessage']);
     Route::post('/addChannel', [UserController::class, 'addChannel']);
     Route::post('/addPointSpin', [UserController::class, 'addPointSpin']);
     Route::post('/checkPointSpin', [UserController::class, 'checkPointSpin']);
     Route::post('/addPointCopun', [UserController::class, 'addPointCopun']);
-    //= ROUTE GET
+    Route::post('/getTubeRandom', [UserController::class, 'getTubeRandom']);
+
+    //= ROUTE GET DATA
     Route::get('/notification', [UserController::class, 'notification']);
     Route::get('/mySubscribe', [UserController::class, 'mySubscribe']);
     Route::get('/myViews', [UserController::class, 'myViews']);
@@ -45,6 +47,8 @@ Route::group(['middleware' => 'jwt'], function () {
     Route::get('/buyCoinsOrMsg', [UserController::class, 'getPageCoinsOrMsg']);
     Route::get('/getLinkInvite', [UserController::class, 'getLinkInvite']);
     Route::get('/getVipList', [UserController::class, 'getVipList']);
+    Route::get('/myMessages', [UserController::class, 'myMessages']);
+    Route::get('/getMessages', [UserController::class, 'getMessages']);
 
 
     //----------------------- Auth User ------------------------
