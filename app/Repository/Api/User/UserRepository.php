@@ -494,6 +494,7 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
                 'youtube_link' => 'required|active_url|url',
                 'youtube_name' => 'required',
                 'youtube_image' => 'required|active_url|url',
+                'channel_name' => 'required',
             ]);
 
             if ($validator->fails()) {
@@ -504,6 +505,7 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
             $user->youtube_link = $request->youtube_link;
             $user->youtube_name = $request->youtube_name;
             $user->youtube_image = $request->youtube_image;
+            $user->channel_name = $request->channel_name;
             if ($user->save()) {
                 return self::returnResponseDataApi(new UserResource($user), 'تم اضافة لينك القناة بنجاح');
             } else {
