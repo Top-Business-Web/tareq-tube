@@ -81,7 +81,7 @@ class PaymobPayment extends BaseController implements PaymentInterface
         return [
             'payment_id'=>$get_order['id'],
             'html' => "",
-            'redirect_url'=>"https://accept.paymobsolutions.com/api/acceptance/iframes/" . $this->paymob_iframe_id . "?payment_token=" . $get_url_token['token']
+            'redirect_url'=>"https://accept.paymobsolutions.com/api/acceptance/iframes/" . $this->paymob_iframe_id . "?payment_token=" . $request_new_token['token']
         ];
     }
 

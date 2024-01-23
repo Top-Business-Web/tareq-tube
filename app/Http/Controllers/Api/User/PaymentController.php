@@ -16,6 +16,7 @@ class PaymentController extends Controller
      */
     public function payment_verify(Request $request)
     {
+        // handle requests
         $amount = $request->amount ?? 200;
         $user_id = $request->user_id ?? 1;
         $user_first_name = $request->user_first_name ?? 'test';
@@ -32,7 +33,7 @@ class PaymentController extends Controller
             ->setUserLastName($user_last_name)
             ->setUserEmail($user_email)
             ->setUserPhone($user_phone)
-            ->setCurrency('EG')
+            ->setCurrency('EGP')
             ->setAmount($amount)
             ->pay();
 
