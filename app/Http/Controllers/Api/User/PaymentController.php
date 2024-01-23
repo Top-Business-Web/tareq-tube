@@ -4,9 +4,7 @@ namespace App\Http\Controllers\Api\User;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Nafezly\Payments\Classes\FawryPayment;
 use Nafezly\Payments\Classes\PaymobPayment;
-use Nafezly\Payments\Classes\PaymobWalletPayment;
 use Nafezly\Payments\Exceptions\MissingPaymentInfoException;
 
 class PaymentController extends Controller
@@ -27,16 +25,16 @@ class PaymentController extends Controller
 
         $payment = new PaymobPayment();
 
-        //or use
-        $payment->setUserId($user_id)
-            ->setUserFirstName($user_first_name)
-            ->setUserLastName($user_last_name)
-            ->setUserEmail($user_email)
-            ->setUserPhone($user_phone)
-            ->setCurrency('EGP')
-            ->setAmount($amount)
-            ->pay();
-
+        //pay function
+        $payment->pay(
+            $amount,
+            $user_id = null,
+            $user_first_name = null,
+            $user_last_name = null,
+            $user_email = null,
+            $user_phone = null,
+            $source = null
+        );
         //verify function
         $payment->verify($request);
 
