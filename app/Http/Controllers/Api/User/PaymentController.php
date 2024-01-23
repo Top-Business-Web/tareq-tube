@@ -28,12 +28,12 @@ class PaymentController extends Controller
         //pay function
         $payment->pay(
             $amount,
-            $user_id = null,
-            $user_first_name = null,
-            $user_last_name = null,
-            $user_email = null,
-            $user_phone = null,
-            $source = null
+            $user_id,
+            $user_first_name,
+            $user_last_name,
+            $user_email,
+            $user_phone,
+            $source
         );
         //verify function
         $payment->verify($request);
