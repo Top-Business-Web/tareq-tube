@@ -15,6 +15,4 @@ use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 |
 */
 
-Route::get('/payments/verify/{payment?}',[PaymentController::class,'payment_verify'])->name('verify-payment');
-
 // web
