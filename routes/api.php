@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\User\AuthController;
 use App\Http\Controllers\Api\User\ConfigController;
+use App\Http\Controllers\Api\User\PaymentController;
 use App\Http\Controllers\Api\User\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -65,3 +66,7 @@ Route::get('getCities', [ConfigController::class, 'getCities']);
 Route::get('setting', [ConfigController::class, 'setting']);
 
 ########################### END GENERAL ROUTES ################################
+
+
+Route::post('/payments/verify/{payment?}',[PaymentController::class,'payment_verify'])->name('verify-payment');
+
