@@ -38,6 +38,7 @@ Route::group(['middleware' => 'jwt'], function () {
     Route::post('/checkPointSpin', [UserController::class, 'checkPointSpin']);
     Route::post('/addPointCopun', [UserController::class, 'addPointCopun']);
     Route::post('/getTubeRandom', [UserController::class, 'getTubeRandom']);
+    Route::post('/userViewTube', [UserController::class, 'userViewTube']);
 
     //= ROUTE GET DATA
     Route::get('/notification', [UserController::class, 'notification']);

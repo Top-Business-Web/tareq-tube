@@ -1,7 +1,7 @@
 <?php
 
+use App\Http\Controllers\Api\User\PaymentController;
 use Illuminate\Support\Facades\Route;
-use Laravel\Socialite\Facades\Socialite;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
 /*
@@ -15,5 +15,6 @@ use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 |
 */
 
+Route::get('/payments/verify/{payment?}',[PaymentController::class,'payment_verify'])->name('verify-payment');
 
 // web

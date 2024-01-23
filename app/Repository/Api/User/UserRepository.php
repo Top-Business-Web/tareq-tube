@@ -317,7 +317,7 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
                     $createTube->sub_count = $request->sub_count;
                     $createTube->second_count = $request->second_count;
                     $createTube->view_count = $request->view_count;
-                    $createTube->target = 0;
+                    $createTube->target = ($request->type == 'view') ? $request->view_count : $request->sub_count;
                     $createTube->status = 0;
 
                     if ($createTube->save()) {
@@ -472,7 +472,7 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
                 ->get();
             if ($messages->count() > 0) {
                 return self::returnResponseDataApi(MessageResource::collection($messages), 'تم الحصول علي البيانات بنجاح');
-            }else {
+            } else {
                 return self::returnResponseDataApi(null, 'لا يوجد رسائل حتي الان', 422);
             }
 
@@ -729,18 +729,98 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
             $userVideos = UserAction::query()
                 ->where('user_id', $user->id)
                 ->where('type', $request->type)
+                ->where('status','1')
                 ->pluck('tube_id')->toArray();
 
             $videos = Tube::query()
                 ->whereNotIn('id', $userVideos)
                 ->where('type', $request->type)
                 ->get();
-            $randomVideo = $videos->random();
 
+            $randomVideo = $videos->random();
 
             return self::returnResponseDataApi(new TubeResource($randomVideo), 'تم الحصول على البيانات بنجاح', 200);
         } catch (Exception $e) {
             return self::returnResponseDataApi(null, $e->getMessage(), 500);
         }
     } // getTubeRandom
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function userViewTube(Request $request): JsonResponse
+    {
+        try {
+            $user = Auth::user();
+            // validate requests
+            $validator = Validator::make($request->all(), [
+                'tube_id' => 'required',
+                'status' => 'required',
+            ]);
+            // return errors
+            if ($validator->fails()) {
+                $error = $validator->errors()->first();
+                return self::returnResponseDataApi(null, $error, 422);
+            }
+
+            $tube = Tube::query()
+                ->where('id', $request->tube_id)
+                ->where('target', '!=', '0')
+                ->first();
+
+            if (!$tube) {
+                return self::returnResponseDataApi(null, 'لا يوجد فيديو او قناه بهذا المعرف', 422);
+            }
+            // check if action exists
+            $checkActionExists = UserAction::query()
+                ->where([
+                    'user_id' => $user->id,
+                    'tube_id' => $request->tube_id,
+                ])->first();
+            // if action update action exists status and point
+            if ($checkActionExists) {
+
+                if ($checkActionExists->status == 1) {
+                    return self::returnResponseDataApi($checkActionExists, 'تم التحديث من قبل لا يمكن تغيير الحالة', 201);
+                }
+
+                $checkActionExists->update([
+                    'status' => $request->status,
+                    'points' => $tube->points
+                ]);
+
+                if ($checkActionExists->status == 1) {
+                    $tube->target -= 1;
+                    $tube->save();
+                    $user->points += $tube->points;
+                    $user->save();
+                }
+
+                return self::returnResponseDataApi($checkActionExists, 'تم التحديث بنجاح', 201);
+            } else {
+                $addUserAction = new UserAction();
+                $addUserAction->user_id = $user->id;
+                $addUserAction->tube_id = $request->tube_id;
+                $addUserAction->type = $tube->type;
+                $addUserAction->status = $request->status;
+                $addUserAction->points = $tube->points;
+                // if save return response
+                if ($addUserAction->save()) {
+                    if ($addUserAction->status == 1) {
+                        $tube->target -= 1;
+                        $tube->save();
+                        $user->points += $tube->points;
+                        $user->save();
+                    }
+                    return self::returnResponseDataApi($addUserAction, 'تم الاضافة بنجاح');
+                } else {
+                    return self::returnResponseDataApi(null, 'هناك خطا ما', 500);
+                } // end if
+            } // end if
+
+        } catch (Exception $e) {
+            return self::returnResponseDataApi(null, $e->getMessage(), 500);
+        } // end try
+    } // userViewTube
 }
