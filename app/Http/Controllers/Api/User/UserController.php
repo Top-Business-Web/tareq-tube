@@ -106,4 +106,9 @@ class UserController extends Controller
         return $this->userRepositoryInterface->getMessages();
     } // get messages
 
+    public function userViewTube(Request $request)
+    {
+        return $this->userRepositoryInterface->userViewTube($request);
+    } // userViewTube
+
 }
