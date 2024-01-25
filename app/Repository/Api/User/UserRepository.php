@@ -404,7 +404,8 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
     {
         try {
             $tubes = Tube::query()->where('user_id', Auth::guard('user-api')->user()->id)
-                ->where('type', 'sub')
+                ->where('type','=','sub')
+                ->latest()
                 ->get();
             return self::returnResponseDataApi(MyTubeResource::collection($tubes), 'تم الحصول علي البيانات بنجاح');
         } catch (\Exception $e) {
@@ -420,6 +421,7 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
         try {
             $tubes = Tube::query()->where('user_id', Auth::guard('user-api')->user()->id)
                 ->where('type', 'view')
+                ->latest()
                 ->get();
 
             return self::returnResponseDataApi(MyTubeResource::collection($tubes), 'تم الحصول علي البيانات بنجاح');
