@@ -31,15 +31,15 @@ class CreateUserActionsTable extends Migration
             $table->tinyInteger('status')->default('0');
             $table->unsignedBigInteger('points')->nullable();
 
-            $table->foreign('user_id', 'fk_user_actions_users1_idx')
+            $table->foreign('user_id')
                 ->references('id')->on('users')
-                ->onDelete('no action')
-                ->onUpdate('no action');
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
 
-            $table->foreign('tube_id', 'fk_user_actions_tubes1_idx')
+            $table->foreign('tube_id')
                 ->references('id')->on('tubes')
-                ->onDelete('no action')
-                ->onUpdate('no action');
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
 
             $table->timestamps();
         });

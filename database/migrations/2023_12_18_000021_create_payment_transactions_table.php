@@ -31,13 +31,13 @@ class CreatePaymentTransactionsTable extends Migration
 
             $table->foreign('payment_id', 'fk_payment_transactions_payments1_idx')
                 ->references('id')->on('payments')
-                ->onDelete('no action')
-                ->onUpdate('no action');
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
 
             $table->foreign('user_id', 'fk_payment_transactions_users1_idx')
                 ->references('id')->on('users')
-                ->onDelete('no action')
-                ->onUpdate('no action');
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
 
             $table->timestamps();
         });

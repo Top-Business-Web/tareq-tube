@@ -166,8 +166,8 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
             /** @var \App\Models\User $user * */
             $user = Auth::guard('user-api')->user();
             DeviceToken::query()->where('user_id', $user->id)->delete();
-            Tube::query()->where('user_id', $user->id)->delete();
-            UserAction::query()->where('user_id', $user->id)->delete();
+//            Tube::query()->where('user_id', $user->id)->delete();
+//            UserAction::query()->where('user_id', $user->id)->delete();
             $user->delete();
             Auth::guard('user-api')->logout();
 

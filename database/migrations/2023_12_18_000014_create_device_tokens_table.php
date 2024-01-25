@@ -31,8 +31,8 @@ class CreateDeviceTokensTable extends Migration
 
             $table->foreign('user_id', 'fk_notifications_users1_idx')
                 ->references('id')->on('users')
-                ->onDelete('no action')
-                ->onUpdate('no action');
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
 
             $table->timestamps();
         });

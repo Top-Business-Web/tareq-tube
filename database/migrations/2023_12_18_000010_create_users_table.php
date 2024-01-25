@@ -41,12 +41,12 @@ class CreateUsersTable extends Migration
             $table->text('youtube_name')->nullable();
             $table->text('youtube_image')->nullable();
             $table->text('channel_name')->nullable();
-            $table->foreign('city_id', 'fk_users_cities1_idx')
+            $table->foreign('city_id')
                 ->references('id')->on('cities')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
 
-            $table->foreign('intrest_id', 'fk_users_intrest1_idx')
+            $table->foreign('intrest_id')
                 ->references('id')->on('intrest')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');

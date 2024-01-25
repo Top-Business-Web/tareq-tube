@@ -32,13 +32,13 @@ class CreatePackageUserTable extends Migration
 
             $table->foreign('user_id', 'fk_package_user_users_idx')
                 ->references('id')->on('users')
-                ->onDelete('no action')
-                ->onUpdate('no action');
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
 
             $table->foreign('package_id', 'fk_package_user_packages1_idx')
                 ->references('id')->on('packages')
-                ->onDelete('no action')
-                ->onUpdate('no action');
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
 
             $table->timestamps();
         });

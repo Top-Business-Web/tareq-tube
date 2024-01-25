@@ -33,13 +33,13 @@ class CreateMsgTable extends Migration
 
             $table->foreign('city_id', 'fk_msg_cities1_idx')
                 ->references('id')->on('cities')
-                ->onDelete('no action')
-                ->onUpdate('no action');
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
 
             $table->foreign('intrest_id', 'fk_msg_intrest1_idx')
                 ->references('id')->on('intrest')
-                ->onDelete('no action')
-                ->onUpdate('no action');
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
 
             $table->timestamps();
         });

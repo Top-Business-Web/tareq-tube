@@ -34,13 +34,13 @@ class CreatePaymentsTable extends Migration
 
             $table->foreign('user_id', 'fk_payments_users1_idx')
                 ->references('id')->on('users')
-                ->onDelete('no action')
-                ->onUpdate('no action');
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
 
             $table->foreign('model_id', 'fk_payments_packages1_idx')
                 ->references('id')->on('packages')
-                ->onDelete('no action')
-                ->onUpdate('no action');
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
 
 
             $table->timestamps();
