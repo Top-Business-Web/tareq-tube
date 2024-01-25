@@ -144,6 +144,10 @@ interface UserRepositoryInterface
      */
     public function getTubeRandom(Request $request): JsonResponse;
 
-    public function userViewTube(Request $request): JsonResponse;
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function userViewTube(Request $request):  JsonResponse;
 }
 //Made By https://github.com/eldapour (eldapour)

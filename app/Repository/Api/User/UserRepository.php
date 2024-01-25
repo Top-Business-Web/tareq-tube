@@ -151,11 +151,6 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
         try {
             $user = Auth::guard('user-api')->user();
 
-            DeviceToken::query()
-                ->where('user_id', $user->id)
-                ->where('token', '=', $user->device->token)
-                ->delete();
-
             return self::returnResponseDataApi(null, "تم تسجيل الخروج بنجاح", 200);
         } catch (\Exception $exception) {
             return self::returnResponseDataApi(null, $exception->getMessage(), 500);
@@ -171,8 +166,7 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
             /** @var \App\Models\User $user * */
             $user = Auth::guard('user-api')->user();
             DeviceToken::query()->where('user_id', $user->id)->delete();
-            InviteToken::query()->where('from_user_id', $user->id)->first()->delete();
-
+            Tube::query()->where('user_id', $user->id)->delete();
             $user->delete();
             Auth::guard('user-api')->logout();
 
