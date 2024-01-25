@@ -182,6 +182,7 @@ return [
         Yajra\Datatables\DatatablesServiceProvider::class,
         Tymon\JWTAuth\Providers\LaravelServiceProvider::class,
         Buglinjo\LaravelWebp\WebpServiceProvider::class,
+        PayMob\PayMobServiceProvider::class,
 
 
 
@@ -242,6 +243,7 @@ return [
         'Datatables' => Yajra\Datatables\Facades\Datatables::class,
         'Webp' => Buglinjo\LaravelWebp\Facades\Webp::class,
         'QrCode' => SimpleSoftwareIO\QrCode\Facades\QrCode::class,
+        'PayMob' => PayMob\Facades\PayMob::class,
 
     ],
 

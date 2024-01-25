@@ -69,5 +69,6 @@ Route::get('setting', [ConfigController::class, 'setting']);
 ########################### END GENERAL ROUTES ################################
 
 
-Route::post('/payments/verify/{payment?}',[PaymentController::class,'payment_verify'])->name('verify-payment');
-
+Route::post('checkout/processed',[PaymentController::class,'checkout_processed']);
+Route::get('checkout/response',[PaymentController::class,'responseStatus']);
+Route::get('checkout',[PaymentController::class,'checkout']);
