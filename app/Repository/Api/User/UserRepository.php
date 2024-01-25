@@ -293,7 +293,7 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
             }
             if ($request->has('view_count') && $request->view_count != '') {
                 $view_count = ConfigCount::find($request->view_count)->point;
-                $view_count_count = ConfigCount::find($request->sub_count)->count;
+                $view_count_count = ConfigCount::find($request->view_count)->count;
             }
             $second_count = ConfigCount::find($request->second_count)->point;
             $pointsNeed = $second_count + $view_count + $sub_count;
@@ -305,7 +305,7 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
                     $createTube->points = $pointsNeed;
                     $createTube->user_id = $user->id;
                     $createTube->url = $request->url;
-                    $createTube->sub_count = $request->sub_count;
+                    $createTube->sub_count = $request->type == 'view' ? null : $request->sub_count;
                     $createTube->second_count = $request->second_count;
                     $createTube->view_count = $request->view_count;
                     $createTube->target = ($request->type == 'view') ? $view_count_count : $sub_count_count;
