@@ -16,7 +16,6 @@
         "laravel/sanctum": "^2.11",
         "laravel/tinker": "^2.5",
         "mcamara/laravel-localization": "^1.7",
-        "nafezly/payments": "dev-master",
         "php-flasher/flasher-sweetalert-laravel": "^1.15",
         "php-flasher/flasher-toastr-laravel": "^1.15",
         "simplesoftwareio/simple-qrcode": "^4.2",
