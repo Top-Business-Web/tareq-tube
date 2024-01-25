@@ -15,8 +15,6 @@ class InviteFriendResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'point' => $this['user'],
-            'tokenPrice' => $this['tokenPrice'],
             'token' => $this['token'],
         ];
     }
