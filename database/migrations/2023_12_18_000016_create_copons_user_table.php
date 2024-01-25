@@ -30,13 +30,13 @@ class CreateCoponsUserTable extends Migration
 
             $table->foreign('user_id', 'fk_copons_user_users1_idx')
                 ->references('id')->on('users')
-                ->onDelete('no action')
-                ->onUpdate('no action');
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
 
             $table->foreign('copon_id', 'fk_copons_user_copons1_idx')
                 ->references('id')->on('copons')
-                ->onDelete('no action')
-                ->onUpdate('no action');
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
 
 
             $table->timestamps();

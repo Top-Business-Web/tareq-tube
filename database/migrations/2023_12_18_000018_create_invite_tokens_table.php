@@ -31,8 +31,8 @@ class CreateInviteTokensTable extends Migration
 
             $table->foreign('user_id', 'fk_invite_tokens_users2_idx')
                 ->references('id')->on('users')
-                ->onDelete('no action')
-                ->onUpdate('no action');
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
 
 
             $table->timestamps();

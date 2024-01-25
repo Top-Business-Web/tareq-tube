@@ -35,25 +35,25 @@ class CreateTubesTable extends Migration
             $table->unsignedBigInteger('target')->nullable();
             $table->tinyInteger('status')->nullable()->default('0');
 
-            $table->foreign('sub_count', 'fk_tubes_config_count1_idx')
+            $table->foreign('sub_count')
                 ->references('id')->on('config_count')
-                ->onDelete('no action')
-                ->onUpdate('no action');
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
 
-            $table->foreign('second_count', 'fk_tubes_config_count2_idx')
+            $table->foreign('second_count')
                 ->references('id')->on('config_count')
-                ->onDelete('no action')
-                ->onUpdate('no action');
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
 
-            $table->foreign('view_count', 'fk_tubes_config_count3_idx')
+            $table->foreign('view_count')
                 ->references('id')->on('config_count')
-                ->onDelete('no action')
-                ->onUpdate('no action');
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
 
             $table->foreign('user_id', 'fk_tubes_users1_idx')
                 ->references('id')->on('users')
-                ->onDelete('no action')
-                ->onUpdate('no action');
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
 
             $table->timestamps();
         });

@@ -32,8 +32,8 @@ class CreateWithdrawRequestTable extends Migration
 
             $table->foreign('user_id', 'fk_withdraw_request_users1_idx')
                 ->references('id')->on('users')
-                ->onDelete('no action')
-                ->onUpdate('no action');
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
 
             $table->timestamps();
         });
