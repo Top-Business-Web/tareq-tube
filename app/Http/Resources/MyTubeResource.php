@@ -18,7 +18,7 @@ class MyTubeResource extends JsonResource
             "id" => $this->id,
             "type" => $this->type,
             "url" => $this->url,
-            "target" => ($this->sub_count != null) ?  $this->target .'/'. $this->subCount->count  :  $this->target .'/'. $this->viewCount->count,
+            "target" => ($this->sub_count != null) ? ($this->subCount->count -  $this->target) .'/'. $this->subCount->count  : ($this->viewCount->count - $this->target) .'/'. $this->viewCount->count,
             "status" => $this->status,
             "created_at" => $this->created_at->format('Y-m-d H:i:s'),
             "updated_at" => $this->updated_at->format('Y-m-d H:i:s'),

@@ -76,6 +76,11 @@ class UserController extends Controller
         return $this->userRepositoryInterface->getLinkInvite();
     } // get Link Invite
 
+    public function addLinkPoints(Request $request): JsonResponse
+    {
+        return $this->userRepositoryInterface->AddLinkPoints($request);
+    } // get Link Invite
+
     public function addPointSpin(Request $request): JsonResponse
     {
         return $this->userRepositoryInterface->addPointSpin($request);

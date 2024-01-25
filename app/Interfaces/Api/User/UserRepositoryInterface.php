@@ -111,6 +111,12 @@ interface UserRepositoryInterface
     public function getLinkInvite(): JsonResponse;
 
     /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function AddLinkPoints(Request $request): JsonResponse;
+
+    /**
      * @return JsonResponse
      */
     public function getVipList(): JsonResponse;

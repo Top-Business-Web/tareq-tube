@@ -116,6 +116,7 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
                 $createUser->limit = $setting->limit_user ?? 0;
                 $createUser->msg_limit = 0;
                 $createUser->youtube_link = $request->youtube_link ?? null;
+                $createUser->invite_token = self::randomToken(10);
 
                 if ($createUser->save()) {
                     // Authenticate User
@@ -131,12 +132,6 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
                         ['user_id' => $createUser->id, 'type' => $request->device_type],
                         ['type' => $request->device_type, 'token' => $request->token]
                     );
-
-                    InviteToken::query()->create([
-                        'token' => self::randomToken(10),
-                        'from_user_id' => $createUser->id,
-                        'status' => 0
-                    ]);
 
                     return self::returnResponseDataApi(new UserResource($createUser), 'تم تسجيل الدخول لاول مرة بنجاح', 201);
                 } else {
@@ -300,9 +295,11 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
             $view_count = 0;
             if ($request->has('sub_count') && $request->sub_count != '') {
                 $sub_count = ConfigCount::find($request->sub_count)->point;
+                $sub_count_count = ConfigCount::find($request->sub_count)->count;
             }
             if ($request->has('view_count') && $request->view_count != '') {
                 $view_count = ConfigCount::find($request->view_count)->point;
+                $view_count_count = ConfigCount::find($request->sub_count)->count;
             }
             $second_count = ConfigCount::find($request->second_count)->point;
             $pointsNeed = $second_count + $view_count + $sub_count;
@@ -317,7 +314,7 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
                     $createTube->sub_count = $request->sub_count;
                     $createTube->second_count = $request->second_count;
                     $createTube->view_count = $request->view_count;
-                    $createTube->target = ($request->type == 'view') ? $request->view_count : $request->sub_count;
+                    $createTube->target = ($request->type == 'view') ? $view_count_count : $sub_count_count;
                     $createTube->status = 0;
 
                     if ($createTube->save()) {
@@ -537,14 +534,54 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
     public function getLinkInvite(): JsonResponse
     {
         try {
-            $user = Auth::user()->points;
-            $tokenPrice = Setting::query()->value('token_price');
-            $token = InviteToken::query()->value('token');
-            return self::returnResponseDataApi(new InviteFriendResource(['user' => $user, 'tokenPrice' => $tokenPrice, 'token' => $token]), 'تم الحصول على البيانات بنجاح');
+            $token = Auth::user()->invite_token;
+            return self::returnResponseDataApi(['token' => $token], 'تم الحصول على البيانات بنجاح');
         } catch (\Exception $e) {
             return self::returnResponseDataApi(null, $e->getMessage(), 500);
         }
     } // getLinkInvite
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function AddLinkPoints(Request $request): JsonResponse
+    {
+        try {
+            $user = Auth::user();
+
+            $tokenPrice = Setting::query()->value('token_price');
+            $checkToken = User::query()->where('invite_token',$request->token)
+                ->where('id','!=',$user->id)
+                ->first();
+
+            if (!$checkToken){
+                return self::returnResponseDataApi(null, 'الكود غير موجود',422);
+            }else {
+                $fromUser = $checkToken;
+                $checkInviteLink = InviteToken::query()->where('user_id', $user->id)
+                    ->where('token',$request->token)->first();
+
+                if ($checkInviteLink){
+                    return self::returnResponseDataApi(null, 'تم استخدام الكود من قبل',422);
+                }else {
+                    $createInviteLink = new InviteToken();
+                    $createInviteLink->token = $request->token;
+                    $createInviteLink->user_id = $user->id;
+                    $createInviteLink->status = 1;
+                    $createInviteLink->save();
+
+                    $fromUser->points += $tokenPrice;
+                    $fromUser->save();
+                    $user->points += $tokenPrice;
+                    $user->save();
+                    return self::returnResponseDataApi(new UserResource($user), 'تم اضافة النقاط بنجاح');
+                }
+            }
+        } catch (\Exception $e) {
+            return self::returnResponseDataApi(null, $e->getMessage(), 500);
+        }
+    } // AddLinkPoints
 
     /**
      * @return JsonResponse
@@ -727,7 +764,7 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
             $userVideos = UserAction::query()
                 ->where('user_id', $user->id)
                 ->where('type', $request->type)
-                ->where('status','1')
+                ->where('status', '1')
                 ->pluck('tube_id')->toArray();
 
             $videos = Tube::query()
@@ -735,9 +772,12 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
                 ->where('type', $request->type)
                 ->get();
 
-            $randomVideo = $videos->random();
-
-            return self::returnResponseDataApi(new TubeResource($randomVideo), 'تم الحصول على البيانات بنجاح', 200);
+            if ($videos->count() > 0) {
+                $randomVideo = $videos->random();
+                return self::returnResponseDataApi(new TubeResource($randomVideo), 'تم الحصول على البيانات بنجاح', 200);
+            } else {
+                return self::returnResponseDataApi(null, 'لا يوجد بيانات', 200);
+            }
         } catch (Exception $e) {
             return self::returnResponseDataApi(null, $e->getMessage(), 500);
         }

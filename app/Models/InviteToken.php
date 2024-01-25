@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * @method static create(array $array)
+ * @property int|mixed $status
  */
 class InviteToken extends Model
 {
