@@ -32,6 +32,7 @@ class CreateUsersTable extends Migration
             $table->text('google_id')->nullable();
             $table->unsignedBigInteger('city_id')->nullable();
             $table->unsignedTinyInteger('is_admin')->nullable()->default('0');
+            $table->boolean('is_vip')->default(false);
             $table->unsignedBigInteger('intrest_id')->nullable();
             $table->unsignedBigInteger('points')->nullable()->default('0');
             $table->unsignedBigInteger('limit')->nullable();

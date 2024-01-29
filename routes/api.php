@@ -69,7 +69,10 @@ Route::get('setting', [ConfigController::class, 'setting']);
 ########################### END GENERAL ROUTES ################################
 
 
-Route::post('pay',[PaymentController::class,'pay']);
-Route::post('checkout/processed',[PaymentController::class,'checkout_processed']);
+
+######################### START PAYMENT ROUTES ################################
+Route::post('goPay',[PaymentController::class,'goPay']);
+Route::post('payment/process',[PaymentController::class,'pay']);
 Route::get('payment/callback',[PaymentController::class,'callback']);
-Route::get('checkout',[PaymentController::class,'checkout']);
+Route::post('checkout',[PaymentController::class,'checkout']);
+######################### END PAYMENT ROUTES ################################

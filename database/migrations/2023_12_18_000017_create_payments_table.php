@@ -31,7 +31,6 @@ class CreatePaymentsTable extends Migration
             $table->unsignedTinyInteger('status')->nullable()->default('0');
             $table->unsignedBigInteger('user_id')->nullable();
             $table->unsignedBigInteger('model_id')->nullable();
-
             $table->foreign('user_id', 'fk_payments_users1_idx')
                 ->references('id')->on('users')
                 ->onDelete('cascade')
