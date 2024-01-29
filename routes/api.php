@@ -69,10 +69,11 @@ Route::get('setting', [ConfigController::class, 'setting']);
 ########################### END GENERAL ROUTES ################################
 
 
-
 ######################### START PAYMENT ROUTES ################################
-Route::post('goPay',[PaymentController::class,'goPay']);
-Route::post('payment/process',[PaymentController::class,'pay']);
-Route::get('payment/callback',[PaymentController::class,'callback']);
-Route::post('checkout',[PaymentController::class,'checkout']);
+Route::group(['middleware' => 'jwt'], function () {
+    Route::post('goPay', [PaymentController::class, 'goPay']);
+    Route::post('checkout', [PaymentController::class, 'checkout']);
+    Route::get('payment/callback', [PaymentController::class, 'callback']);
+});
 ######################### END PAYMENT ROUTES ################################
+
