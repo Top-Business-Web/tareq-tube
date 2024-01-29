@@ -4,7 +4,9 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use App\Interfaces\Api\User\UserRepositoryInterface;
+use App\Interfaces\Api\User\PaymentRepositoryInterface;
 use App\Repository\Api\User\UserRepository as UserApiRepository;
+use App\Repository\Api\User\PaymentRepository as PaymentApiRepository;
 
 use App\Interfaces\{
     AuthInterface,
@@ -76,6 +78,7 @@ class RepositoryServiceProvider extends ServiceProvider
 
         // start Api classes and interfaces
         $this->app->bind(UserRepositoryInterface::class,UserApiRepository::class);
+        $this->app->bind(PaymentRepositoryInterface::class,PaymentApiRepository::class);
         // ----------------------------------------------------------------
 
     }
