@@ -116,4 +116,9 @@ class UserController extends Controller
         return $this->userRepositoryInterface->userViewTube($request);
     } // userViewTube
 
+    public function checkUser(Request $request)
+    {
+        return $this->userRepositoryInterface->checkUser($request);
+    }
+
 }

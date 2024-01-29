@@ -122,7 +122,10 @@ class PaymentRepository extends ResponseApi implements PaymentRepositoryInterfac
     public function checkout(array $data)
     {
         $order = Payment::find($data['order_id']);
-        $user = User::find(Auth::user()->id);
+
+        $order->transaction_id = $data['transaction_id'];
+        $order->save();
+        $user = User::find($order->user_id);
         if ($order->type == 'model') {
             $model = ModelPrice::query()->find($order->model_id);
             if ($model->type == 'msg'){
