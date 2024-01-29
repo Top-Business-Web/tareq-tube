@@ -92,7 +92,7 @@ class PaymentController extends Controller
     ############################# التوجهه بعد عمليه الدفع الالكتروني ################
     public function callback(Request $request): RedirectResponse
     {
-        dd($request->all);
+        dd($request->all());
         return redirect()->to('api/checkout?status=' . $request['success'] . '&id=' . $request['id']);
     }
 
