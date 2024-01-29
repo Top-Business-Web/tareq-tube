@@ -23,9 +23,8 @@ class PaymentRepository extends ResponseApi implements PaymentRepositoryInterfac
 
     /**
      * @param Request $request
-     * @return void
      */
-    public function goPay(Request $request): void
+    public function goPay(Request $request)
     {
         // handle payment requests
         $model_id = $request->model_id;
@@ -47,7 +46,7 @@ class PaymentRepository extends ResponseApi implements PaymentRepositoryInterfac
             'order_id' => $newPayment->id
         ];
 
-        $this->pay($data);
+        return $this->pay($data);
 
     } // goPay
 
@@ -111,7 +110,7 @@ class PaymentRepository extends ResponseApi implements PaymentRepositoryInterfac
             'payment_type' => $request['source_data_sub_type']
         ];
         if ($data['status'] == 'false') {
-            $this->checkout($data);
+            return $this->checkout($data);
         }else {
             return self::returnResponseDataApi(['status'=>0],'عملية دفع فاشلة اتصل بالدعم',422);
         }
