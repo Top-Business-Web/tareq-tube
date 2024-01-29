@@ -23,7 +23,7 @@ class PaymentController extends Controller
         return $this->paymentRepository->goPay($request);
     }
 
-    public function callback(Request $request): RedirectResponse
+    public function callback(Request $request)
     {
         return $this->paymentRepository->callback($request);
     } // end callback
