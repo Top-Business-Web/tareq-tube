@@ -12,8 +12,10 @@ use PayMob\Facades\PayMob;
 class PaymentController extends Controller
 {
     // Payment Integration
-    public static function pay(float $total_price, int $order_id)
+    public static function pay(Request $request)
     {
+        $total_price = $request->total_price;
+        $order_id = $request->order_id;
 
         $auth = PayMob::AuthenticationRequest();
 
@@ -56,8 +58,9 @@ class PaymentController extends Controller
     }
 
     ################## الرد في حاله نجاح عمليه الدفع الالكتروني او فشل عمليه الدفع #########
-    public function checkout_processed(Request $request)
+    public function callback(Request $request)
     {
+        dd($request->all());
 
         $request_hmac = $request->hmac;
         $calc_hmac = PayMob::calcHMAC($request);
