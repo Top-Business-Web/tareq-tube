@@ -149,5 +149,10 @@ interface UserRepositoryInterface
      * @return JsonResponse
      */
     public function userViewTube(Request $request):  JsonResponse;
+
+    /**
+     * @return JsonResponse
+     */
+    public function checkUser(Request $request):  JsonResponse;
 }
 //Made By https://github.com/eldapour (eldapour)

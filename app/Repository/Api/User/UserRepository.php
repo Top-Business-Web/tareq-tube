@@ -860,4 +860,19 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
             return self::returnResponseDataApi(null, $e->getMessage(), 500);
         } // end try
     } // userViewTube
+
+    public function checkUser(Request $request): JsonResponse
+    {
+        try {
+            $gmail = $request->gmail;
+            $checkUser = User::where('gmail', $gmail)->first();
+            if ($checkUser){
+                return self::returnResponseDataApi(['status'=>1], 'هذا الحساب موجود في قواعد البيانات');
+            }else {
+                return self::returnResponseDataApi(['status'=>0], 'هذا الحساب غير موجود في قواعد البيانات');
+            }
+        } catch (Exception $e) {
+            return self::returnResponseDataApi(null, $e->getMessage(), 500);
+        } // end try
+    } // checkUser
 }
