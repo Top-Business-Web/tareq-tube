@@ -123,7 +123,7 @@ class PaymentRepository extends ResponseApi implements PaymentRepositoryInterfac
     {
         $order = Payment::find($data['order_id']);
 
-        $order->transaction_id = $data['transaction_id'];
+        $order->transaction_id = $data['id'];
         $order->save();
         $user = User::find($order->user_id);
         if ($order->type == 'model') {
