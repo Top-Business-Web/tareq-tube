@@ -76,19 +76,19 @@ class PaymentRepository extends ResponseApi implements PaymentRepositoryInterfac
             'currency' => 'EGP',
             'order_id' => $order->id,
             "billing_data" => [ // put your client information
-//                "apartment" => "803",
-//                "email" => "claudette09@exa.com",
-//                "floor" => "42",
-//                "first_name" => "Clifford",
-//                "last_name" => "Nicolas",
-//                "street" => "Ethan Land",
-//                "building" => "8028",
-//                "phone_number" => "+86(8)9135210487",
-//                "shipping_method" => "PKG",
-//                "postal_code" => "01898",
-//                "city" => "Jaskolskiburgh",
-//                "country" => "CR",
-//                "state" => "Utah"
+                "apartment" => "803",
+                "email" => "claudette09@exa.com",
+                "floor" => "42",
+                "first_name" => "Clifford",
+                "last_name" => "Nicolas",
+                "street" => "Ethan Land",
+                "building" => "8028",
+                "phone_number" => "+86(8)9135210487",
+                "shipping_method" => "PKG",
+                "postal_code" => "01898",
+                "city" => "Jaskolskiburgh",
+                "country" => "EG",
+                "state" => "Cairo"
             ]
         ]);
 
