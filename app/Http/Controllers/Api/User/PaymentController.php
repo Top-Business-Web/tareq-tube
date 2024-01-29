@@ -58,9 +58,8 @@ class PaymentController extends Controller
     }
 
     ################## الرد في حاله نجاح عمليه الدفع الالكتروني او فشل عمليه الدفع #########
-    public function callback(Request $request)
+    public function checkout_processed(Request $request)
     {
-        dd($request->all());
 
         $request_hmac = $request->hmac;
         $calc_hmac = PayMob::calcHMAC($request);
@@ -91,8 +90,9 @@ class PaymentController extends Controller
     }
 
     ############################# التوجهه بعد عمليه الدفع الالكتروني ################
-    public function responseStatus(Request $request): RedirectResponse
+    public function callback(Request $request): RedirectResponse
     {
+        dd($request->all);
         return redirect()->to('api/checkout?status=' . $request['success'] . '&id=' . $request['id']);
     }
 

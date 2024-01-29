@@ -70,6 +70,6 @@ Route::get('setting', [ConfigController::class, 'setting']);
 
 
 Route::post('pay',[PaymentController::class,'pay']);
-Route::post('paymob-callback',[PaymentController::class,'callback']);
-Route::get('checkout/response',[PaymentController::class,'responseStatus']);
+Route::post('checkout/processed',[PaymentController::class,'checkout_processed']);
+Route::get('payment/callback',[PaymentController::class,'callback']);
 Route::get('checkout',[PaymentController::class,'checkout']);
