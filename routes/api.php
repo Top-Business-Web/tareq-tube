@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Route;
 ######################### START AUTH ROUTES ###################################
 Route::group(['prefix' => 'auth'], function () {
     Route::post('loginWithGoogle', [AuthController::class, 'loginWithGoogle']);
+    Route::post('/checkUser', [UserController::class, 'checkUser']);
 });
 ########################### END AUTH ROUTES ###################################
 
@@ -32,7 +33,6 @@ Route::group(['middleware' => 'jwt'], function () {
 
     //--------------------- User Actions -----------------------
     //= ROUTE POST DATA
-    Route::post('/checkUser', [UserController::class, 'checkUser']);
     Route::post('/addTube', [UserController::class, 'addTube']);
     Route::post('/addMessage', [UserController::class, 'addMessage']);
     Route::post('/addChannel', [UserController::class, 'addChannel']);
