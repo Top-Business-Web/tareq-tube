@@ -30,12 +30,15 @@ trait FirebaseNotification
         Notification::query()
             ->create([
                 'title' => $data['title'],
-                'description' => $data['description'],
+                'description' => $data['body'],
                 'user_id' => $user_id ?? null,
             ]);
 
         $fields = array(
-            'registration_ids' => $tokens,
+            // 'registration_ids' => $tokens,
+            'registration_ids' => [
+                'ctHo9fMpQTGLXrP1JnkrJR:APA91bHRFT15MXQSa8225BpcSUGGvWDy92rYGAYYglAj9dLaV8WhdDcBjhZCse4azycfsfIZcftB42D04Oy6hAN_Qg6AfcK0CZbgEdWnayRgTKtuddbfKgL5AMnPK9Hd0G-TFW60z2Dv'
+            ],
             'data' => ["note_type" => "notification"],
             'notification' => $data
         );

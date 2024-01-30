@@ -38,8 +38,12 @@ class NotificationRepository implements NotificationInterface
 
     public function showCreate()
     {
-        $users = User::query()->select('id', 'name')->get();
-        return view('admin/notifications/parts/create', compact('users'));
+        return $this->sendFirebaseNotification([
+            'title' => 'ffff',
+            'body' => 'ffff',
+        ], 1);
+        // $users = User::query()->select('id', 'name')->get();
+        // return view('admin/notifications/parts/create', compact('users'));
     }
 
     public function storeNotification($request)
@@ -48,10 +52,6 @@ class NotificationRepository implements NotificationInterface
             $inputs = $request->all();
 
             if ($this->createNotification($inputs)) {
-                $this->sendFirebaseNotification([
-                    'title' => $inputs['title'],
-                    'body' => $inputs['description'],
-                ], $inputs['user_id']);
                 toastr()->addSuccess('تم اضافة الاشعار بنجاح');
                 return redirect()->back();
             } else {
