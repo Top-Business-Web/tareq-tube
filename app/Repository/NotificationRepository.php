@@ -2,13 +2,17 @@
 
 namespace App\Repository;
 
-use App\Interfaces\NotificationInterface;
-use App\Models\Notification;
 use App\Models\User;
+use App\Models\Notification;
 use Yajra\DataTables\DataTables;
+use App\Traits\FirebaseNotification;
+use App\Interfaces\NotificationInterface;
 
 class NotificationRepository implements NotificationInterface
 {
+
+    use FirebaseNotification;
+    
     public function index($request)
     {
         if ($request->ajax()) {
@@ -44,6 +48,10 @@ class NotificationRepository implements NotificationInterface
             $inputs = $request->all();
 
             if ($this->createNotification($inputs)) {
+                $this->sendFirebaseNotification([
+                    'title' => $inputs['title'],
+                    'body' => $inputs['description'],
+                ], $inputs['user_id']);
                 toastr()->addSuccess('تم اضافة الاشعار بنجاح');
                 return redirect()->back();
             } else {
