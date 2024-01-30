@@ -88,7 +88,7 @@
 
         <li class="slide">
             <a class="side-menu__item" href="{{ route('userAction.index') }}">
-               <i class="fa fa-person-running side-menu__icon"></i>
+               <i class="fa fa-user side-menu__icon"></i>
                 <span class="side-menu__label">تفاعل المستخدمين</span>
             </a>
         </li>
