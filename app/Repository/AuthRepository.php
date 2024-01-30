@@ -33,7 +33,6 @@ class AuthRepository implements AuthInterface
             return redirect()->route('adminHome');
         }
         toastr()->addError('هناك خطا في البيانات');
-//        return redirect()->back();
     }
 
     public function logout()
