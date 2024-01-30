@@ -2,55 +2,42 @@
 
 namespace App\Traits;
 
-use App\Models\Notification;
 use App\Models\DeviceToken;
+use App\Models\Notification;
 use App\Models\User;
 
 trait FirebaseNotification
 {
 
     //firebase server key
-    private string $serverKey = 'AAAAYR8Sg9c:APA91bG2iz-PO2r1Pt7D-Z6BCBlKsfslMYDx7bTkoiXYC9Fvd8hCs-7rV82Qec5gpJyoR6AZQUsuDXJJiuLFXmqFhXrDijyJQR7TGU-ZzE---BcLvvp46AMvVJikSFjdaP0XIYM33klH';
+    private string $serverKey = 'AAAAgU3S_qk:APA91bFM8J_dvNalQDGUDdoLZQnxtAyscbw3ZLE4CYJ1l5ofbpOIFiaUK0qsDvZP0dOFlrytnlOjS7Bfxk3PcoaesXY8alRAkGQyAmQO-BteeovaJ3k2sOlHB2acOEtFktLFKdMmo8bV';
 
 
-    public function sendFirebaseNotification($data, $user_id = null, $type = 'user', $create = true)
+    public function sendFirebaseNotification($data, $user_id = null)
     {
-
         $url = 'https://fcm.googleapis.com/fcm/send';
 
-        if ($user_id != null && $type == 'user') {
+        if ($user_id != null) {
             $userIds = User::where('id', '=', $user_id)->pluck('id')->toArray();
             $tokens = DeviceToken::whereIn('user_id', $userIds)->pluck('token')->toArray();
-
-        } elseif ($user_id != null && $type == 'driver') {
-            $userIds = User::where('id', '=', $user_id)->pluck('id')->toArray();
-            $tokens = DeviceToken::whereIn('user_id', $userIds)->pluck('token')->toArray();
-        } elseif ($user_id == null && $type == 'all_user') {
-            $usersIds = User::where('type', '=', 'user')->pluck('id')->toArray();
-            $tokens = DeviceToken::whereIn('user_id', $usersIds)->pluck('token')->toArray();
-        } elseif ($user_id == null && $type == 'all_driver') {
-            $usersIds = User::where('type', '=', 'driver')
-                ->where('status', '=', true)->pluck('id')->toArray();
-            $tokens = DeviceToken::whereIn('user_id', $usersIds)->pluck('token')->toArray();
         } else {
             $userIds = User::pluck('id')->toArray();
             $tokens = DeviceToken::whereIn('user_id', $userIds)->pluck('token')->toArray();
         }
 
-        if ($create === true) {
-            //start notification store
-            Notification::query()
-                ->create([
-                    'title' => $data['title'],
-                    'description' => $data['body'],
-                    'user_id' => $user_id ?? null,
-                    'type' => $type
-                ]);
-        }
+
+        //start notification store
+        Notification::query()
+            ->create([
+                'title' => $data['title'],
+                'description' => $data['description'],
+                'user_id' => $user_id ?? null,
+            ]);
 
         $fields = array(
             'registration_ids' => $tokens,
-            'data' => $data,
+            'data' => ["note_type" => "notification"],
+            'notification' => $data
         );
         $fields = json_encode($fields);
 
@@ -73,5 +60,4 @@ trait FirebaseNotification
         curl_close($ch);
         return $result;
     }
-
 }
