@@ -108,6 +108,13 @@
         </li>
 
         <li class="slide">
+            <a class="side-menu__item" href="{{ route('payment-transaction.index') }}">
+                <i class="fa fa-money-check side-menu__icon"></i>
+                <span class="side-menu__label">معاملات الدفع</span>
+            </a>
+        </li>
+
+        <li class="slide">
             <a class="side-menu__item" href="{{ route('setting.edit') }}">
                 <i class="fa fa-wrench side-menu__icon"></i>
                 <span class="side-menu__label">الاعدادات</span>

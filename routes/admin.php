@@ -22,6 +22,7 @@ use App\Http\Controllers\Admin\{
     UserActionController,
     TubeController,
     ModelPriceController,
+    PaymentTransactionController,
     SettingController,
 };
 
@@ -140,6 +141,10 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:user'], function () {
     #============================ Setting =====================================
     Route::get('setting/edit', [SettingController::class, 'showEditSetting'])->name('setting.edit');
     Route::put('setting/update/{id}', [SettingController::class, 'updateSetting'])->name('setting.update');
+
+    #============================ Payment Transaction =====================================
+    Route::get('payment-transaction', [PaymentTransactionController::class, 'index'])->name('payment-transaction.index');
+    Route::get('payment-transaction/{id}/delete', [PaymentTransactionController::class, 'delete'])->name('payment-transaction.delete');
 
 });
 

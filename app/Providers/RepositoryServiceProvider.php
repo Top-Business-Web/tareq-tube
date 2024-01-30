@@ -24,6 +24,7 @@ use App\Interfaces\{
     UserActionInterface,
     TubeInterface,
     ModelPriceInterface,
+    PaymentTransactionInterface,
     SettingInterface,
 };
 use App\Repository\{
@@ -42,7 +43,8 @@ use App\Repository\{
     UserActionRepository,
     TubeRepository,
     ModelPriceRepository,
-    SettingRepository
+    SettingRepository,
+    PaymentTransactionRepository
 };
 
 
@@ -73,6 +75,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(TubeInterface::class,TubeRepository::class);
         $this->app->bind(ModelPriceInterface::class,ModelPriceRepository::class);
         $this->app->bind(SettingInterface::class,SettingRepository::class);
+        $this->app->bind(PaymentTransactionInterface::class,PaymentTransactionRepository::class);
         // ----------------------------------------------------------------
 
 
