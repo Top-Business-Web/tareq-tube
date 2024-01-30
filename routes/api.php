@@ -74,7 +74,7 @@ Route::get('setting', [ConfigController::class, 'setting']);
 Route::group(['middleware' => 'jwt'], function () {
     Route::post('goPay', [PaymentController::class, 'goPay']);
 });
-    Route::post('checkout', [PaymentController::class, 'checkout']);
     Route::get('payment/callback', [PaymentController::class, 'callback']);
+    Route::post('checkout', [PaymentController::class, 'checkout']);
 ######################### END PAYMENT ROUTES ################################
 

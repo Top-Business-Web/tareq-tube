@@ -109,7 +109,7 @@ class PaymentRepository extends ResponseApi implements PaymentRepositoryInterfac
             'order_id' => $request['merchant_order_id'],
             'payment_type' => $request['source_data_sub_type']
         ];
-        if ($data['status'] == 'false') {
+        if ($data['status'] !== 'false') {
             return $this->checkout($data);
         }else {
             return self::returnResponseDataApi(['status'=>0],'عملية دفع فاشلة اتصل بالدعم',422);
