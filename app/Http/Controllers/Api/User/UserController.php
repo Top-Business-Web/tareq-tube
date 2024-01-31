@@ -119,6 +119,6 @@ class UserController extends Controller
     public function checkUser(Request $request)
     {
         return $this->userRepositoryInterface->checkUser($request);
-    }
+    } // check user
 
 }
