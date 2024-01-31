@@ -392,7 +392,9 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
     {
         try {
             $data = Notification::query()->where('user_id', Auth::user()->id)
-                ->orWhere('user_id', null)->get();
+                ->orWhere('user_id', null)
+                ->latest()
+                ->get();
 
             return self::returnResponseDataApi(NotificationResource::collection($data), 'تم الحصول علي البيانات بنجاح');
         } catch (\Exception $e) {
@@ -453,7 +455,7 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
     {
         try {
             $user = Auth::guard('user-api')->user();
-            $messages = Message::query()->where('user_id', $user->id)->get();
+            $messages = Message::query()->where('user_id', $user->id)->latest()->get();
             if ($messages->count() > 0) {
                 return self::returnResponseDataApi(MyMessageResource::collection($messages), 'تم الحصول علي البيانات بنجاح');
             } else {
