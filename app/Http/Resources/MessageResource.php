@@ -16,13 +16,9 @@ class MessageResource extends JsonResource
     {
         return [
             "id" => $this->id,
-            "url" => $this->url,
             "content" => $this->content,
-            "city" => $this->city,
-            "interest" => $this->intrest,
-            "user" => new UserResource(\Auth::guard('user-api')->user()),
-            "created_at" => ($this->created_at) ? $this->created_at->format('Y-m-d H:i:s') : '',
-            "updated_at" => ($this->updated_at) ? $this->updated_at->format('Y-m-d H:i:s') : '',
+            "url" => $this->url,
+            "created_at" => optional($this->created_at)->diffForHumans(),
         ];
     }
 }

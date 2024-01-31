@@ -17,17 +17,19 @@ class PaymentController extends Controller
         $this->paymentRepository = $paymentRepository;
     }
 
-    // Payment to get iframe
+    #|> Payment to get iframe
     public function goPay(Request $request)
     {
         return $this->paymentRepository->goPay($request);
-    }
+    } // end goPay
 
+    #|> callback function for paymob payment
     public function callback(Request $request)
     {
         return $this->paymentRepository->callback($request);
     } // end callback
 
+    #|> checkout && endpoint for paymob payment
     public function checkout(array $data)
     {
         return $this->paymentRepository->checkout($data);

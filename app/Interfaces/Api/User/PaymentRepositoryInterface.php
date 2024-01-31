@@ -7,9 +7,28 @@ use Illuminate\Http\Request;
 
 interface PaymentRepositoryInterface
 {
-    public function goPay(Request $request);
+    /**
+     * @param Request $request
+     * @return mixed
+     */
+    public function goPay(Request $request): mixed;
+
+    /**
+     * @param array $data
+     * @return JsonResponse
+     */
     public function pay(array $data): JsonResponse;
-    public function callback(Request $request);
-    public function checkout(array $data);
+
+    /**
+     * @param Request $request
+     * @return mixed
+     */
+    public function callback(Request $request): mixed;
+
+    /**
+     * @param array $data
+     * @return mixed
+     */
+    public function checkout(array $data): mixed;
 }
 //Made By https://github.com/eldapour (eldapour)
