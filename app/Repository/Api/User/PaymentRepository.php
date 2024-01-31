@@ -132,13 +132,24 @@ class PaymentRepository extends ResponseApi implements PaymentRepositoryInterfac
                 $model->count;
                 $user->msg_limit += $model->count;
                 $user->save();
-
+                //|> send FCM notification
+                $fcmData =[
+                    'title' => 'عملية شراء ناجحة',
+                    'body' => 'عملية شراء رسائل ناجحة رصيدك الان من الرسائل :' . $user->msg_limit,
+                ];
+                $this->sendFirebaseNotification($fcmData,$user->id);
                 return self::returnResponseDataApi(['status'=>1],'عملية شراء رسائل ناجحة');
             }else {
                 $model->count;
                 $user->points += $model->count;
                 $user->limit += $model->count;
                 $user->save();
+                //|> send FCM notification
+                $fcmData =[
+                    'title' => 'عملية شراء ناجحة',
+                    'body' => 'عملية شراء نقاط ناجحة رصيدك الان من النقاط :' . $user->points,
+                ];
+                $this->sendFirebaseNotification($fcmData,$user->id);
                 return self::returnResponseDataApi(['status'=>1],'عملية شراء نقاط ناجحة');
             }
 
@@ -160,6 +171,12 @@ class PaymentRepository extends ResponseApi implements PaymentRepositoryInterfac
             // Update user
             $user->is_vip = 1;
             $user->save();
+            //|> send FCM notification
+            $fcmData =[
+                'title' => 'عملية شراء ناجحة',
+                'body' => 'عملية شراء باقة VIP ناجحة .',
+            ];
+            $this->sendFirebaseNotification($fcmData,$user->id);
 
             return self::returnResponseDataApi(['status'=>1],'عملية شراء باقة VIP ناجحة');
 

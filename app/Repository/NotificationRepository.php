@@ -12,7 +12,7 @@ class NotificationRepository implements NotificationInterface
 {
 
     use FirebaseNotification;
-    
+
     public function index($request)
     {
         if ($request->ajax()) {
@@ -48,10 +48,13 @@ class NotificationRepository implements NotificationInterface
             $inputs = $request->all();
 
             if ($this->createNotification($inputs)) {
-                $this->sendFirebaseNotification([
+                //|> send FCM notification
+                $fcmData =[
                     'title' => $inputs['title'],
                     'body' => $inputs['description'],
-                ], $inputs['user_id']);
+                ];
+                $this->sendFirebaseNotification($fcmData, $inputs['user_id'],true);
+
                 toastr()->addSuccess('تم اضافة الاشعار بنجاح');
                 return redirect()->back();
             } else {

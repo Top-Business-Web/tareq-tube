@@ -10,10 +10,10 @@ trait FirebaseNotification
 {
 
     //firebase server key
-    private string $serverKey = 'AAAAgU3S_qk:APA91bFM8J_dvNalQDGUDdoLZQnxtAyscbw3ZLE4CYJ1l5ofbpOIFiaUK0qsDvZP0dOFlrytnlOjS7Bfxk3PcoaesXY8alRAkGQyAmQO-BteeovaJ3k2sOlHB2acOEtFktLFKdMmo8bV';
+    private string $serverKey = 'AAAADSJHJPw:APA91bEmJEJKIHb30TxM4jXpB-sRsfe3iMvBcv4mhuY2plRkh-iLGtyK-ISk1-7FpCWtzbi761TQmd_PpZJ1sXUz8_Ovhz3JD9e1QdSzeIQZdGW5R3b9daJ5Q2C4tQleH0rgv--iwzl0';
 
 
-    public function sendFirebaseNotification($data, $user_id = null)
+    public function sendFirebaseNotification($data, $user_id = null, $created = false,$interest_id = null)
     {
         $url = 'https://fcm.googleapis.com/fcm/send';
 
@@ -21,18 +21,22 @@ trait FirebaseNotification
             $userIds = User::where('id', '=', $user_id)->pluck('id')->toArray();
             $tokens = DeviceToken::whereIn('user_id', $userIds)->pluck('token')->toArray();
         } else {
-            $userIds = User::pluck('id')->toArray();
+            if ($interest_id != null) {
+                $userIds = User::where('intrest_id',$interest_id)->pluck('id')->toArray();
+            }else {
+                $userIds = User::pluck('id')->toArray();
+            }
             $tokens = DeviceToken::whereIn('user_id', $userIds)->pluck('token')->toArray();
         }
 
-
-        //start notification store
-        Notification::query()
-            ->create([
-                'title' => $data['title'],
-                'description' => $data['description'],
-                'user_id' => $user_id ?? null,
-            ]);
+        if (!$created) {
+            //|> start notification store
+            $createNotification = new Notification();
+            $createNotification->title = $data['title'];
+            $createNotification->description = $data['body'];
+            $createNotification->user_id = $user_id ?? null;
+            $createNotification->save();
+        }
 
         $fields = array(
             'registration_ids' => $tokens,

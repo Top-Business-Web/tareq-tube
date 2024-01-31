@@ -348,7 +348,7 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
                 'city_id' => 'required',
                 'intrest_id' => 'required',
             ]);
-
+            //|> Validator Fails
             if ($validator->fails()) {
                 $error = $validator->errors()->first();
                 return self::returnResponseDataApi(null, $error, 422);
@@ -365,6 +365,14 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
                 if ($addMessage->save()) {
                     $user->msg_limit -= 1;
                     $user->save();
+
+                    //|> send FCM notification
+                    $fcmData =[
+                        'title' => 'رسالة جديدة',
+                        'body' => $addMessage->content
+                    ];
+                    $this->sendFirebaseNotification($fcmData,null,false,$addMessage->intrest_id);
+
                     return self::returnResponseDataApi(new MessageResource($addMessage), 'تم انشاء الرسالة بنجاح', 201);
                 } else {
                     return self::returnResponseDataApi(null, 'هناك خطا ما', 500);
