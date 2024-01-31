@@ -469,8 +469,8 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
         try {
             $user = Auth::guard('user-api')->user();
             $messages = Message::query()
-                ->where('city_id', $user->city_id)
                 ->where('intrest_id', $user->intrest_id)
+                ->latest()
                 ->get();
             if ($messages->count() > 0) {
                 return self::returnResponseDataApi(MessageResource::collection($messages), 'تم الحصول علي البيانات بنجاح');
