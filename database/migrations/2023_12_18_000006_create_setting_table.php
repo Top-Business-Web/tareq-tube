@@ -32,6 +32,7 @@ class CreateSettingTable extends Migration
             $table->unsignedBigInteger('vat')->nullable();
             $table->text('privacy')->nullable();
             $table->unsignedBigInteger('point_price')->nullable();
+            $table->unsignedBigInteger('limit_balance')->nullable();
             $table->unsignedBigInteger('token_price')->nullable();
             $table->timestamps();
         });

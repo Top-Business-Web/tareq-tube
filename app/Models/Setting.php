@@ -19,6 +19,7 @@ class Setting extends Model
         'vat',
         'privacy',
         'point_price',
+        'limit_balance',
         'token_price'
     ];
 }

@@ -121,5 +121,10 @@ class UserController extends Controller
         return $this->userRepositoryInterface->checkUser($request);
     } #|> check user
 
+    public function withdraw(Request $request)
+    {
+        return $this->userRepositoryInterface->withdraw($request);
+    } #|> withdraw user
+
 }
 ###############|> Made By https://github.com/eldapour (eldapour) 🚀

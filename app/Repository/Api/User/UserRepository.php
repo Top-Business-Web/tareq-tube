@@ -30,6 +30,7 @@ use App\Models\Tube;
 use App\Models\User;
 use App\Models\UserAction;
 use App\Models\UserSpin;
+use App\Models\Withdraw;
 use App\Repository\Api\ResponseApi;
 use App\Traits\FirebaseNotification;
 use App\Traits\PhotoTrait;
@@ -230,12 +231,25 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
                 ->where('type', 'view')
                 ->count();
             $message_count = Message::query()->where('user_id', Auth::guard('user-api')->user()->id)->count();
+
+            $setting = Setting::query()->first([
+                'logo',
+                'phone',
+                'limit_user',
+                'point_user',
+                'vat',
+                'point_price',
+                'limit_balance',
+                'token_price'
+            ]);
+
             $data = [
                 'sliders' => SliderResource::collection(Slider::get()),
                 'user' => new UserResource(\Auth::user()),
                 'subscribe_count' => $subscribe_count,
                 'views_count' => $views_count,
                 'message_count' => $message_count,
+                'setting' => $setting,
             ];
             return self::returnResponseDataApi($data, 'تم الحصول علي البيانات بنجاح');
         } catch (\Exception $e) {
@@ -367,11 +381,11 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
                     $user->save();
 
                     //|> send FCM notification
-                    $fcmData =[
+                    $fcmData = [
                         'title' => 'رسالة جديدة',
                         'body' => $addMessage->content
                     ];
-                    $this->sendFirebaseNotification($fcmData,null,false,$addMessage->intrest_id);
+                    $this->sendFirebaseNotification($fcmData, null, false, $addMessage->intrest_id);
 
                     return self::returnResponseDataApi(new MessageResource($addMessage), 'تم انشاء الرسالة بنجاح', 201);
                 } else {
@@ -409,7 +423,7 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
     {
         try {
             $tubes = Tube::query()->where('user_id', Auth::guard('user-api')->user()->id)
-                ->where('type','=','sub')
+                ->where('type', '=', 'sub')
                 ->latest()
                 ->get();
             return self::returnResponseDataApi(MyTubeResource::collection($tubes), 'تم الحصول علي البيانات بنجاح');
@@ -479,7 +493,6 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
             } else {
                 return self::returnResponseDataApi(null, 'لا يوجد رسائل حتي الان', 422);
             }
-
         } catch (\Exception $e) {
             return self::returnResponseDataApi(null, $e->getMessage(), 500);
         }
@@ -560,20 +573,20 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
             $user = Auth::user();
 
             $tokenPrice = Setting::query()->value('token_price');
-            $checkToken = User::query()->where('invite_token',$request->token)
-                ->where('id','!=',$user->id)
+            $checkToken = User::query()->where('invite_token', $request->token)
+                ->where('id', '!=', $user->id)
                 ->first();
 
-            if (!$checkToken){
-                return self::returnResponseDataApi(null, 'الكود غير موجود',422);
-            }else {
+            if (!$checkToken) {
+                return self::returnResponseDataApi(null, 'الكود غير موجود', 422);
+            } else {
                 $fromUser = $checkToken;
                 $checkInviteLink = InviteToken::query()->where('user_id', $user->id)
-                    ->where('token',$request->token)->first();
+                    ->where('token', $request->token)->first();
 
-                if ($checkInviteLink){
-                    return self::returnResponseDataApi(null, 'تم استخدام الكود من قبل',422);
-                }else {
+                if ($checkInviteLink) {
+                    return self::returnResponseDataApi(null, 'تم استخدام الكود من قبل', 422);
+                } else {
                     $createInviteLink = new InviteToken();
                     $createInviteLink->token = $request->token;
                     $createInviteLink->user_id = $user->id;
@@ -876,14 +889,60 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
         try {
             $gmail = $request->gmail;
             $checkUser = User::where('gmail', $gmail)->first();
-            if ($checkUser){
-                return self::returnResponseDataApi(['status'=>1], 'هذا الحساب موجود في قواعد البيانات');
-            }else {
-                return self::returnResponseDataApi(['status'=>0], 'هذا الحساب غير موجود في قواعد البيانات');
+            if ($checkUser) {
+                return self::returnResponseDataApi(['status' => 1], 'هذا الحساب موجود في قواعد البيانات');
+            } else {
+                return self::returnResponseDataApi(['status' => 0], 'هذا الحساب غير موجود في قواعد البيانات');
             }
         } catch (Exception $e) {
             return self::returnResponseDataApi(null, $e->getMessage(), 500);
         } // end try
     } // checkUser
+
+    public function withdraw(Request $request): JsonResponse
+    {
+        try {
+            $user = User::find(Auth::user()->id);
+            $point_price = Setting::value('point_price');
+            $limit_balance = Setting::value('limit_balance');
+            $rules = [
+                'phone' => 'required',
+            ];
+            $validator = Validator::make($request->all(),$rules);
+
+            if ($validator->fails()){
+                $error = $validator->errors()->first();
+                return self::returnResponseDataApi(null,$error,422);
+            }
+
+            if ($user->points < $limit_balance){
+                return self::returnResponseDataApi(null,'لا يوجد رصيد كافي لسحبه اقل رصيد للسحب : ' . $limit_balance . ' ج.م' ,422);
+            }
+
+            $createWithdraw = new Withdraw();
+            $createWithdraw->user_id = $user->id;
+            $createWithdraw->phone = $request->input('phone');
+            $createWithdraw->price = $user->points / $point_price;
+            $createWithdraw->status = 0;
+
+            if($createWithdraw->save()){
+                $user->points = 0;
+                $user->save();
+
+                //|> send FCM notification
+                $fcmData = [
+                    'title' => 'طلب سحب رصيد',
+                    'body' => 'تم طلب سحب رصيد وسيتم اخطارك بارسال الرصيد في اقرب وقت'
+                ];
+                $this->sendFirebaseNotification($fcmData,$user->id);
+
+                return self::returnResponseDataApi(['status'=>1],'تم ارسال طلب سحب رصيد بنجاح');
+            }else {
+                return self::returnResponseDataApi(null,'هناك خطا ما حاول في وقت لاحق',422);
+            }
+        } catch (Exception $e) {
+            return self::returnResponseDataApi(null, $e->getMessage(), 500);
+        } // end try
+    } // end withdraw
 }
 ###############|> Made By https://github.com/eldapour (eldapour) 🚀
