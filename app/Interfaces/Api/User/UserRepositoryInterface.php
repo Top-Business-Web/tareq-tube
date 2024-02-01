@@ -151,8 +151,15 @@ interface UserRepositoryInterface
     public function userViewTube(Request $request):  JsonResponse;
 
     /**
+     * @param Request $request
      * @return JsonResponse
      */
     public function checkUser(Request $request):  JsonResponse;
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function withdraw(Request $request): JsonResponse;
 }
 ###############|> Made By https://github.com/eldapour (eldapour) 🚀

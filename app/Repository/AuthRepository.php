@@ -3,7 +3,9 @@
 namespace App\Repository;
 
 use App\Interfaces\AuthInterface;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class AuthRepository implements AuthInterface
 {
@@ -17,18 +19,23 @@ class AuthRepository implements AuthInterface
 
     public function login($request)
     {
-        $data = $request->validate(
-            [
-                'gmail' => 'required|exists:users,gmail',
-                'password' => 'required'
-            ],
-            [
-                'gmail.exists' => 'هذا البريد غير مسجل معنا',
-                'gmail.required' => 'يرجي ادخال البريد الالكتروني',
-                'password.required' => 'يرجي ادخال كلمة المرور',
-            ]
-        );
-        if (Auth::guard('user')->attempt($data)) {
+        $validator = Validator::make($request->all(), [
+            'gmail' => 'required|exists:users,gmail',
+            'password' => 'required'
+        ], [
+            'gmail.exists' => 'هذا البريد غير مسجل معنا',
+            'gmail.required' => 'يرجي ادخال البريد الالكتروني',
+            'password.required' => 'يرجي ادخال كلمة المرور',
+        ]);
+        if ($validator->fails()) {
+            $errors = $validator->errors()->all();
+            foreach ($errors as $error) {
+                toastr()->addError($error);
+            }
+            return redirect()->back();
+        }
+
+        if (Auth::guard('user')->attempt(['gmail' => $request->gmail, 'password' => $request->password])) {
             toastr()->addSuccess('تم تسجيل الدخول بنجاح');
             return redirect()->route('adminHome');
         }

@@ -41,6 +41,7 @@ Route::group(['middleware' => 'jwt'], function () {
     Route::post('/getTubeRandom', [UserController::class, 'getTubeRandom']);
     Route::post('/userViewTube', [UserController::class, 'userViewTube']);
     Route::post('/addLinkPoints', [UserController::class, 'addLinkPoints']);
+    Route::post('/withdraw', [UserController::class, 'withdraw']);
 
     #|> ROUTE GET DATA
     Route::get('/notification', [UserController::class, 'notification']);
