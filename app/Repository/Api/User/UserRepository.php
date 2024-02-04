@@ -283,7 +283,6 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
     public function addTube(Request $request): JsonResponse
     {
         try {
-            /** @var \App\Models\User $user * */
             $user = Auth::guard('user-api')->user();
             $userPoint = $user->points;
 
@@ -313,34 +312,54 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
             $second_count = ConfigCount::find($request->second_count)->point;
             $pointsNeed = $second_count + $view_count + $sub_count;
 
-            if ($user->limit > 0) {
-                if ($userPoint >= $pointsNeed) {
-                    $createTube = new Tube();
-                    $createTube->type = $request->type;
-                    $createTube->points = $pointsNeed;
-                    $createTube->user_id = $user->id;
-                    $createTube->url = $request->url;
-                    $createTube->sub_count = $request->type == 'view' ? null : $request->sub_count;
-                    $createTube->second_count = $request->second_count;
-                    $createTube->view_count = $request->view_count;
-                    $createTube->target = ($request->type == 'view') ? $view_count_count : $sub_count_count;
-                    $createTube->status = 0;
+            if ($user->is_vip != 1){
+                if ($user->limit > 0) {
+                    if ($userPoint >= $pointsNeed) {
+                        $createTube = new Tube();
+                        $createTube->type = $request->type;
+                        $createTube->points = $pointsNeed;
+                        $createTube->user_id = $user->id;
+                        $createTube->url = $request->url;
+                        $createTube->sub_count = $request->type == 'view' ? null : $request->sub_count;
+                        $createTube->second_count = $request->second_count;
+                        $createTube->view_count = $request->view_count;
+                        $createTube->target = ($request->type == 'view') ? $view_count_count : $sub_count_count;
+                        $createTube->status = 0;
 
-                    if ($createTube->save()) {
-                        $user->points -= $pointsNeed;
-                        $user->limit -= 1;
-                        $user->save();
+                        if ($createTube->save()) {
+                            $user->points -= $pointsNeed;
+                            $user->limit -= 1;
+                            $user->save();
 
-                        return self::returnResponseDataApi(new TubeResource($createTube), 'تم الانشاء بنجاح', 201);
+                            return self::returnResponseDataApi(new TubeResource($createTube), 'تم الانشاء بنجاح', 201);
+                        } else {
+                            return self::returnResponseDataApi(null, 'هناك خطا ما', 500);
+                        }
                     } else {
-                        return self::returnResponseDataApi(null, 'هناك خطا ما', 500);
+                        return self::returnResponseDataApi(null, 'نقاطك لا تكفي لاتمام العملية تحتاج الي ' . $pointsNeed - $userPoint . ' من النقاط ', 422);
                     }
                 } else {
-                    return self::returnResponseDataApi(null, 'نقاطك لا تكفي لاتمام العملية تحتاج الي ' . $pointsNeed - $userPoint . ' من النقاط ', 422);
+                    return self::returnResponseDataApi(null, 'تم الانتهاء من الباقة الحالية قم بشراء باقة جديدة', 422);
                 }
-            } else {
-                return self::returnResponseDataApi(null, 'تم الانتهاء من الباقة الحالية قم بشراء باقة جديدة', 422);
+            }else {
+                $createTube = new Tube();
+                $createTube->type = $request->type;
+                $createTube->points = $pointsNeed;
+                $createTube->user_id = $user->id;
+                $createTube->url = $request->url;
+                $createTube->sub_count = $request->type == 'view' ? null : $request->sub_count;
+                $createTube->second_count = $request->second_count;
+                $createTube->view_count = $request->view_count;
+                $createTube->target = ($request->type == 'view') ? $view_count_count : $sub_count_count;
+                $createTube->status = 0;
+
+                if ($createTube->save()) {
+                    return self::returnResponseDataApi(new TubeResource($createTube), 'تم الانشاء بنجاح', 201);
+                } else {
+                    return self::returnResponseDataApi(null, 'هناك خطا ما', 500);
+                }
             }
+
         } catch (\Exception $e) {
             return self::returnResponseDataApi(null, $e->getMessage(), 500);
         }
