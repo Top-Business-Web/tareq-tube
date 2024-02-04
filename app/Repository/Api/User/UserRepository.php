@@ -809,6 +809,7 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
                 ->pluck('tube_id')->toArray();
 
             $videos = Tube::query()
+                ->where('user_id','!=',$user->id)
                 ->whereNotIn('id', $userVideos)
                 ->where('type', $request->type)
                 ->get();
