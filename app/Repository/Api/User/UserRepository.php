@@ -812,6 +812,7 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
     public function userViewTube(Request $request): JsonResponse
     {
         try {
+            $vat = Setting::value('vat');
             $user = Auth::user();
             // validate requests
             $validator = Validator::make($request->all(), [
@@ -832,6 +833,16 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
             if (!$tube) {
                 return self::returnResponseDataApi(null, 'لا يوجد فيديو او قناه بهذا المعرف', 422);
             }
+            // point vat calculate
+            $point_vat = $tube->points - ($tube->points * ($vat / 100));
+
+            // view point calculate
+            if ($tube->type = 'view') {
+                $point_gain = $point_vat / $tube->viewCount->count;
+            } else {
+                $point_gain = $point_vat / $tube->subCount->count;
+            }
+
             // check if action exists
             $checkActionExists = UserAction::query()
                 ->where([
@@ -847,13 +858,13 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
 
                 $checkActionExists->update([
                     'status' => $request->status,
-                    'points' => $tube->points
+                    'points' => $point_gain
                 ]);
 
                 if ($checkActionExists->status == 1) {
                     $tube->target -= 1;
                     $tube->save();
-                    $user->points += $tube->points;
+                    $user->points += $point_gain;
                     $user->save();
                 }
 
@@ -864,13 +875,13 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
                 $addUserAction->tube_id = $request->tube_id;
                 $addUserAction->type = $tube->type;
                 $addUserAction->status = $request->status;
-                $addUserAction->points = $tube->points;
+                $addUserAction->points = $point_gain;
                 // if save return response
                 if ($addUserAction->save()) {
                     if ($addUserAction->status == 1) {
                         $tube->target -= 1;
                         $tube->save();
-                        $user->points += $tube->points;
+                        $user->points += $point_gain;
                         $user->save();
                     }
                     return self::returnResponseDataApi($addUserAction, 'تم الاضافة بنجاح');
@@ -884,6 +895,10 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
         } // end try
     } // userViewTube
 
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
     public function checkUser(Request $request): JsonResponse
     {
         try {
@@ -899,6 +914,10 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
         } // end try
     } // checkUser
 
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
     public function withdraw(Request $request): JsonResponse
     {
         try {
@@ -908,15 +927,15 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
             $rules = [
                 'phone' => 'required',
             ];
-            $validator = Validator::make($request->all(),$rules);
+            $validator = Validator::make($request->all(), $rules);
 
-            if ($validator->fails()){
+            if ($validator->fails()) {
                 $error = $validator->errors()->first();
-                return self::returnResponseDataApi(null,$error,422);
+                return self::returnResponseDataApi(null, $error, 422);
             }
 
-            if ($user->points < $limit_balance){
-                return self::returnResponseDataApi(null,'لا يوجد رصيد كافي لسحبه اقل رصيد للسحب : ' . $limit_balance . ' ج.م' ,422);
+            if ($user->points < $limit_balance) {
+                return self::returnResponseDataApi(null, 'لا يوجد رصيد كافي لسحبه اقل رصيد للسحب : ' . $limit_balance . ' ج.م', 422);
             }
 
             $createWithdraw = new Withdraw();
@@ -925,7 +944,7 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
             $createWithdraw->price = $user->points / $point_price;
             $createWithdraw->status = 0;
 
-            if($createWithdraw->save()){
+            if ($createWithdraw->save()) {
                 $user->points = 0;
                 $user->save();
 
@@ -934,11 +953,11 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
                     'title' => 'طلب سحب رصيد',
                     'body' => 'تم طلب سحب رصيد وسيتم اخطارك بارسال الرصيد في اقرب وقت'
                 ];
-                $this->sendFirebaseNotification($fcmData,$user->id);
+                $this->sendFirebaseNotification($fcmData, $user->id);
 
-                return self::returnResponseDataApi(['status'=>1],'تم ارسال طلب سحب رصيد بنجاح');
-            }else {
-                return self::returnResponseDataApi(null,'هناك خطا ما حاول في وقت لاحق',422);
+                return self::returnResponseDataApi(['status' => 1], 'تم ارسال طلب سحب رصيد بنجاح');
+            } else {
+                return self::returnResponseDataApi(null, 'هناك خطا ما حاول في وقت لاحق', 422);
             }
         } catch (Exception $e) {
             return self::returnResponseDataApi(null, $e->getMessage(), 500);
