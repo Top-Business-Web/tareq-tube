@@ -16,9 +16,10 @@ class CityRepository implements CityInterface
                 ->addColumn('action', function ($citites) {
                     return '
                             <a href="' . route('city.edit', $citites->id) . '" class="btn btn-pill btn-info-light"><i class="fa fa-edit"></i></a>
-                            <a href="' . route('city.delete', $citites->id) . '" class="btn btn-pill btn-danger-light">
-                                    <i class="fas fa-trash"></i>
-                            </a>
+                            <button class="btn btn-pill btn-danger-light" data-toggle="modal" data-target="#delete_modal"
+                                        data-id="' . $citites->id . '" data-title="' . $citites->name . '">
+                                        <i class="fas fa-trash"></i>
+                                </button>
                        ';
                 })
                 ->escapeColumns([])
@@ -86,7 +87,6 @@ class CityRepository implements CityInterface
         $city = City::findOrFail($request->id);
 
         $city->delete();
-        toastr()->addSuccess("تم حذف المدينة بنجاح");
-        return redirect()->back();
+        return response(['message' => 'تم الحذف بنجاح', 'status' => 200], 200);
     }
 }

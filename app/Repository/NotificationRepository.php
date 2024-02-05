@@ -12,7 +12,7 @@ class NotificationRepository implements NotificationInterface
 {
 
     use FirebaseNotification;
-    
+
     public function index($request)
     {
         if ($request->ajax()) {
@@ -21,12 +21,13 @@ class NotificationRepository implements NotificationInterface
                 ->addColumn('action', function ($notifications) {
                     return '
                             <a href="' . route('notification.edit', $notifications->id) . '" class="btn btn-pill btn-info-light"><i class="fa fa-edit"></i></a>
-                            <a href="' . route('notification.delete', $notifications->id) . '" class="btn btn-pill btn-danger-light">
-                                    <i class="fas fa-trash"></i>
-                            </a>
+                            <button class="btn btn-pill btn-danger-light" data-toggle="modal" data-target="#delete_modal"
+                    data-id="' . $notifications->id . '" data-title="' . $notifications->title . '">
+                    <i class="fas fa-trash"></i>
+            </button>
                        ';
                 })
-                ->editColumn('user_id', function($notifications) {
+                ->editColumn('user_id', function ($notifications) {
                     return $notifications->user->name ?? 'كل المستخدمين';
                 })
                 ->escapeColumns([])
@@ -99,9 +100,7 @@ class NotificationRepository implements NotificationInterface
     {
         $notification = Notification::findOrFail($request->id);
 
-            $notification->delete();
-            toastr()->addSuccess("تم حذف الاشعار بنجاح");
-            return redirect()->back();
+        $notification->delete();
+        return response(['message' => 'تم الحذف بنجاح', 'status' => 200], 200);
     }
-
 }

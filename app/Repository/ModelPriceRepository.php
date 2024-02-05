@@ -17,9 +17,10 @@ class ModelPriceRepository implements ModelPriceInterface
                 ->addColumn('action', function ($model_prices) {
                     return '
                             <a href="' . route('modelPrice.edit', $model_prices->id) . '" class="btn btn-pill btn-info-light"><i class="fa fa-edit"></i></a>
-                            <a href="' . route('modelPrice.delete', $model_prices->id) . '" class="btn btn-pill btn-danger-light">
-                                    <i class="fas fa-trash"></i>
-                            </a>
+                            <button class="btn btn-pill btn-danger-light" data-toggle="modal" data-target="#delete_modal"
+                                data-id="' . $model_prices->id . '" data-title="' . $model_prices->type . '">
+                                <i class="fas fa-trash"></i>
+                            </button>
                        ';
                 })
                 ->editColumn('type', function ($model_prices) {
@@ -91,8 +92,7 @@ class ModelPriceRepository implements ModelPriceInterface
     {
         $model_price = ModelPrice::findOrFail($request->id);
             $model_price->delete();
-            toastr()->addSuccess("تم حذف سعر الباقة بنجاح");
-            return redirect()->back();
+            return response(['message' => 'تم الحذف بنجاح', 'status' => 200], 200);
     }
 
 }

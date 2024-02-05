@@ -16,9 +16,10 @@ class InterestRepository implements InterestInterface
                 ->addColumn('action', function ($interests) {
                     return '
                             <a href="' . route('interest.edit', $interests->id) . '" class="btn btn-pill btn-info-light"><i class="fa fa-edit"></i></a>
-                            <a href="' . route('interest.delete', $interests->id) . '" class="btn btn-pill btn-danger-light">
-                                    <i class="fas fa-trash"></i>
-                            </a>
+                            <button class="btn btn-pill btn-danger-light" data-toggle="modal" data-target="#delete_modal"
+                                        data-id="' . $interests->id . '" data-title="' . $interests->name . '">
+                                        <i class="fas fa-trash"></i>
+                                </button>
                        ';
                 })
                 ->escapeColumns([])
@@ -86,7 +87,6 @@ class InterestRepository implements InterestInterface
         $interest = Interest::findOrFail($request->id);
 
         $interest->delete();
-        toastr()->addSuccess("تم حذف الاهتمام بنجاح");
-        return redirect()->back();
+        return response(['message' => 'تم الحذف بنجاح', 'status' => 200], 200);
     }
 }

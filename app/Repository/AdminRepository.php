@@ -18,9 +18,10 @@ class AdminRepository implements AdminInterface
                 ->addColumn('action', function ($admins) {
                     return '
                             <a href="' . route('admin.edit', $admins->id) . '" class="btn btn-pill btn-info-light"><i class="fa fa-edit"></i></a>
-                            <a href="' . route('delete.admin', $admins->id) . '" class="btn btn-pill btn-danger-light">
-                                    <i class="fas fa-trash"></i>
-                            </a>
+                            <button class="btn btn-pill btn-danger-light" data-toggle="modal" data-target="#delete_modal"
+                                        data-id="' . $admins->id . '" data-title="' . $admins->name . '">
+                                        <i class="fas fa-trash"></i>
+                                </button>
                        ';
                 })
                 ->editColumn('image', function ($admins) {
@@ -55,14 +56,8 @@ class AdminRepository implements AdminInterface
                 unlink($admin->image);
             }
 
-            // Delete the admin user
             $admin->delete();
-
-            // Show a sweet alert with a cancel button
-            toastr()->addSuccess("تم حذف المشرف بنجاح", 'green');
-
-            // Redirect back after deletion
-            return redirect()->back();
+            return response(['message' => 'تم الحذف بنجاح', 'status' => 200], 200);
         }
     }
 

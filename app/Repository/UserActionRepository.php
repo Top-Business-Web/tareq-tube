@@ -15,9 +15,10 @@ class UserActionRepository implements UserActionInterface
             return DataTables::of($user_actions)
                 ->addColumn('action', function ($user_actions) {
                     return '
-                            <a href="' . route('userAction.delete', $user_actions->id) . '" class="btn btn-pill btn-danger-light">
-                                    <i class="fas fa-trash"></i>
-                            </a>
+                    <button class="btn btn-pill btn-danger-light" data-toggle="modal" data-target="#delete_modal"
+                        data-id="' . $user_actions->id . '" data-title="' . $user_actions->tube->url . '">
+                        <i class="fas fa-trash"></i>
+                    </button>
                        ';
                 })
                 ->editColumn('user_id', function ($user_actions) {
@@ -46,17 +47,11 @@ class UserActionRepository implements UserActionInterface
 
     public function deleteUserAction($request)
     {
-        // Find the admin user by ID
         $user_action = UserAction::findOrFail($request->id);
 
-        // Delete the admin user
         $user_action->delete();
 
-        // Show a sweet alert with a cancel button
-        toastr()->addSuccess("تم حذف بنجاح");
-
-        // Redirect back after deletion
-        return redirect()->back();
+        return response(['message' => 'تم الحذف بنجاح', 'status' => 200], 200);
     }
 
 }
