@@ -108,6 +108,13 @@
         </li>
 
         <li class="slide">
+            <a class="side-menu__item" href="{{ route('withdraw.index') }}">
+                <i class="fa fa-credit-card side-menu__icon"></i>
+                <span class="side-menu__label"> طلبات سحب الرصيد</span>
+            </a>
+        </li>
+
+        <li class="slide">
             <a class="side-menu__item" href="{{ route('payment-transaction.index') }}">
                 <i class="fa fa-money-check side-menu__icon"></i>
                 <span class="side-menu__label">معاملات الدفع</span>
@@ -127,7 +134,7 @@
                 <span class="side-menu__label">تسجيل الخروج</span>
             </a>
         </li>
-        
+
 
     </ul>
 </aside>

@@ -8,8 +8,7 @@ use App\Interfaces\Api\User\PaymentRepositoryInterface;
 use App\Repository\Api\User\UserRepository as UserApiRepository;
 use App\Repository\Api\User\PaymentRepository as PaymentApiRepository;
 
-use App\Interfaces\{
-    AuthInterface,
+use App\Interfaces\{AuthInterface,
     CityInterface,
     InterestInterface,
     PackageInterface,
@@ -26,9 +25,8 @@ use App\Interfaces\{
     ModelPriceInterface,
     PaymentTransactionInterface,
     SettingInterface,
-};
-use App\Repository\{
-    AdminRepository,
+    WithdrawInterface};
+use App\Repository\{AdminRepository,
     AuthRepository,
     CityRepository,
     ConfigCountRepository,
@@ -44,8 +42,8 @@ use App\Repository\{
     TubeRepository,
     ModelPriceRepository,
     SettingRepository,
-    PaymentTransactionRepository
-};
+    PaymentTransactionRepository,
+    WithdrawRepository};
 
 
 
@@ -75,6 +73,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(TubeInterface::class,TubeRepository::class);
         $this->app->bind(ModelPriceInterface::class,ModelPriceRepository::class);
         $this->app->bind(SettingInterface::class,SettingRepository::class);
+        $this->app->bind(WithdrawInterface::class,WithdrawRepository::class);
         $this->app->bind(PaymentTransactionInterface::class,PaymentTransactionRepository::class);
         // ----------------------------------------------------------------
 

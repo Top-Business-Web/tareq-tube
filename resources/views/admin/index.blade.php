@@ -12,26 +12,11 @@
                 <div class="card-body">
                     <div class="d-flex">
                         <div class="text-white">
-                            <h2 class="mb-0 number-font"></h2>
+                            <h2 class="mb-0 number-font">{{ $user_count}}</h2>
                             <p class="text-white mb-0"> جميع المستخدمين</p>
                         </div>
                         <div class="mr-auto">
-                            <i class="fe fe-users text-white fs-30 ml-2 mt-2"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-sm-12 col-md-6 col-lg-6 col-xl-3">
-            <div class="card bg-success img-card box-info-shadow">
-                <div class="card-body">
-                    <div class="d-flex">
-                        <div class="text-white">
-                            <h2 class="mb-0 number-font"></h2>
-                            <p class="text-white mb-0">السائقين</p>
-                        </div>
-                        <div class="mr-auto">
-                            <i class="fa fa-car text-white fs-30 ml-2 mt-2"></i>
+                            <i class="fa fa-users text-white fs-30 ml-2 mt-2"></i>
                         </div>
                     </div>
                 </div>
@@ -42,12 +27,11 @@
                 <div class="card-body">
                     <div class="d-flex">
                         <div class="text-white">
-                            <h2 class="mb-0 number-font">
-                            </h2>
-                            <p class="text-white mb-0">الرحلات التي انجزت</p>
+                            <h2 class="mb-0 number-font">{{ $watch_count }}</h2>
+                            <p class="text-white mb-0">المشاهدات</p>
                         </div>
                         <div class="mr-auto">
-                            <i class="fe fe-check text-white fs-30 ml-2 mt-2"></i>
+                            <i class="fa fa-tv text-white fs-30 ml-2 mt-2"></i>
                         </div>
                     </div>
                 </div>
@@ -58,26 +42,26 @@
                 <div class="card-body">
                     <div class="d-flex">
                         <div class="text-white">
-                            <h2 class="mb-0 number-font"></h2>
-                            <p class="text-white mb-0">الرحلات الجديدة</p>
+                            <h2 class="mb-0 number-font">{{ $sub_count }}</h2>
+                            <p class="text-white mb-0">الاشتراكات</p>
                         </div>
                         <div class="mr-auto">
-                            <i class="fa fa-plus text-white fs-30 ml-2 mt-2"></i>
+                            <i class="fa fa-plus-circle text-white fs-30 ml-2 mt-2"></i>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
         <div class="col-sm-12 col-md-6 col-lg-6 col-xl-3">
-            <div class="card bg-danger img-card box-info-shadow">
+            <div class="card bg-success img-card box-info-shadow">
                 <div class="card-body">
                     <div class="d-flex">
                         <div class="text-white">
-                            <h2 class="mb-0 number-font"></h2>
-                            <p class="text-white mb-0">سعر الكيلو</p>
+                            <h2 class="mb-0 number-font">{{ $payment_count }}</h2>
+                            <p class="text-white mb-0">عمليات الدفع</p>
                         </div>
                         <div class="mr-auto">
-                            <i class="fa fa-road text-white fs-30 ml-2 mt-2"></i>
+                            <i class="fa fa-dollar-sign text-white fs-30 ml-2 mt-2"></i>
                         </div>
                     </div>
                 </div>

@@ -6,8 +6,8 @@ use Illuminate\Support\Facades\{
     Artisan,
 };
 use illuminate\Filesystem\symlink;
-use App\Http\Controllers\Admin\{
-    AuthController,
+use App\Http\Controllers\Admin\{AuthController,
+    MainController,
     UserController,
     AdminController,
     CityController,
@@ -24,7 +24,7 @@ use App\Http\Controllers\Admin\{
     ModelPriceController,
     PaymentTransactionController,
     SettingController,
-};
+    WithdrawController};
 
 Route::group(['prefix' => 'admin'], function () {
     Route::get('login', [AuthController::class, 'index'])->name('admin.login');
@@ -36,9 +36,7 @@ Route::get('/', function () {
 });
 
 Route::group(['prefix' => 'admin', 'middleware' => 'auth:user'], function () {
-    Route::get('/', function () {
-        return view('admin/index');
-    })->name('adminHome');
+    Route::get('/',[MainController::class,'index'])->name('adminHome');
 
     #============================ Admin ====================================
     Route::get('admins', [AdminController::class, 'index'])->name('admin.index');
@@ -105,6 +103,12 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:user'], function () {
     #============================ Message =====================================
     Route::get('messages', [MsgController::class, 'index'])->name('message.index');
     Route::delete('messages/{id}/delete', [MsgController::class, 'deleteMessage'])->name('message.delete');
+
+
+    #============================ withdraw request =====================================
+    Route::get('withdraw/requests', [WithdrawController::class, 'index'])->name('withdraw.index');
+    Route::get('withdraw/{id}/delete', [WithdrawController::class, 'deleteWithdraw'])->name('withdraw.delete');
+
 
     #============================ Notification =====================================
     Route::get('notifications', [NotificationController::class, 'index'])->name('notification.index');

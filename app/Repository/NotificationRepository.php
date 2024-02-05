@@ -53,6 +53,12 @@ class NotificationRepository implements NotificationInterface
             $inputs = $request->all();
 
             if ($this->createNotification($inputs)) {
+                //|> send FCM notification
+                $fcmData =[
+                    'title' => $inputs['title'],
+                    'body' => $inputs['description'],
+                ];
+                $this->sendFirebaseNotification($fcmData, $inputs['user_id'],true);
                 toastr()->addSuccess('تم اضافة الاشعار بنجاح');
                 return redirect()->back();
             } else {
@@ -103,4 +109,5 @@ class NotificationRepository implements NotificationInterface
         $notification->delete();
         return response(['message' => 'تم الحذف بنجاح', 'status' => 200], 200);
     }
+
 }

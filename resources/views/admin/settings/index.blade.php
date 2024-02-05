@@ -29,7 +29,7 @@
                 <div class="card-body">
                     <form id="updateForm" method="POST" enctype="multipart/form-data" action="{{route('setting.update',$settingData['id'])}}">
                         @csrf
-                        @method('put')
+                        @method('PUT')
                         <input type="hidden" value="{{ $settingData['id'] }}" name="id">
                         <div class="form-group">
                             <div class="row">
@@ -54,15 +54,20 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <label for="name_ar" class="form-control-label">نقاط المستخدم</label>
                                     <input type="number" class="form-control" value="{{ $settingData['point_user'] }}" name="point_user"
                                         required>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <label for="name_en" class="form-control-label">ضريبة القيمة المضافة</label>
                                     <input type="number" class="form-control" value="{{ $settingData['vat'] }}" name="vat"
                                         required>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="name_en" class="form-control-label">الحد للسحب</label>
+                                    <input type="number" class="form-control" value="{{ $settingData['limit_balance'] }}" name="limit_balance"
+                                           required>
                                 </div>
                             </div>
                             <div class="row">

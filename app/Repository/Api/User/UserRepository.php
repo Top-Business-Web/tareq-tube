@@ -30,6 +30,7 @@ use App\Models\Tube;
 use App\Models\User;
 use App\Models\UserAction;
 use App\Models\UserSpin;
+use App\Models\Withdraw;
 use App\Repository\Api\ResponseApi;
 use App\Traits\FirebaseNotification;
 use App\Traits\PhotoTrait;
@@ -230,12 +231,25 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
                 ->where('type', 'view')
                 ->count();
             $message_count = Message::query()->where('user_id', Auth::guard('user-api')->user()->id)->count();
+
+            $setting = Setting::query()->first([
+                'logo',
+                'phone',
+                'limit_user',
+                'point_user',
+                'vat',
+                'point_price',
+                'limit_balance',
+                'token_price'
+            ]);
+
             $data = [
                 'sliders' => SliderResource::collection(Slider::get()),
                 'user' => new UserResource(\Auth::user()),
                 'subscribe_count' => $subscribe_count,
                 'views_count' => $views_count,
                 'message_count' => $message_count,
+                'setting' => $setting,
             ];
             return self::returnResponseDataApi($data, 'تم الحصول علي البيانات بنجاح');
         } catch (\Exception $e) {
@@ -269,7 +283,6 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
     public function addTube(Request $request): JsonResponse
     {
         try {
-            /** @var \App\Models\User $user * */
             $user = Auth::guard('user-api')->user();
             $userPoint = $user->points;
 
@@ -299,34 +312,54 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
             $second_count = ConfigCount::find($request->second_count)->point;
             $pointsNeed = $second_count + $view_count + $sub_count;
 
-            if ($user->limit > 0) {
-                if ($userPoint >= $pointsNeed) {
-                    $createTube = new Tube();
-                    $createTube->type = $request->type;
-                    $createTube->points = $pointsNeed;
-                    $createTube->user_id = $user->id;
-                    $createTube->url = $request->url;
-                    $createTube->sub_count = $request->type == 'view' ? null : $request->sub_count;
-                    $createTube->second_count = $request->second_count;
-                    $createTube->view_count = $request->view_count;
-                    $createTube->target = ($request->type == 'view') ? $view_count_count : $sub_count_count;
-                    $createTube->status = 0;
+            if ($user->is_vip != 1){
+                if ($user->limit > 0) {
+                    if ($userPoint >= $pointsNeed) {
+                        $createTube = new Tube();
+                        $createTube->type = $request->type;
+                        $createTube->points = $pointsNeed;
+                        $createTube->user_id = $user->id;
+                        $createTube->url = $request->url;
+                        $createTube->sub_count = $request->type == 'view' ? null : $request->sub_count;
+                        $createTube->second_count = $request->second_count;
+                        $createTube->view_count = $request->view_count;
+                        $createTube->target = ($request->type == 'view') ? $view_count_count : $sub_count_count;
+                        $createTube->status = 0;
 
-                    if ($createTube->save()) {
-                        $user->points -= $pointsNeed;
-                        $user->limit -= 1;
-                        $user->save();
+                        if ($createTube->save()) {
+                            $user->points -= $pointsNeed;
+                            $user->limit -= 1;
+                            $user->save();
 
-                        return self::returnResponseDataApi(new TubeResource($createTube), 'تم الانشاء بنجاح', 201);
+                            return self::returnResponseDataApi(new TubeResource($createTube), 'تم الانشاء بنجاح', 201);
+                        } else {
+                            return self::returnResponseDataApi(null, 'هناك خطا ما', 500);
+                        }
                     } else {
-                        return self::returnResponseDataApi(null, 'هناك خطا ما', 500);
+                        return self::returnResponseDataApi(null, 'نقاطك لا تكفي لاتمام العملية تحتاج الي ' . $pointsNeed - $userPoint . ' من النقاط ', 422);
                     }
                 } else {
-                    return self::returnResponseDataApi(null, 'نقاطك لا تكفي لاتمام العملية تحتاج الي ' . $pointsNeed - $userPoint . ' من النقاط ', 422);
+                    return self::returnResponseDataApi(null, 'تم الانتهاء من الباقة الحالية قم بشراء باقة جديدة', 422);
                 }
-            } else {
-                return self::returnResponseDataApi(null, 'تم الانتهاء من الباقة الحالية قم بشراء باقة جديدة', 422);
+            }else {
+                $createTube = new Tube();
+                $createTube->type = $request->type;
+                $createTube->points = $pointsNeed;
+                $createTube->user_id = $user->id;
+                $createTube->url = $request->url;
+                $createTube->sub_count = $request->type == 'view' ? null : $request->sub_count;
+                $createTube->second_count = $request->second_count;
+                $createTube->view_count = $request->view_count;
+                $createTube->target = ($request->type == 'view') ? $view_count_count : $sub_count_count;
+                $createTube->status = 0;
+
+                if ($createTube->save()) {
+                    return self::returnResponseDataApi(new TubeResource($createTube), 'تم الانشاء بنجاح', 201);
+                } else {
+                    return self::returnResponseDataApi(null, 'هناك خطا ما', 500);
+                }
             }
+
         } catch (\Exception $e) {
             return self::returnResponseDataApi(null, $e->getMessage(), 500);
         }
@@ -348,7 +381,7 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
                 'city_id' => 'required',
                 'intrest_id' => 'required',
             ]);
-
+            //|> Validator Fails
             if ($validator->fails()) {
                 $error = $validator->errors()->first();
                 return self::returnResponseDataApi(null, $error, 422);
@@ -365,6 +398,14 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
                 if ($addMessage->save()) {
                     $user->msg_limit -= 1;
                     $user->save();
+
+                    //|> send FCM notification
+                    $fcmData = [
+                        'title' => 'رسالة جديدة',
+                        'body' => $addMessage->content
+                    ];
+                    $this->sendFirebaseNotification($fcmData, null, false, $addMessage->intrest_id);
+
                     return self::returnResponseDataApi(new MessageResource($addMessage), 'تم انشاء الرسالة بنجاح', 201);
                 } else {
                     return self::returnResponseDataApi(null, 'هناك خطا ما', 500);
@@ -384,7 +425,9 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
     {
         try {
             $data = Notification::query()->where('user_id', Auth::user()->id)
-                ->orWhere('user_id', null)->get();
+                ->orWhere('user_id', null)
+                ->latest()
+                ->get();
 
             return self::returnResponseDataApi(NotificationResource::collection($data), 'تم الحصول علي البيانات بنجاح');
         } catch (\Exception $e) {
@@ -399,7 +442,7 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
     {
         try {
             $tubes = Tube::query()->where('user_id', Auth::guard('user-api')->user()->id)
-                ->where('type','=','sub')
+                ->where('type', '=', 'sub')
                 ->latest()
                 ->get();
             return self::returnResponseDataApi(MyTubeResource::collection($tubes), 'تم الحصول علي البيانات بنجاح');
@@ -445,7 +488,7 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
     {
         try {
             $user = Auth::guard('user-api')->user();
-            $messages = Message::query()->where('user_id', $user->id)->get();
+            $messages = Message::query()->where('user_id', $user->id)->latest()->get();
             if ($messages->count() > 0) {
                 return self::returnResponseDataApi(MyMessageResource::collection($messages), 'تم الحصول علي البيانات بنجاح');
             } else {
@@ -461,15 +504,14 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
         try {
             $user = Auth::guard('user-api')->user();
             $messages = Message::query()
-                ->where('city_id', $user->city_id)
                 ->where('intrest_id', $user->intrest_id)
+                ->latest()
                 ->get();
             if ($messages->count() > 0) {
                 return self::returnResponseDataApi(MessageResource::collection($messages), 'تم الحصول علي البيانات بنجاح');
             } else {
                 return self::returnResponseDataApi(null, 'لا يوجد رسائل حتي الان', 422);
             }
-
         } catch (\Exception $e) {
             return self::returnResponseDataApi(null, $e->getMessage(), 500);
         }
@@ -550,20 +592,20 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
             $user = Auth::user();
 
             $tokenPrice = Setting::query()->value('token_price');
-            $checkToken = User::query()->where('invite_token',$request->token)
-                ->where('id','!=',$user->id)
+            $checkToken = User::query()->where('invite_token', $request->token)
+                ->where('id', '!=', $user->id)
                 ->first();
 
-            if (!$checkToken){
-                return self::returnResponseDataApi(null, 'الكود غير موجود',422);
-            }else {
+            if (!$checkToken) {
+                return self::returnResponseDataApi(null, 'الكود غير موجود', 422);
+            } else {
                 $fromUser = $checkToken;
                 $checkInviteLink = InviteToken::query()->where('user_id', $user->id)
-                    ->where('token',$request->token)->first();
+                    ->where('token', $request->token)->first();
 
-                if ($checkInviteLink){
-                    return self::returnResponseDataApi(null, 'تم استخدام الكود من قبل',422);
-                }else {
+                if ($checkInviteLink) {
+                    return self::returnResponseDataApi(null, 'تم استخدام الكود من قبل', 422);
+                } else {
                     $createInviteLink = new InviteToken();
                     $createInviteLink->token = $request->token;
                     $createInviteLink->user_id = $user->id;
@@ -767,6 +809,7 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
                 ->pluck('tube_id')->toArray();
 
             $videos = Tube::query()
+                ->where('user_id','!=',$user->id)
                 ->whereNotIn('id', $userVideos)
                 ->where('type', $request->type)
                 ->get();
@@ -789,6 +832,7 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
     public function userViewTube(Request $request): JsonResponse
     {
         try {
+            $vat = Setting::value('vat');
             $user = Auth::user();
             // validate requests
             $validator = Validator::make($request->all(), [
@@ -809,6 +853,16 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
             if (!$tube) {
                 return self::returnResponseDataApi(null, 'لا يوجد فيديو او قناه بهذا المعرف', 422);
             }
+            // point vat calculate
+            $point_vat = $tube->points - ($tube->points * ($vat / 100));
+
+            // view point calculate
+            if ($tube->type = 'view') {
+                $point_gain = $point_vat / $tube->viewCount->count;
+            } else {
+                $point_gain = $point_vat / $tube->subCount->count;
+            }
+
             // check if action exists
             $checkActionExists = UserAction::query()
                 ->where([
@@ -824,13 +878,13 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
 
                 $checkActionExists->update([
                     'status' => $request->status,
-                    'points' => $tube->points
+                    'points' => $point_gain
                 ]);
 
                 if ($checkActionExists->status == 1) {
                     $tube->target -= 1;
                     $tube->save();
-                    $user->points += $tube->points;
+                    $user->points += $point_gain;
                     $user->save();
                 }
 
@@ -841,13 +895,13 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
                 $addUserAction->tube_id = $request->tube_id;
                 $addUserAction->type = $tube->type;
                 $addUserAction->status = $request->status;
-                $addUserAction->points = $tube->points;
+                $addUserAction->points = $point_gain;
                 // if save return response
                 if ($addUserAction->save()) {
                     if ($addUserAction->status == 1) {
                         $tube->target -= 1;
                         $tube->save();
-                        $user->points += $tube->points;
+                        $user->points += $point_gain;
                         $user->save();
                     }
                     return self::returnResponseDataApi($addUserAction, 'تم الاضافة بنجاح');
@@ -861,18 +915,73 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
         } // end try
     } // userViewTube
 
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
     public function checkUser(Request $request): JsonResponse
     {
         try {
             $gmail = $request->gmail;
             $checkUser = User::where('gmail', $gmail)->first();
-            if ($checkUser){
-                return self::returnResponseDataApi(['status'=>1], 'هذا الحساب موجود في قواعد البيانات');
-            }else {
-                return self::returnResponseDataApi(['status'=>0], 'هذا الحساب غير موجود في قواعد البيانات');
+            if ($checkUser) {
+                return self::returnResponseDataApi(['status' => 1], 'هذا الحساب موجود في قواعد البيانات');
+            } else {
+                return self::returnResponseDataApi(['status' => 0], 'هذا الحساب غير موجود في قواعد البيانات');
             }
         } catch (Exception $e) {
             return self::returnResponseDataApi(null, $e->getMessage(), 500);
         } // end try
     } // checkUser
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function withdraw(Request $request): JsonResponse
+    {
+        try {
+            $user = User::find(Auth::user()->id);
+            $point_price = Setting::value('point_price');
+            $limit_balance = Setting::value('limit_balance');
+            $rules = [
+                'phone' => 'required',
+            ];
+            $validator = Validator::make($request->all(), $rules);
+
+            if ($validator->fails()) {
+                $error = $validator->errors()->first();
+                return self::returnResponseDataApi(null, $error, 422);
+            }
+
+            if ($user->points < $limit_balance) {
+                return self::returnResponseDataApi(null, 'لا يوجد رصيد كافي لسحبه اقل رصيد للسحب : ' . $limit_balance . ' ج.م', 422);
+            }
+
+            $createWithdraw = new Withdraw();
+            $createWithdraw->user_id = $user->id;
+            $createWithdraw->phone = $request->input('phone');
+            $createWithdraw->price = $user->points / $point_price;
+            $createWithdraw->status = 0;
+
+            if ($createWithdraw->save()) {
+                $user->points = 0;
+                $user->save();
+
+                //|> send FCM notification
+                $fcmData = [
+                    'title' => 'طلب سحب رصيد',
+                    'body' => 'تم طلب سحب رصيد وسيتم اخطارك بارسال الرصيد في اقرب وقت'
+                ];
+                $this->sendFirebaseNotification($fcmData, $user->id);
+
+                return self::returnResponseDataApi(['status' => 1], 'تم ارسال طلب سحب رصيد بنجاح');
+            } else {
+                return self::returnResponseDataApi(null, 'هناك خطا ما حاول في وقت لاحق', 422);
+            }
+        } catch (Exception $e) {
+            return self::returnResponseDataApi(null, $e->getMessage(), 500);
+        } // end try
+    } // end withdraw
 }
+###############|> Made By https://github.com/eldapour (eldapour) 🚀
