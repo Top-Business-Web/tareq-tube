@@ -4,7 +4,6 @@ namespace App\Repository;
 
 use App\Interfaces\CouponInterface;
 use App\Models\Coupon;
-use App\Models\Package;
 use Yajra\DataTables\DataTables;
 
 class CouponRepository implements CouponInterface
@@ -17,9 +16,10 @@ class CouponRepository implements CouponInterface
                 ->addColumn('action', function ($coupons) {
                     return '
                             <a href="' . route('coupon.edit', $coupons->id) . '" class="btn btn-pill btn-info-light"><i class="fa fa-edit"></i></a>
-                            <a href="' . route('coupon.delete', $coupons->id) . '" class="btn btn-pill btn-danger-light">
-                                    <i class="fas fa-trash"></i>
-                            </a>
+                            <button class="btn btn-pill btn-danger-light" data-toggle="modal" data-target="#delete_modal"
+                                data-id="' . $coupons->id . '" data-title="' . $coupons->code . '">
+                                <i class="fas fa-trash"></i>
+                            </button>
                        ';
                 })
                 ->escapeColumns([])
@@ -86,9 +86,7 @@ class CouponRepository implements CouponInterface
     {
         $coupon = Coupon::findOrFail($request->id);
 
-            $coupon->delete();
-            toastr()->addSuccess("تم حذف الكوبون بنجاح");
-            return redirect()->back();
+        $coupon->delete();
+        return response(['message' => 'تم الحذف بنجاح', 'status' => 200], 200);
     }
-
 }

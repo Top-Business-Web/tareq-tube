@@ -44,7 +44,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:user'], function () {
     Route::post('admin/store', [AdminController::class, 'storeAdmin'])->name('admin.store');
     Route::get('admin/{id}/edit', [AdminController::class, 'showEdit'])->name('admin.edit');
     Route::put('admin/update/{id}', [AdminController::class, 'updateAdmin'])->name('admin.update');
-    Route::get('admin/{id}/delete', [AdminController::class, 'delete'])->name('delete.admin');
+    Route::delete('admin/{id}/delete', [AdminController::class, 'delete'])->name('delete.admin');
     Route::get('my_profile', [AdminController::class, 'myProfile'])->name('myProfile');
     Route::get('logout', [AuthController::class, 'logout'])->name('admin.logout');
 
@@ -60,7 +60,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:user'], function () {
     Route::post('package/store', [PackageController::class, 'storePackage'])->name('package.store');
     Route::get('package/{id}/edit', [PackageController::class, 'showEditPage'])->name('package.edit');
     Route::put('package/update/{id}', [PackageController::class, 'updatePackage'])->name('package.update');
-    Route::get('package/{id}/delete', [PackageController::class, 'deletePackage'])->name('package.delete');
+    Route::delete('package/{id}/delete', [PackageController::class, 'deletePackage'])->name('package.delete');
 
     #============================ Packages Users =====================================
     Route::get('packages_users', [PackageUserController::class, 'index'])->name('package_user.index');
@@ -73,7 +73,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:user'], function () {
     Route::post('city/store', [CityController::class, 'storeCity'])->name('city.store');
     Route::get('city/{id}/edit', [CityController::class, 'showEditCity'])->name('city.edit');
     Route::put('city/update/{id}', [CityController::class, 'updateCity'])->name('city.update');
-    Route::get('city/{id}/delete', [CityController::class, 'deleteCity'])->name('city.delete');
+    Route::delete('city/{id}/delete', [CityController::class, 'deleteCity'])->name('city.delete');
 
 
     #============================ Interest ==================================
@@ -82,7 +82,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:user'], function () {
     Route::post('interest/store', [InterestController::class, 'storeInterest'])->name('interest.store');
     Route::get('interest/{id}/edit', [InterestController::class, 'showEditInterest'])->name('interest.edit');
     Route::put('interest/update/{id}', [InterestController::class, 'updateInterest'])->name('interest.update');
-    Route::get('interest/{id}/delete', [InterestController::class, 'deleteInterest'])->name('interest.delete');
+    Route::delete('interest/{id}/delete', [InterestController::class, 'deleteInterest'])->name('interest.delete');
 
     #============================ Config Count =====================================
     Route::get('config_count', [ConfigCountController::class, 'index'])->name('config_count.index');
@@ -90,7 +90,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:user'], function () {
     Route::post('config_count/store', [ConfigCountController::class, 'storeConfigCount'])->name('config_count.store');
     Route::get('config_count/{id}/edit', [ConfigCountController::class, 'showEditConfigCount'])->name('config_count.edit');
     Route::put('config_count/update/{id}', [ConfigCountController::class, 'updateConfigCount'])->name('config_count.update');
-    Route::get('config_count/{id}/delete', [ConfigCountController::class, 'deleteConfigCount'])->name('config_count.delete');
+    Route::delete('config_count/{id}/delete', [ConfigCountController::class, 'deleteConfigCount'])->name('config_count.delete');
 
     #============================ Slider =====================================
     Route::get('sliders', [SliderController::class, 'index'])->name('slider.index');
@@ -98,11 +98,11 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:user'], function () {
     Route::post('slider/store', [SliderController::class, 'storeSlider'])->name('slider.store');
     Route::get('slider/{id}/edit', [SliderController::class, 'showEditSlider'])->name('slider.edit');
     Route::put('slider/update/{id}', [SliderController::class, 'updateSlider'])->name('slider.update');
-    Route::get('slider/{id}/delete', [SliderController::class, 'deleteSlider'])->name('slider.delete');
+    Route::delete('slider/{id}/delete', [SliderController::class, 'deleteSlider'])->name('slider.delete');
 
     #============================ Message =====================================
     Route::get('messages', [MsgController::class, 'index'])->name('message.index');
-    Route::get('messages/{id}/delete', [MsgController::class, 'deleteMessage'])->name('message.delete');
+    Route::delete('messages/{id}/delete', [MsgController::class, 'deleteMessage'])->name('message.delete');
 
 
     #============================ withdraw request =====================================
@@ -116,7 +116,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:user'], function () {
     Route::post('notification/store', [NotificationController::class, 'storeNotification'])->name('notification.store');
     Route::get('notification/{id}/edit', [NotificationController::class, 'showEditNotification'])->name('notification.edit');
     Route::put('notification/update/{id}', [NotificationController::class, 'updateNotification'])->name('notification.update');
-    Route::get('notification/{id}/delete', [NotificationController::class, 'deleteNotification'])->name('notification.delete');
+    Route::delete('notification/{id}/delete', [NotificationController::class, 'deleteNotification'])->name('notification.delete');
 
     #============================ Coupon =====================================
     Route::get('coupons', [CouponController::class, 'index'])->name('coupon.index');
@@ -124,15 +124,15 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:user'], function () {
     Route::post('coupon/store', [CouponController::class, 'storeCoupon'])->name('coupon.store');
     Route::get('coupon/{id}/edit', [CouponController::class, 'showEditCoupon'])->name('coupon.edit');
     Route::put('coupon/update/{id}', [CouponController::class, 'updateCoupon'])->name('coupon.update');
-    Route::get('coupon/{id}/delete', [CouponController::class, 'deleteCoupon'])->name('coupon.delete');
+    Route::delete('coupon/{id}/delete', [CouponController::class, 'deleteCoupon'])->name('coupon.delete');
 
     #============================ User Action =====================================
     Route::get('user_actions', [UserActionController::class, 'index'])->name('userAction.index');
-    Route::get('user_actions/{id}/delete', [UserActionController::class, 'deleteUserAction'])->name('userAction.delete');
+    Route::delete('user_actions/{id}/delete', [UserActionController::class, 'deleteUserAction'])->name('userAction.delete');
 
     #============================ Tube =====================================
     Route::get('tubes', [TubeController::class, 'index'])->name('tube.index');
-    Route::get('tube/{id}/delete', [TubeController::class, 'deleteTube'])->name('tube.delete');
+    Route::delete('tube/{id}/delete', [TubeController::class, 'deleteTube'])->name('tube.delete');
 
     #============================ Model Price =====================================
     Route::get('model_prices', [ModelPriceController::class, 'index'])->name('modelPrice.index');
@@ -140,7 +140,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:user'], function () {
     Route::post('model_price/store', [ModelPriceController::class, 'storeModelPrice'])->name('modelPrice.store');
     Route::get('model_price/{id}/edit', [ModelPriceController::class, 'showEditModelPrice'])->name('modelPrice.edit');
     Route::put('model_price/update/{id}', [ModelPriceController::class, 'updateModelPrice'])->name('modelPrice.update');
-    Route::get('model_price/{id}/delete', [ModelPriceController::class, 'deleteModelPrice'])->name('modelPrice.delete');
+    Route::delete('model_price/{id}/delete', [ModelPriceController::class, 'deleteModelPrice'])->name('modelPrice.delete');
 
     #============================ Setting =====================================
     Route::get('setting/edit', [SettingController::class, 'showEditSetting'])->name('setting.edit');
@@ -148,7 +148,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:user'], function () {
 
     #============================ Payment Transaction =====================================
     Route::get('payment-transaction', [PaymentTransactionController::class, 'index'])->name('payment-transaction.index');
-    Route::get('payment-transaction/{id}/delete', [PaymentTransactionController::class, 'delete'])->name('payment-transaction.delete');
+    Route::delete('payment-transaction/{id}/delete', [PaymentTransactionController::class, 'delete'])->name('payment-transaction.delete');
 
 });
 

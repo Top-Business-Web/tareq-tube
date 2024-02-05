@@ -82,7 +82,7 @@
         $(document).on('click', '#delete_btn', function (event) {
             var id = $("#delete_id").val();
             $.ajax({
-                type: 'POST',
+                type: 'DELETE',
                 url: routeOfDelete,
                 data: {
                     '_token': "{{csrf_token()}}",

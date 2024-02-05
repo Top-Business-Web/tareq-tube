@@ -17,9 +17,10 @@ class ConfigCountRepository implements ConfigCountInterface
                 ->addColumn('action', function ($config_count) {
                     return '
                             <a href="' . route('config_count.edit', $config_count->id) . '" class="btn btn-pill btn-info-light"><i class="fa fa-edit"></i></a>
-                            <a href="' . route('config_count.delete', $config_count->id) . '" class="btn btn-pill btn-danger-light">
-                                    <i class="fas fa-trash"></i>
-                            </a>
+                            <button class="btn btn-pill btn-danger-light" data-toggle="modal" data-target="#delete_modal"
+                                        data-id="' . $config_count->id . '" data-title="' . $config_count->type . '">
+                                        <i class="fas fa-trash"></i>
+                                </button>
                        ';
                 })
                 ->editColumn('type', function ($config_count) {
@@ -95,7 +96,6 @@ class ConfigCountRepository implements ConfigCountInterface
         $config_count = ConfigCount::findOrFail($request->id);
 
         $config_count->delete();
-        toastr()->addSuccess("تم حذف سعر العملية بنجاح");
-        return redirect()->back();
+        return response(['message' => 'تم الحذف بنجاح', 'status' => 200], 200);
     }
 }

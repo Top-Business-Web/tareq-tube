@@ -15,9 +15,10 @@ class TubeRepository implements TubeInterface
             return DataTables::of($tubes)
                 ->addColumn('action', function ($tubes) {
                     return '
-                            <a href="' . route('tube.delete', $tubes->id) . '" class="btn btn-pill btn-danger-light">
-                                    <i class="fas fa-trash"></i>
-                            </a>
+                    <button class="btn btn-pill btn-danger-light" data-toggle="modal" data-target="#delete_modal"
+                        data-id="' . $tubes->id . '" data-title="' . $tubes->url . '">
+                        <i class="fas fa-trash"></i>
+                    </button>
                        ';
                 })
                 ->editColumn('user_id', function ($tubes) {
@@ -48,9 +49,7 @@ class TubeRepository implements TubeInterface
         $tube = Tube::findOrFail($request->id);
 
             $tube->delete();
-            toastr()->addSuccess("تم حذف القناة بنجاح");
-
-            return redirect()->back();
+            return response(['message' => 'تم الحذف بنجاح', 'status' => 200], 200);
     }
 
 }

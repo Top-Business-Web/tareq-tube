@@ -16,9 +16,10 @@ class PaymentTransactionRepository implements PaymentTransactionInterface
             return DataTables::of($payment_transaction)
                 ->addColumn('action', function ($payment_transaction) {
                     return '
-                            <a href="' . route('payment-transaction.delete', $payment_transaction->id) . '" class="btn btn-pill btn-danger-light">
-                                    <i class="fas fa-trash"></i>
-                            </a>
+                    <button class="btn btn-pill btn-danger-light" data-toggle="modal" data-target="#delete_modal"
+                        data-id="' . $payment_transaction->id . '" data-title="' . $payment_transaction->payment->transaction_id . '">
+                        <i class="fas fa-trash"></i>
+                    </button>
                        ';
                 })
                 ->editColumn('user_id', function ($payment_transaction) {
@@ -43,9 +44,7 @@ class PaymentTransactionRepository implements PaymentTransactionInterface
         $payment_transaction = PaymentTransaction::findOrFail($request->id);
 
             $payment_transaction->delete();
-            toastr()->addSuccess("تم حذف العملية بنجاح");
-
-            return redirect()->back();
+            return response(['message' => 'تم الحذف بنجاح', 'status' => 200], 200);
     }
 
 }
