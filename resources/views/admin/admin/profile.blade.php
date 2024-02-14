@@ -53,13 +53,13 @@
                                         </tbody>
                                         <tbody class="col-lg-12 col-xl-4 p-0">
                                         <tr>
-                                            <td><strong>Email :</strong> {{$admin->email}}</td>
+                                            <td><strong>Email :</strong> {{$admin->gmail}}</td>
                                         </tr>
                                         </tbody>
                                         <tbody class="col-lg-12 col-xl-4 p-0">
-                                        <tr>
-                                            <td><strong>Register Date :</strong> {{$admin->created_at->diffForHumans()}}</td>
-                                        </tr>
+                                            <tr>
+                                                <td><strong>Register Date :</strong> {{$admin->created_at ? $admin->created_at->diffForHumans() : '____'}}</td>
+                                            </tr>                                            
                                         </tbody>
                                     </table>
                                 </div>
