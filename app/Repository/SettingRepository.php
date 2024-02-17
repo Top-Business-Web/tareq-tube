@@ -13,7 +13,7 @@ class SettingRepository implements SettingInterface
     {
         $setting = Setting::first();
 
-        $settingData = $setting->only(['id', 'logo', 'phone', 'limit_user', 'point_user', 'vat', 'privacy', 'point_price', 'token_price','limit_balance']);
+        $settingData = $setting->only(['id', 'logo', 'phone', 'limit_user', 'point_user', 'vat', 'privacy', 'point_price', 'token_price', 'limit_balance']);
 
         return view('admin/settings/index', compact('settingData'));
     }
@@ -29,12 +29,14 @@ class SettingRepository implements SettingInterface
 
             $setting->update($inputs);
 
+            // return redirect()->back();
             toastr()->addSuccess('تم التعديل الاعدادات بنجاح');
         } catch (\Exception $e) {
             toastr()->addError('هناك خطأ: ' . $e->getMessage());
         }
         return redirect()->route('setting.edit');
     }
+
 
     private function uploadImage($request, &$inputs)
     {
@@ -45,5 +47,4 @@ class SettingRepository implements SettingInterface
             unset($inputs['logo']);
         }
     }
-
 }

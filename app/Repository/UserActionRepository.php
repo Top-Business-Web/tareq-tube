@@ -22,12 +22,11 @@ class UserActionRepository implements UserActionInterface
                        ';
                 })
                 ->editColumn('user_id', function ($user_actions) {
-                    return $user_actions->user->name;
-                })
+                    return $user_actions->user ? $user_actions->user->name : '_';
+                })                
                 ->editColumn('tube_id', function ($user_actions) {
-                    // Create a link for the tube_id
                     return '<a href="' . $user_actions->tube->url . '" target="_blank" class="tube-link">' . $user_actions->tube->url . '</a>';
-                })
+                })                
                 ->editColumn('status', function ($user_actions) {
                     // Create a button based on the status
                     $buttonStyle = $user_actions->status == 0 ? 'background-color: #4CAF50; color: #ffffff;' : 'background-color: #FF5252; color: #ffffff;';

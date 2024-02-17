@@ -39,7 +39,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <a href="{{ route('package.index') }}" class="btn btn-info text-white">رجوع للخلف</a>
+                        <a href="{{ route('modelPrice.index') }}" class="btn btn-info text-white">رجوع للخلف</a>
                         <button type="submit" class="btn btn-primary" id="addButton">اضافة</button>
                     </div>
                 </form>
