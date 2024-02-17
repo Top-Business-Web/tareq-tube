@@ -38,7 +38,7 @@ class MessageRepository implements MessageInterface
         } else {
             return view('admin/messages/index');
         }
-    }
+    } // hi
 
     public function deleteMessage($request)
     {
