@@ -20,8 +20,8 @@ class SettingController extends Controller
         return $this->settingInterface->showEditSetting();
     }
 
-    public function updateSetting(Request $request, $id)
+    public function updateSetting(Request $request)
     {
-        $this->settingInterface->updateSetting($request, $id);
+        $this->settingInterface->updateSetting($request);
     }
 }
