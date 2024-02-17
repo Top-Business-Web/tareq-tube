@@ -8,6 +8,7 @@
 <!-- TITLE -->
 <title>@yield('title')</title>
 
+
 <!-- BOOTSTRAP CSS -->
 <link href="{{asset('assets/admin')}}/assets/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
 
