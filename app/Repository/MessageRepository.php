@@ -25,7 +25,7 @@ class MessageRepository implements MessageInterface
                     return '<a href="' . $messages->url . '" target="_blank" style="background-color: #007bff; color: #fff; padding: 5px; cursor: pointer; text-decoration: none; border: 1px solid #007bff; border-radius: 5px;">' . $messages->url . '</a>';
                 })
                 ->editColumn('user_id', function ($messages) {
-                    return $messages->user_id;
+                    return $messages->user->name;
                 })
                 ->editColumn('city_id', function ($messages) {
                     return $messages->city->name;
@@ -38,7 +38,7 @@ class MessageRepository implements MessageInterface
         } else {
             return view('admin/messages/index');
         }
-    }
+    } // hi
 
     public function deleteMessage($request)
     {
