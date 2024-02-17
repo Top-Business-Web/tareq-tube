@@ -143,8 +143,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:user'], function () {
     Route::delete('model_price/{id}/delete', [ModelPriceController::class, 'deleteModelPrice'])->name('modelPrice.delete');
 
     #============================ Setting =====================================
-    Route::get('setting/edit', [SettingController::class, 'showEditSetting'])->name('setting.edit');
-    Route::put('setting/update/{id}', [SettingController::class, 'updateSetting'])->name('setting.update');
+    Route::get('setting/index', [SettingController::class, 'showEditSetting'])->name('setting.index');
+    Route::post('setting/update', [SettingController::class, 'updateSetting'])->name('setting.update');
 
     #============================ Payment Transaction =====================================
     Route::get('payment-transaction', [PaymentTransactionController::class, 'index'])->name('payment-transaction.index');

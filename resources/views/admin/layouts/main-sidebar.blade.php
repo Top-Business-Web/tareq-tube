@@ -122,7 +122,7 @@
         </li>
 
         <li class="slide">
-            <a class="side-menu__item" href="{{ route('setting.edit') }}">
+            <a class="side-menu__item" href="{{ route('setting.index') }}">
                 <i class="fa fa-wrench side-menu__icon"></i>
                 <span class="side-menu__label">الاعدادات</span>
             </a>

@@ -5,11 +5,12 @@ namespace App\Repository;
 use App\Interfaces\SettingInterface;
 use App\Models\Setting;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect;
 
 class SettingRepository implements SettingInterface
 {
 
-    public function showEditSetting()
+    public function showEditSetting(): \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory|\Illuminate\View\View|\Illuminate\Contracts\Foundation\Application
     {
         $setting = Setting::first();
 
@@ -18,8 +19,9 @@ class SettingRepository implements SettingInterface
         return view('admin/settings/index', compact('settingData'));
     }
 
-    public function updateSetting($request, $id)
+    public function updateSetting($request)
     {
+        $id = $request->id;
         try {
             $setting = Setting::findOrFail($id);
 
@@ -29,12 +31,12 @@ class SettingRepository implements SettingInterface
 
             $setting->update($inputs);
 
-            // return redirect()->back();
             toastr()->addSuccess('تم التعديل الاعدادات بنجاح');
         } catch (\Exception $e) {
             toastr()->addError('هناك خطأ: ' . $e->getMessage());
         }
-        return redirect()->route('setting.edit');
+        return redirect()->route('setting.index')->send();
+
     }
 
 
