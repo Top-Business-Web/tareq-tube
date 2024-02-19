@@ -18,6 +18,7 @@ class TubeResource extends JsonResource
             "id" => $this->id,
             "type" => $this->type,
             "points" => $this->points,
+            'vat_point' => $this->vat_point,
             "url" => $this->url,
             "target" => $this->target,
             "status" => $this->status,
