@@ -863,6 +863,8 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
                 $point_gain = $point_vat / $tube->subCount->count;
             }
 
+            $point_gain = number_format($point_gain,0);
+
             // check if action exists
             $checkActionExists = UserAction::query()
                 ->where([
