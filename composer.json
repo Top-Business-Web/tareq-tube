@@ -24,7 +24,8 @@
         "simplesoftwareio/simple-qrcode": "^4.2",
         "tymon/jwt-auth": "^1.0",
         "yajra/laravel-datatables": "^1.5",
-        "yemeni-open-source/blade-realtime-input": "^5.1"
+        "yemeni-open-source/blade-realtime-input": "^5.1",
+      "ext-curl": "*"
     },
     "require-dev": {
         "facade/ignition": "^2.5",

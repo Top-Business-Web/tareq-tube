@@ -4,15 +4,12 @@ namespace App\Repository;
 
 use App\Models\User;
 use App\Models\Notification;
+use App\Repository\Api\ResponseApi;
 use Yajra\DataTables\DataTables;
-use App\Traits\FirebaseNotification;
 use App\Interfaces\NotificationInterface;
 
-class NotificationRepository implements NotificationInterface
+class NotificationRepository extends ResponseApi implements NotificationInterface
 {
-
-    use FirebaseNotification;
-
     public function index($request)
     {
         if ($request->ajax()) {
@@ -39,12 +36,8 @@ class NotificationRepository implements NotificationInterface
 
     public function showCreate()
     {
-        return $this->sendFirebaseNotification([
-            'title' => 'ffff',
-            'body' => 'ffff',
-        ], 1);
-        // $users = User::query()->select('id', 'name')->get();
-        // return view('admin/notifications/parts/create', compact('users'));
+         $users = User::query()->select('id', 'name')->get();
+         return view('admin/notifications/parts/create', compact('users'));
     }
 
     public function storeNotification($request)
@@ -54,11 +47,7 @@ class NotificationRepository implements NotificationInterface
 
             if ($this->createNotification($inputs)) {
                 //|> send FCM notification
-                $fcmData =[
-                    'title' => $inputs['title'],
-                    'body' => $inputs['description'],
-                ];
-                $this->sendFirebaseNotification($fcmData, $inputs['user_id'],true);
+                self::sendFcm($inputs['title'],$inputs['description'],$inputs['user_id'] ?? null,true);
                 toastr()->addSuccess('تم اضافة الاشعار بنجاح');
                 return redirect()->back();
             } else {
@@ -108,6 +97,6 @@ class NotificationRepository implements NotificationInterface
 
         $notification->delete();
         return response(['message' => 'تم الحذف بنجاح', 'status' => 200], 200);
-    }
+    } // delete notifications
 
 }
