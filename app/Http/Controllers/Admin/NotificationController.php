@@ -30,15 +30,15 @@ class NotificationController extends Controller
         return $this->notificationInterface->storeNotification($request);
     }
 
-    public function showEditNotification($id)
-    {
-        return $this->notificationInterface->showEditNotification($id);
-    }
-
-    public function updateNotification(Request $request, $id)
-    {
-        return $this->notificationInterface->updateNotification($request, $id);
-    }
+//    public function showEditNotification($id)
+//    {
+//        return $this->notificationInterface->showEditNotification($id);
+//    }
+//
+//    public function updateNotification(Request $request, $id)
+//    {
+//        return $this->notificationInterface->updateNotification($request, $id);
+//    }
 
     public function deleteNotification(Request $request)
     {

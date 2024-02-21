@@ -49,10 +49,9 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:user'], function () {
     Route::get('logout', [AuthController::class, 'logout'])->name('admin.logout');
 
     #============================ users ====================================
-    Route::get('userPerson', [UserController::class, 'indexPerson'])->name('userPerson.index');
-    Route::get('userCompany', [UserController::class, 'indexCompany'])->name('userCompany.index');
-    Route::POST('user/delete', [UserController::class, 'delete'])->name('user_delete');
-    Route::POST('change-status-user', [UserController::class, 'changeStatusUser'])->name('changeStatusUser');
+    Route::get('users', [UserController::class, 'index'])->name('users.index');
+    Route::delete('user/{id}/delete', [UserController::class, 'delete'])->name('user_delete');
+    Route::post('change-status-user', [UserController::class, 'changeStatusUser'])->name('changeStatusUser');
 
     #============================ Package =====================================
     Route::get('packages', [PackageController::class, 'index'])->name('package.index');
