@@ -48,6 +48,7 @@ class PaymentRepository extends ResponseApi implements PaymentRepositoryInterfac
             $paymentLog->user_id = $user->id;
             $paymentLog->payment_id = $newPayment->id;
             $paymentLog->status = false;
+            $paymentLog->save();
 
             $data = [
                 'model_id' => $model_id,
