@@ -156,7 +156,7 @@ class PaymentRepository extends ResponseApi implements PaymentRepositoryInterfac
 
             // payment log
             $paymentLog = PaymentTransaction::query()
-                ->where(['payment_id'=>$order->id,'status'=>0])
+                ->where(['payment_id'=>$order->id,'status'=> 0])
                 ->first();
             $paymentLog->status = 1;
             $paymentLog->save();
@@ -173,7 +173,7 @@ class PaymentRepository extends ResponseApi implements PaymentRepositoryInterfac
                         'title' => 'عملية شراء ناجحة',
                         'body' => 'عملية شراء رسائل ناجحة رصيدك الان من الرسائل :' . $user->msg_limit,
                     ];
-                    $this->sendFirebaseNotification($fcmData, $user->id);
+                    self::sendFcm($fcmData['title'],$fcmData['body'],$user->id);
                     return self::returnResponseDataApi(['status' => 1], 'عملية شراء رسائل ناجحة');
                 } else {
                     $model->count;
@@ -185,7 +185,7 @@ class PaymentRepository extends ResponseApi implements PaymentRepositoryInterfac
                         'title' => 'عملية شراء ناجحة',
                         'body' => 'عملية شراء نقاط ناجحة رصيدك الان من النقاط :' . $user->points,
                     ];
-                    $this->sendFirebaseNotification($fcmData, $user->id);
+                    self::sendFcm($fcmData['title'],$fcmData['body'],$user->id);
                     return self::returnResponseDataApi(['status' => 1], 'عملية شراء نقاط ناجحة');
                 }
 
@@ -212,8 +212,7 @@ class PaymentRepository extends ResponseApi implements PaymentRepositoryInterfac
                     'title' => 'عملية شراء ناجحة',
                     'body' => 'عملية شراء باقة VIP ناجحة .',
                 ];
-                $this->sendFirebaseNotification($fcmData, $user->id);
-
+                self::sendFcm($fcmData['title'],$fcmData['body'],$user->id);
                 return self::returnResponseDataApi(['status' => 1], 'عملية شراء باقة VIP ناجحة');
 
             } else {
