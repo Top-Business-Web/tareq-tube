@@ -24,6 +24,7 @@ class UserResource extends JsonResource
             'google_id' => $this->google_id,
             'city' =>$this->city,
             'interest' => $this->interest,
+            'is_vip' => $this->is_vip,
             'points' => $this->points,
             'balance' => $this->points / Setting::first('point_price')->point_price,
             'limit' => $this->limit,
