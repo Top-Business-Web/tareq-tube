@@ -950,6 +950,7 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
             $limit_balance = Setting::value('limit_balance');
             $rules = [
                 'phone' => 'required',
+                'amount' => 'required'
             ];
             $validator = Validator::make($request->all(), $rules);
 
@@ -965,11 +966,11 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
             $createWithdraw = new Withdraw();
             $createWithdraw->user_id = $user->id;
             $createWithdraw->phone = $request->input('phone');
-            $createWithdraw->price = $user->points / $point_price;
+            $createWithdraw->price = $request->input('amount');
             $createWithdraw->status = 0;
 
             if ($createWithdraw->save()) {
-                $user->points = 0;
+                $user->points -= $createWithdraw->price * $point_price;
                 $user->save();
 
                 //|> send FCM notification
