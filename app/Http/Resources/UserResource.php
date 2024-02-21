@@ -15,6 +15,7 @@ class UserResource extends JsonResource
      */
     public function toArray($request)
     {
+        $balance = $this->points / Setting::first('point_price')->point_price;
         return [
 
             'name' => $this->name,
@@ -26,7 +27,7 @@ class UserResource extends JsonResource
             'interest' => $this->interest,
             'is_vip' => $this->is_vip,
             'points' => $this->points,
-            'balance' => $this->points / Setting::first('point_price')->point_price,
+            'balance' => $balance,
             'limit' => $this->limit,
             'msg_limit' => $this->msg_limit,
             'youtube_link' => $this->youtube_link,
