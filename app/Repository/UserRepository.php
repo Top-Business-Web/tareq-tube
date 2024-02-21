@@ -4,19 +4,20 @@ namespace App\Repository;
 
 use App\Interfaces\UserInterface;
 use App\Models\User;
+use App\Repository\Api\ResponseApi;
 use App\Traits\PhotoTrait;
 use Illuminate\Support\Facades\Hash;
 use Yajra\DataTables\Facades\DataTables;
 
-class UserRepository implements UserInterface
+class UserRepository extends ResponseApi implements UserInterface
 {
     use PhotoTrait;
 
-    public function indexPerson($request)
+    public function index($request)
     {
         if ($request->ajax()) {
             $users = User::query()
-            ->where('type', '=', 'user')->latest()->get();
+                ->where('is_admin', '=', '0')->latest()->get();
             return DataTables::of($users)
                 ->addColumn('action', function ($users) {
                     return '
@@ -28,66 +29,39 @@ class UserRepository implements UserInterface
                 })
                 ->editColumn('image', function ($users) {
                     return '
-                    <img alt="image" onclick="window.open(this.src)" class="avatar avatar-md rounded-circle" src="' . asset($users->img) . '">
+                    <img alt="image" onclick="window.open(this.src)" class="avatar avatar-md rounded-circle" src="' . $users->image . '">
                     ';
                 })
                 ->editColumn('status', function ($users) {
-                    if ($users->status == 1)
-                        return '<button class="btn btn-sm btn-success statusBtn" data-id="' . $users->id . '">مقبول</button>';
-                    else
-                        return '<button class="btn btn-sm btn-danger statusBtn" data-id="' . $users->id . '">غير مقبول</button>';
+                    if ($users->status == 1) {
+                        $btn = '<button class="btn btn-sm btn-success statusBtn" data-id="' . $users->id . '">
+                                    مفعل
+                                </button>';
+                        if ($users->is_vip == 1) {
+                            $btn .= ' <span class="btn btn-sm btn-primary-gradient">حساب VIP</span>';
+                        }
+                        return $btn;
+                    } else {
+                        $btn = '<button class="btn btn-sm btn-danger statusBtn" data-id="' . $users->id . '">
+                                   غير مفعل
+                                </button>';
+
+                        if ($users->is_vip == 1) {
+                            $btn .= '<span class="btn btn-sm btn-primary-gradient">حساب VIP</span>';
+                        }
+                        return $btn;
+                    }
                 })
                 ->escapeColumns([])
                 ->make(true);
         } else {
-            return view('admin.user.index_person');
-        }
-    }
-
-
-    public function indexCompany($request)
-    {
-        if ($request->ajax()) {
-            $users = User::query()
-                ->where('user_type', 'company')->latest()->get();
-            return DataTables::of($users)
-                ->addColumn('action', function ($users) {
-                    return '
-                            <button class="btn btn-pill btn-danger-light" data-toggle="modal" data-target="#delete_modal"
-                                    data-id="' . $users->id . '" data-title="' . $users->name . '">
-                                    <i class="fas fa-trash"></i>
-                            </button>
-                       ';
-                })
-                ->editColumn('image', function ($users) {
-                    return '
-                    <img alt="image" onclick="window.open(this.src)" class="avatar avatar-md rounded-circle" src="' . asset($users->image) . '">
-                    ';
-                })
-                ->editColumn('status', function ($user) {
-                    if ($user->status == 1)
-                        return '<button class="btn btn-sm btn-success statusBtn" data-id="' . $user->id . '">مفعل</button>';
-                    else
-                        return '<button class="btn btn-sm btn-danger statusBtn" data-id="' . $user->id . '">غير مفعل</button>';
-                })
-                ->editColumn('city_id', function ($user) {
-                    return $user->city->name_ar;
-                })
-                ->escapeColumns([])
-                ->make(true);
-        } else {
-            return view('admin.user.index_company');
+            return view('admin.users.index');
         }
     }
 
     public function delete($request)
     {
-        $admin = User::where('id', $request->id)->first();
-
-        if (file_exists($admin->image)) {
-            unlink($admin->image);
-        }
-        $admin->delete();
+        User::where('id', $request->id)->delete();
         return response(['message' => 'تم الحذف بنجاح', 'status' => 200], 200);
     }
 
@@ -100,8 +74,10 @@ class UserRepository implements UserInterface
         $user->save();
 
         if ($user->status == 1) {
+            self::sendFcm('اشعار من الادمن','تم تفعيل حسابك',$user->id);
             return response()->json('200');
         } else {
+            self::sendFcm('اشعار من الادمن','تم ايقاف حسابك قم بالاتصال بالدعم',$user->id);
             return response()->json('201');
         }
     }

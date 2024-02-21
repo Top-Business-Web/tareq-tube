@@ -616,6 +616,8 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
                     $fromUser->save();
                     $user->points += $tokenPrice;
                     $user->save();
+                    self::sendFcm('مكافئة التنزيل','تم اضافة مكافئة التنزيل رصيدك اصبح : ' . $fromUser->points , $fromUser->id);
+                    self::sendFcm('مكافئة التنزيل','تم اضافة مكافئة التنزيل رصيدك اصبح : ' . $user->points , $user->id);
                     return self::returnResponseDataApi(new UserResource($user), 'تم اضافة النقاط بنجاح');
                 }
             }
