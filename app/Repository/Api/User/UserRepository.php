@@ -404,7 +404,7 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
                         'title' => 'رسالة جديدة',
                         'body' => $addMessage->content
                     ];
-                    $this->sendFirebaseNotification($fcmData, null, false, $addMessage->intrest_id);
+                    self::sendFcm($fcmData['title'],$fcmData['body'],null,true,$addMessage->intrest_id);
 
                     return self::returnResponseDataApi(new MessageResource($addMessage), 'تم انشاء الرسالة بنجاح', 201);
                 } else {
