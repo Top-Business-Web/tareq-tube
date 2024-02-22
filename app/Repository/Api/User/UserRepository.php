@@ -312,7 +312,8 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
             $second_count = ConfigCount::find($request->second_count)->point;
             $pointsNeed = $second_count + $view_count + $sub_count;
 
-            if ($user->is_vip != 1){
+            // if user not have VIP Package
+            if ($user->is_vip != 1) {
                 if ($user->limit > 0) {
                     if ($userPoint >= $pointsNeed) {
                         $createTube = new Tube();
@@ -341,23 +342,33 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
                 } else {
                     return self::returnResponseDataApi(null, 'تم الانتهاء من الباقة الحالية قم بشراء باقة جديدة', 422);
                 }
-            }else {
-                $createTube = new Tube();
-                $createTube->type = $request->type;
-                $createTube->points = $pointsNeed;
-                $createTube->user_id = $user->id;
-                $createTube->url = $request->url;
-                $createTube->sub_count = $request->type == 'view' ? null : $request->sub_count;
-                $createTube->second_count = $request->second_count;
-                $createTube->view_count = $request->view_count;
-                $createTube->target = ($request->type == 'view') ? $view_count_count : $sub_count_count;
-                $createTube->status = 0;
+            } else {
+                // if user have VIP Package
+                if ($userPoint >= $pointsNeed) {
+                    $createTube = new Tube();
+                    $createTube->type = $request->type;
+                    $createTube->points = $pointsNeed;
+                    $createTube->user_id = $user->id;
+                    $createTube->url = $request->url;
+                    $createTube->sub_count = $request->type == 'view' ? null : $request->sub_count;
+                    $createTube->second_count = $request->second_count;
+                    $createTube->view_count = $request->view_count;
+                    $createTube->target = ($request->type == 'view') ? $view_count_count : $sub_count_count;
+                    $createTube->status = 0;
 
-                if ($createTube->save()) {
-                    return self::returnResponseDataApi(new TubeResource($createTube), 'تم الانشاء بنجاح', 201);
+                    if ($createTube->save()) {
+                        $user->points -= $pointsNeed;
+                        $user->limit -= 1;
+                        $user->save();
+
+                        return self::returnResponseDataApi(new TubeResource($createTube), 'تم الانشاء بنجاح', 201);
+                    } else {
+                        return self::returnResponseDataApi(null, 'هناك خطا ما', 500);
+                    }
                 } else {
-                    return self::returnResponseDataApi(null, 'هناك خطا ما', 500);
+                    return self::returnResponseDataApi(null, 'نقاطك لا تكفي لاتمام العملية تحتاج الي ' . $pointsNeed - $userPoint . ' من النقاط ', 422);
                 }
+
             }
 
         } catch (\Exception $e) {
@@ -404,7 +415,7 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
                         'title' => 'رسالة جديدة',
                         'body' => $addMessage->content
                     ];
-                    self::sendFcm($fcmData['title'],$fcmData['body'],null,true,$addMessage->intrest_id);
+                    self::sendFcm($fcmData['title'], $fcmData['body'], null, true, $addMessage->intrest_id);
 
                     return self::returnResponseDataApi(new MessageResource($addMessage), 'تم انشاء الرسالة بنجاح', 201);
                 } else {
@@ -499,6 +510,9 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
         }
     }
 
+    /**
+     * @return JsonResponse
+     */
     public function getMessages(): JsonResponse
     {
         try {
@@ -616,8 +630,8 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
                     $fromUser->save();
                     $user->points += $tokenPrice;
                     $user->save();
-                    self::sendFcm('مكافئة التنزيل','تم اضافة مكافئة التنزيل رصيدك اصبح : ' . $fromUser->points , $fromUser->id);
-                    self::sendFcm('مكافئة التنزيل','تم اضافة مكافئة التنزيل رصيدك اصبح : ' . $user->points , $user->id);
+                    self::sendFcm('مكافئة التنزيل', 'تم اضافة مكافئة التنزيل رصيدك اصبح : ' . $fromUser->points, $fromUser->id);
+                    self::sendFcm('مكافئة التنزيل', 'تم اضافة مكافئة التنزيل رصيدك اصبح : ' . $user->points, $user->id);
                     return self::returnResponseDataApi(new UserResource($user), 'تم اضافة النقاط بنجاح');
                 }
             }
@@ -811,7 +825,7 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
                 ->pluck('tube_id')->toArray();
 
             $videos = Tube::query()
-                ->where('user_id','!=',$user->id)
+                ->where('user_id', '!=', $user->id)
                 ->whereNotIn('id', $userVideos)
                 ->where('type', $request->type)
                 ->get();
@@ -865,7 +879,7 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
                 $point_gain = $point_vat / $tube->subCount->count;
             }
 
-            $point_gain = number_format($point_gain,0);
+            $point_gain = number_format($point_gain, 0);
 
             // check if action exists
             $checkActionExists = UserAction::query()
