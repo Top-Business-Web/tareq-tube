@@ -41,7 +41,7 @@ class Tube extends Model
         $point_gain = 0;
 
         // view point calculate
-        if ($this->type = 'view') {
+        if ($this->type == 'view') {
             $point_gain = $point_vat / $this->viewCount->count;
         } else {
             $point_gain = $point_vat / $this->subCount->count;
