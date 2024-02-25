@@ -1,0 +1,19 @@
+name: Deploy Laravel Project 🚀
+on: [push]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Deploy to Server
+      uses: easingthemes/ssh-deploy@main
+      with:
+        TARGET: domains/topbusiness.io/public_html/tube
+        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        REMOTE_HOST: 31.220.106.209
+        REMOTE_USER: u463118956
+        REMOTE_PORT: 65002
