@@ -25,7 +25,7 @@ use App\Interfaces\{AuthInterface,
     ModelPriceInterface,
     PaymentTransactionInterface,
     SettingInterface,
-    WithdrawInterface};
+    WithdrawInterface, YoutubeKeyInterface};
 use App\Repository\{AdminRepository,
     AuthRepository,
     CityRepository,
@@ -43,7 +43,7 @@ use App\Repository\{AdminRepository,
     ModelPriceRepository,
     SettingRepository,
     PaymentTransactionRepository,
-    WithdrawRepository};
+    WithdrawRepository, YoutubeKeyRepository};
 
 
 
@@ -75,6 +75,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(SettingInterface::class,SettingRepository::class);
         $this->app->bind(WithdrawInterface::class,WithdrawRepository::class);
         $this->app->bind(PaymentTransactionInterface::class,PaymentTransactionRepository::class);
+        $this->app->bind(YoutubeKeyInterface::class,YoutubeKeyRepository::class);
         // ----------------------------------------------------------------
 
 

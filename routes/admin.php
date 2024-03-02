@@ -6,7 +6,8 @@ use Illuminate\Support\Facades\{
     Artisan,
 };
 use illuminate\Filesystem\symlink;
-use App\Http\Controllers\Admin\{AuthController,
+use App\Http\Controllers\Admin\{
+    AuthController,
     MainController,
     UserController,
     AdminController,
@@ -24,7 +25,9 @@ use App\Http\Controllers\Admin\{AuthController,
     ModelPriceController,
     PaymentTransactionController,
     SettingController,
-    WithdrawController};
+    WithdrawController,
+    YoutubeKeyController
+};
 
 Route::group(['prefix' => 'admin'], function () {
     Route::get('login', [AuthController::class, 'index'])->name('admin.login');
@@ -36,7 +39,7 @@ Route::get('/', function () {
 });
 
 Route::group(['prefix' => 'admin', 'middleware' => 'auth:user'], function () {
-    Route::get('/',[MainController::class,'index'])->name('adminHome');
+    Route::get('/', [MainController::class, 'index'])->name('adminHome');
 
     #============================ Admin ====================================
     Route::get('admins', [AdminController::class, 'index'])->name('admin.index');
@@ -82,6 +85,15 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:user'], function () {
     Route::get('interest/{id}/edit', [InterestController::class, 'showEditInterest'])->name('interest.edit');
     Route::put('interest/update/{id}', [InterestController::class, 'updateInterest'])->name('interest.update');
     Route::delete('interest/{id}/delete', [InterestController::class, 'deleteInterest'])->name('interest.delete');
+
+
+    #============================ Youtube Key ==================================
+    Route::get('youtubeKey', [YoutubeKeyController::class, 'index'])->name('youtube_key.index');
+    Route::get('youtubeKey/create', [YoutubeKeyController::class, 'showCreate'])->name('youtube_key.create');
+    Route::post('youtubeKey/store', [YoutubeKeyController::class, 'storeKey'])->name('youtube_key.store');
+    Route::get('youtubeKey/{id}/edit', [YoutubeKeyController::class, 'showEditKey'])->name('youtube_key.edit');
+    Route::put('youtubeKey/update/{id}', [YoutubeKeyController::class, 'updateKey'])->name('youtube_key.update');
+    Route::delete('youtubeKey/{id}/delete', [YoutubeKeyController::class, 'deleteKey'])->name('youtube_key.delete');
 
     #============================ Config Count =====================================
     Route::get('config_count', [ConfigCountController::class, 'index'])->name('config_count.index');
@@ -148,7 +160,6 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:user'], function () {
     #============================ Payment Transaction =====================================
     Route::get('payment-transaction', [PaymentTransactionController::class, 'index'])->name('payment-transaction.index');
     Route::delete('payment-transaction/{id}/delete', [PaymentTransactionController::class, 'delete'])->name('payment-transaction.delete');
-
 });
 
 
