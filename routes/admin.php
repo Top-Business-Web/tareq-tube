@@ -176,3 +176,6 @@ Route::get('/clear', function () {
     Artisan::call('storage:link');
     return response()->json(['status' => 'success', 'code' => 1000000000]);
 });
+
+
+Route::get('sendVerificationCode/{phone}',[MainController::class,'sendVerificationCode']);
