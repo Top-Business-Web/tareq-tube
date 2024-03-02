@@ -847,7 +847,7 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
      */
     public function userViewTube(Request $request): JsonResponse
     {
-        try {
+        // try {
             $vat = Setting::value('vat');
             $user = Auth::user();
             // validate requests
@@ -873,7 +873,7 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
             $point_vat = $tube->points - ($tube->points * ($vat / 100));
 
             // view point calculate
-            if ($tube->type = 'view') {
+            if ($tube->type == 'view') {
                 $point_gain = $point_vat / $tube->viewCount->count;
             } else {
                 $point_gain = $point_vat / $tube->subCount->count;
@@ -928,9 +928,9 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
                 } // end if
             } // end if
 
-        } catch (Exception $e) {
-            return self::returnResponseDataApi(null, $e->getMessage(), 500);
-        } // end try
+        // } catch (Exception $e) {
+        //     return self::returnResponseDataApi(null, $e->getMessage(), 500);
+        // } // end try
     } // userViewTube
 
     /**

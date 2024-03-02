@@ -94,5 +94,4 @@ Route::post('testFcm',[ConfigController::class,'testFcm']);
 
 ############|> START get Active Key ROUTES
 Route::get('getActiveKey',[ConfigController::class,'getActiveKey']);
-Route::post('updateActiveKey',[ConfigController::class,'updateActiveKey']);
 ############|> END get Active Key ROUTES

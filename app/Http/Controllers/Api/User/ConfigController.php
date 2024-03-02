@@ -49,11 +49,11 @@ class ConfigController extends Controller
     {
         try {
             $key = YoutubeKey::query()
-                ->select('key', 'limit')
                 ->where('limit', '<', '9900')
                 ->latest()->first();
-
             if ($key) {
+                $key->limit += 1;
+                $key->save();
                 return self::returnResponseDataApi($key, 'تم الحصول علي البيانات بنجاح', 200);
             } else {
                 return self::returnResponseDataApi(null, 'لا يوجد بيانات حاليا', 422);
@@ -62,27 +62,4 @@ class ConfigController extends Controller
             return self::returnResponseDataApi(null, $e->getMessage(), 500);
         }
     } // getActiveKey
-
-    public function updateActiveKey(Request $request)
-    {
-        try {
-            $key = $request->key;
-            $youtubeKey = YoutubeKey::query()
-                ->where('key', $key)->first();
-            $youtubeKey->limit += 1;
-            $youtubeKey->save();
-
-            if ($youtubeKey) {
-
-                $youtubeKeyData = YoutubeKey::query()
-                    ->select('key', 'limit')
-                    ->where('key', $key)
-                    ->first();
-
-                return self::returnResponseDataApi($youtubeKeyData, 'تم تحديث البيانات بنجاح', 200);
-            }
-        } catch (Exception $e) {
-            return self::returnResponseDataApi(null, $e->getMessage(), 500);
-        }
-    } // end function updateActiveKey
 }
