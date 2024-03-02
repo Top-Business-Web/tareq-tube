@@ -136,6 +136,13 @@
         </li>
 
         <li class="slide">
+            <a class="side-menu__item" href="{{ route('youtube_key.index') }}">
+                <i class="fa fa-wrench side-menu__icon"></i>
+                <span class="side-menu__label"> API يوتيوب </span>
+            </a>
+        </li>
+
+        <li class="slide">
             <a class="side-menu__item" href="{{route('admin.logout')}}">
                 <i class="fa fa-lock side-menu__icon"></i>
                 <span class="side-menu__label">تسجيل الخروج</span>

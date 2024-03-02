@@ -39,7 +39,6 @@ trait FirebaseNotification
         }
 
         $fields = array(
-            // 'registration_ids' => $tokens,
             'registration_ids' => $tokens,
             'data' => ["note_type" => "notification"],
             'notification' => $data
