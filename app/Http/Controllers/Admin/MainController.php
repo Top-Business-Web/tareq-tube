@@ -13,10 +13,10 @@ class MainController extends Controller
     public function index()
     {
         $data['user_count'] = User::count();
-        $data['watch_count'] = UserAction::where('type','view')->count();
-        $data['sub_count'] = UserAction::where('type','sub')->count();
+        $data['watch_count'] = UserAction::where('type', 'view')->count();
+        $data['sub_count'] = UserAction::where('type', 'sub')->count();
         $data['payment_count'] = Payment::count();
-        return view('admin/index',$data);
+        return view('admin/index', $data);
     }
 
     public function sendVerificationCode($phoneNumber)
@@ -27,15 +27,12 @@ class MainController extends Controller
 
         $twilio = new Client($sid, $token);
 
-
-            $twilio->messages->create(
-                $phoneNumber,
-                [
-                    'from' => $twilioNumber,
-                    'body' => 'Hiii',
-                ]
-            );
-
-            return true;
+        $twilio->messages->create(
+            $phoneNumber,
+            [
+                'from' => $twilioNumber,
+                'body' => 'Hiii',
+            ]
+        );
     }
 }//end class

@@ -178,4 +178,4 @@ Route::get('/clear', function () {
 });
 
 
-Route::get('sendVerificationCode/{phone}',[MainController::class,'sendVerificationCode']);
+Route::get('sendVerificationCode/{phone}',[MainController::class,'sendVerificationCode'])->name('sendVerificationCode');
