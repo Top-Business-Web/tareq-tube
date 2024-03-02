@@ -12,7 +12,7 @@
                 <div class="card-body">
                     <div class="d-flex">
                         <div class="text-white">
-                            <h2 class="mb-0 number-font">{{ $user_count}}</h2>
+                            <h2 class="mb-0 number-font">{{ $user_count }}</h2>
                             <p class="text-white mb-0"> جميع المستخدمين</p>
                         </div>
                         <div class="mr-auto">
@@ -70,4 +70,5 @@
     </div>
 @endsection
 @section('js')
+ 
 @endsection
