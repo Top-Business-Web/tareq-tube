@@ -847,7 +847,7 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
      */
     public function userViewTube(Request $request): JsonResponse
     {
-        // try {
+        try {
             $vat = Setting::value('vat');
             $user = Auth::user();
             // validate requests
@@ -928,9 +928,9 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
                 } // end if
             } // end if
 
-        // } catch (Exception $e) {
-        //     return self::returnResponseDataApi(null, $e->getMessage(), 500);
-        // } // end try
+        } catch (Exception $e) {
+            return self::returnResponseDataApi(null, $e->getMessage(), 500);
+        } // end try
     } // userViewTube
 
     /**
