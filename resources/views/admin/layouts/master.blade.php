@@ -66,14 +66,8 @@ $checkKeysCount = \App\Models\YoutubeKey::query()
         function playWarning() {
             var x = new Audio("{{ asset('assets/wrong-answer-129254.mp3') }}");
 
-            var playPromise = x.play();
+            x.play();
 
-            if (playPromise !== undefined) {
-                playPromise.then(_ => {
-                    x.play();
-                }).catch(error => {
-                });
-            }
             var notyf = new Notyf({
                 duration: 6000,
                 position: {
@@ -89,11 +83,11 @@ $checkKeysCount = \App\Models\YoutubeKey::query()
             });
 
         } // end playAudio
-        @if ($checkKeysCount <= 1)
-        setInterval(function () {
-            playWarning();
-        }, 3000)
-        @endif
+            @if ($checkKeysCount <= 1)
+            setInterval(function () {
+                playWarning();
+            }, 3000)
+            @endif
     @endif
 </script>
 @yield('ajaxCalls')
