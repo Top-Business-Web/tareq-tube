@@ -304,10 +304,13 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
             if ($request->has('sub_count') && $request->sub_count != '') {
                 $sub_count = ConfigCount::find($request->sub_count)->point;
                 $sub_count_count = ConfigCount::find($request->sub_count)->count;
+                $pointsNeed = $second_count * $sub_count;
+
             }
             if ($request->has('view_count') && $request->view_count != '') {
                 $view_count = ConfigCount::find($request->view_count)->point;
                 $view_count_count = ConfigCount::find($request->view_count)->count;
+                $pointsNeed = $second_count * $view_count;
             }
             $second_count = ConfigCount::find($request->second_count)->point;
             $pointsNeed = $second_count + $view_count + $sub_count;
