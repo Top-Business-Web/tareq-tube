@@ -301,6 +301,8 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
 
             $sub_count = 0;
             $view_count = 0;
+            $second_count = ConfigCount::find($request->second_count)->point;
+
             if ($request->has('sub_count') && $request->sub_count != '') {
                 $sub_count = ConfigCount::find($request->sub_count)->point;
                 $sub_count_count = ConfigCount::find($request->sub_count)->count;
@@ -312,8 +314,6 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
                 $view_count_count = ConfigCount::find($request->view_count)->count;
                 $pointsNeed = $second_count * $view_count;
             }
-            $second_count = ConfigCount::find($request->second_count)->point;
-            $pointsNeed = $second_count + $view_count + $sub_count;
 
             // if user not have VIP Package
             if ($user->is_vip != 1) {
