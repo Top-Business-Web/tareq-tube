@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\YoutubeKey;
+use App\Models\YoutubeKeyEach;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 
@@ -39,12 +40,29 @@ class resetApiKey extends Command
      */
     public function handle()
     {
-        $day = Carbon::now();
-        YoutubeKey::query()
+        $day = Carbon::now()->subDay(); // Subtract 24 hours
+
+        $each = YoutubeKeyEach::query()
             ->whereDate('created_at', '<', $day)
-            ->update([
-                'limit' => 0,
-                'created_at' => $day
-            ]);
+            ->select('key_id')
+            ->groupBy('key_id');
+
+        $each_counts_by_key_id = $each->select('key_id', \DB::raw('count(*) as count'))->get()->toArray();
+        $arr = [];
+        // $each_counts_by_key_id is an array where each element has 'key_id' and 'count'
+        foreach ($each_counts_by_key_id as $index => $count_by_key_id) {
+            $arr[$index]['key_id'] = $count_by_key_id['key_id'];
+            $arr[$index]['count'] = $count_by_key_id['count'];
+        }
+
+        foreach ($arr as $value) {
+            $youtubeKey = YoutubeKey::query()
+                ->where('id', '=', $value['key_id'])->first();
+            $youtubeKey->limit -= $value['count'];
+            $youtubeKey->save();
+        }
+
+        $each->delete();
+
     }
 }
