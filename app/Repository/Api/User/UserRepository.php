@@ -107,7 +107,7 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
                 $validatorRegister = Validator::make($request->all(), [
                     'gmail' => 'required|email',
                     'intrest_id' => 'required',
-                    'device_id'=> 'required|exists:google_device_ids,device_id'
+                    'device_id'=> 'required|unique:google_device_ids,device_id,except,id'
                 ]);
 
                 // Check Validation Result
