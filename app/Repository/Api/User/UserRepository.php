@@ -60,7 +60,7 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
             // Validation Rules
             $validatorLogin = Validator::make($request->all(), [
                 'gmail' => 'required|email',
-                'device_id'=>'required'
+                'device_id' => 'required'
             ]);
 
             if ($validatorLogin->fails()) {
@@ -94,9 +94,9 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
 
                 // check if the user device id equals the current gmail
                 $checkDeviceId = GoogleDeviceId::query()
-                ->where(['gmail'=>$check_exists->gmail,'device_id'=>$request->device_id])->first();
+                    ->where(['gmail' => $check_exists->gmail, 'device_id' => $request->device_id])->first();
 
-                if(!$checkDeviceId){
+                if (!$checkDeviceId) {
                     return self::returnResponseDataApi(null, "معرف الجهاز غير متطابق مع الجيميل الخاص بك", 422);
                 } // end if
 
@@ -107,7 +107,7 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
                 $validatorRegister = Validator::make($request->all(), [
                     'gmail' => 'required|email',
                     'intrest_id' => 'required',
-                    'device_id'=> 'required|unique:google_device_ids,device_id,except,id'
+                    'device_id' => 'required|unique:google_device_ids,device_id,except,id'
                 ]);
 
                 // Check Validation Result
@@ -145,7 +145,7 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
                         ['type' => $request->device_type, 'token' => $request->token]
                     );
                     //? create a new user device Id with gmail
-                    new GoogleDeviceId($request->device_id,$request->gmail);
+                    new GoogleDeviceId($request->device_id, $request->gmail);
 
                     return self::returnResponseDataApi(new UserResource($createUser), 'تم تسجيل الدخول لاول مرة بنجاح', 201);
                 } else {
@@ -973,11 +973,16 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
     public function checkDevice(Request $request): JsonResponse
     {
         try {
-            $data = GoogleDeviceId::query()->where('device_id', $request->device_id)->first();
+            $data = GoogleDeviceId::query()
+                ->select('device_id', 'gmail')
+                ->where('device_id', $request->device_id)
+                ->first();
             if ($data) {
+                $data['status'] = 1;
                 return self::returnResponseDataApi($data, "تم الحصول علي البيانات بنجاح", 200);
             } else {
-                return self::returnResponseDataApi(null, "لا يوجد بيانات مرتبطه بهذا المعرف", 422);
+                $data['status'] = 0;
+                return self::returnResponseDataApi($data, "لا يوجد بيانات مرتبطه بهذا المعرف", 200);
             }
         } catch (Exception $e) {
             return self::returnResponseDataApi(null, $e->getMessage(), 500);
