@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Route;
 Route::group(['prefix' => 'auth'], function () {
     Route::post('loginWithGoogle', [AuthController::class, 'loginWithGoogle']);
     Route::post('/checkUser', [UserController::class, 'checkUser']);
+    Route::post('/checkDevice', [UserController::class, 'checkDevice']);
 });
 ############|> END AUTH ROUTES
 
@@ -70,12 +71,11 @@ Route::get('setting', [ConfigController::class, 'setting']);
 ############|> END GENERAL ROUTES
 
 /*
- * |> START PAYMENT ROUTES
- * |> ROUTE GO PAY TO CREATE PAYMENT BY PAYMOB
- * |> ROUTE PAYMENT/CALLBACK TO GET RESPONSE FROM PAYMOB =>> TURE OR FALSE
- * |> ROUTE CHECKOUT TO FINISH PAYMENT BY PAYMOB
- * */
-
+ ? |> START PAYMENT ROUTES
+ ? |> ROUTE GO PAY TO CREATE PAYMENT BY PAYMOB
+ ! |> ROUTE PAYMENT/CALLBACK TO GET RESPONSE FROM PAYMOB =>> TURE OR FALSE
+ ? |> ROUTE CHECKOUT TO FINISH PAYMENT BY PAYMOB
+ */
 ############|> START PAYMENT ROUTES
 
 #|> create new payment & order
