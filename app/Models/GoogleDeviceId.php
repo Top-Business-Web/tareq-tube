@@ -14,9 +14,12 @@ class GoogleDeviceId extends Model
         'device_id',
         'gmail'
     ];
-    public function __construct($deviceId,$gmail){
-        $this->device_id = $deviceId;
-        $this->gmail = $gmail;
-        $this->save();
+    public function __construct($deviceId = null, $gmail = null)
+    {
+        if ($deviceId !== null && $gmail !== null) {
+            $this->device_id = $deviceId;
+            $this->gmail = $gmail;
+            $this->save();
+        }
     }
 }
