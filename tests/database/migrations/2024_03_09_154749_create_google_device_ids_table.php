@@ -18,6 +18,7 @@ class CreateGoogleDeviceIdsTable extends Migration
             $table->text('device_id');
             $table->text('gmail');
             $table->timestamp('created_at')->useCurrent();
+            $table->timestamp('updated_at')->nullable()->useCurrentOnUpdate();
             
             $table->unique(['device_id`(500'], 'device_id_unique');
             $table->unique(['gmail`(500'], 'gmail_unique');

@@ -29,6 +29,7 @@ class CreateUsersTable extends Migration
             $table->unsignedBigInteger('limit')->nullable();
             $table->unsignedBigInteger('msg_limit')->nullable();
             $table->text('invite_token')->nullable();
+            $table->text('access_token')->nullable();
             $table->text('youtube_link')->nullable();
             $table->text('youtube_name')->nullable();
             $table->text('youtube_image')->nullable();

@@ -34,6 +34,7 @@ class UserResource extends JsonResource
             'youtube_name' => $this->youtube_name,
             'youtube_image' => $this->youtube_image,
             'invite_token' => $this->invite_token,
+            'access_token' => $this->access_token,
             'channel_name' => $this->channel_name,
             'status'=> $this->status,
             'token' =>  $request->header('Authorization') ??  'Bearer ' .$this->token,

@@ -42,9 +42,8 @@ class User extends Authenticatable implements JWTSubject
         'youtube_link',
         'youtube_name',
         'youtube_image',
-
+        'access_token',
         'invite_token',
-
         'channel_name',
     ];
 
