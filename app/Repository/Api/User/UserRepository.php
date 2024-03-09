@@ -59,7 +59,8 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
 
             // Validation Rules
             $validatorLogin = Validator::make($request->all(), [
-                'gmail' => 'required|email'
+                'gmail' => 'required|email',
+                'device_id'=>'required'
             ]);
 
             if ($validatorLogin->fails()) {
@@ -91,8 +92,13 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
                     ['type' => $request->device_type, 'token' => $request->token]
                 );
 
-                //? create a new user device Id with gmail
-                new GoogleDeviceId($request->device_id,$request->gmail);
+                // check if the user device id equals the current gmail
+                $checkDeviceId = GoogleDeviceId::query()
+                ->where(['gmail'=>$check_exists->gmail,'device_id'=>$request->device_id])->first();
+
+                if(!$checkDeviceId){
+                    return self::returnResponseDataApi(null, "معرف الجهاز غير متطابق مع الجيميل الخاص بك", 422);
+                } // end if
 
                 return self::returnResponseDataApi(new UserResource($user), "تم تسجيل الدخول بنجاح", 200);
             } else {
@@ -101,6 +107,7 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
                 $validatorRegister = Validator::make($request->all(), [
                     'gmail' => 'required|email',
                     'intrest_id' => 'required',
+                    'device_id'=> 'required|exists:google_device_ids,device_id'
                 ]);
 
                 // Check Validation Result
