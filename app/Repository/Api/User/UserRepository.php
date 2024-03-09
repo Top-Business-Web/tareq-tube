@@ -60,7 +60,8 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
             // Validation Rules
             $validatorLogin = Validator::make($request->all(), [
                 'gmail' => 'required|email',
-                'device_id' => 'required'
+                'device_id' => 'required',
+                'access_token'=> 'required'
             ]);
 
             if ($validatorLogin->fails()) {
@@ -74,6 +75,7 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
 
                 $check_exists->name = $request->name;
                 $check_exists->image = $request->image;
+                $check_exists->access_token = $request->access_token;
                 $check_exists->save();
 
 
@@ -107,6 +109,7 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
                 $validatorRegister = Validator::make($request->all(), [
                     'gmail' => 'required|email',
                     'intrest_id' => 'required',
+                    'access_token'=>'required',
                     'device_id' => 'required|unique:google_device_ids,device_id,except,id'
                 ]);
 
@@ -129,6 +132,7 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
                 $createUser->msg_limit = 0;
                 $createUser->youtube_link = $request->youtube_link ?? null;
                 $createUser->invite_token = self::randomToken(10);
+                $createUser->access_token = $request->access_token;
 
                 if ($createUser->save()) {
                     // Authenticate User
@@ -296,7 +300,7 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
     public function addTube(Request $request): JsonResponse
     {
         try {
-            $user = Auth::guard('user-api')->user();
+            $user = User::find(Auth::guard('user-api')->user()->id);
             $userPoint = $user->points;
 
             $validator = Validator::make($request->all(), [
@@ -615,7 +619,7 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
     public function AddLinkPoints(Request $request): JsonResponse
     {
         try {
-            $user = Auth::user();
+            $user = User::find(Auth::user()->id);
 
             $tokenPrice = Setting::query()->value('token_price');
             $checkToken = User::query()->where('invite_token', $request->token)
@@ -861,7 +865,7 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
     {
         try {
             $vat = Setting::value('vat');
-            $user = Auth::user();
+            $user = User::find(Auth::user()->id);
             // validate requests
             $validator = Validator::make($request->all(), [
                 'tube_id' => 'required',
