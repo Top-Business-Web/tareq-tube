@@ -120,6 +120,10 @@ class UserController extends Controller
     {
         return $this->userRepositoryInterface->checkUser($request);
     } #|> check user
+    public function checkDevice(Request $request)
+    {
+        return $this->userRepositoryInterface->checkDevice($request);
+    } #|> check user
 
     public function withdraw(Request $request)
     {

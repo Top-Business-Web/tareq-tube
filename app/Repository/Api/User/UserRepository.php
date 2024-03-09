@@ -18,6 +18,7 @@ use App\Models\ConfigCount;
 use App\Models\Coupon;
 use App\Models\CouponUser;
 use App\Models\DeviceToken;
+use App\Models\GoogleDeviceId;
 use App\Models\Interest;
 use App\Models\InviteToken;
 use App\Models\Message;
@@ -58,7 +59,8 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
 
             // Validation Rules
             $validatorLogin = Validator::make($request->all(), [
-                'gmail' => 'required|email'
+                'gmail' => 'required|email',
+                'device_id'=>'required'
             ]);
 
             if ($validatorLogin->fails()) {
@@ -90,6 +92,14 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
                     ['type' => $request->device_type, 'token' => $request->token]
                 );
 
+                // check if the user device id equals the current gmail
+                $checkDeviceId = GoogleDeviceId::query()
+                ->where(['gmail'=>$check_exists->gmail,'device_id'=>$request->device_id])->first();
+
+                if(!$checkDeviceId){
+                    return self::returnResponseDataApi(null, "معرف الجهاز غير متطابق مع الجيميل الخاص بك", 422);
+                } // end if
+
                 return self::returnResponseDataApi(new UserResource($user), "تم تسجيل الدخول بنجاح", 200);
             } else {
 
@@ -97,6 +107,7 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
                 $validatorRegister = Validator::make($request->all(), [
                     'gmail' => 'required|email',
                     'intrest_id' => 'required',
+                    'device_id'=> 'required|exists:google_device_ids,device_id'
                 ]);
 
                 // Check Validation Result
@@ -124,15 +135,17 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
                     $credentials = ['gmail' => $createUser->gmail, 'password' => '123456'];
                     $token = Auth::guard('user-api')->attempt($credentials);
 
-                    // Get User and Attach Token
+                    //? Get User and Attach Token
                     $createUser = Auth::guard('user-api')->user();
                     $createUser['token'] = $token;
 
-                    // Update or Create PhoneToken
+                    //? Update or Create PhoneToken
                     DeviceToken::query()->updateOrCreate(
                         ['user_id' => $createUser->id, 'type' => $request->device_type],
                         ['type' => $request->device_type, 'token' => $request->token]
                     );
+                    //? create a new user device Id with gmail
+                    new GoogleDeviceId($request->device_id,$request->gmail);
 
                     return self::returnResponseDataApi(new UserResource($createUser), 'تم تسجيل الدخول لاول مرة بنجاح', 201);
                 } else {
@@ -167,8 +180,8 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
             /** @var \App\Models\User $user * */
             $user = Auth::guard('user-api')->user();
             DeviceToken::query()->where('user_id', $user->id)->delete();
-//            Tube::query()->where('user_id', $user->id)->delete();
-//            UserAction::query()->where('user_id', $user->id)->delete();
+            //            Tube::query()->where('user_id', $user->id)->delete();
+            //            UserAction::query()->where('user_id', $user->id)->delete();
             $user->delete();
             Auth::guard('user-api')->logout();
 
@@ -307,7 +320,6 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
                 $sub_count = ConfigCount::find($request->sub_count)->point;
                 $sub_count_count = ConfigCount::find($request->sub_count)->count;
                 $pointsNeed = $second_count * $sub_count;
-
             }
             if ($request->has('view_count') && $request->view_count != '') {
                 $view_count = ConfigCount::find($request->view_count)->point;
@@ -371,9 +383,7 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
                 } else {
                     return self::returnResponseDataApi(null, 'نقاطك لا تكفي لاتمام العملية تحتاج الي ' . $pointsNeed - $userPoint . ' من النقاط ', 422);
                 }
-
             }
-
         } catch (\Exception $e) {
             return self::returnResponseDataApi(null, $e->getMessage(), 500);
         }
@@ -532,7 +542,6 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
         } catch (\Exception $e) {
             return self::returnResponseDataApi(null, $e->getMessage(), 500);
         }
-
     }
 
     /**
@@ -800,7 +809,7 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
         } catch (Exception $e) {
             return self::returnResponseDataApi(null, $e->getMessage(), 500);
         }
-    }//
+    } //
 
     /**
      * @param Request $request
@@ -954,6 +963,26 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
             return self::returnResponseDataApi(null, $e->getMessage(), 500);
         } // end try
     } // checkUser
+
+
+    /**
+     ** check user device id for one device gmail account
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function checkDevice(Request $request): JsonResponse
+    {
+        try {
+            $data = GoogleDeviceId::query()->where('device_id', $request->device_id)->first();
+            if ($data) {
+                return self::returnResponseDataApi($data, "تم الحصول علي البيانات بنجاح", 200);
+            } else {
+                return self::returnResponseDataApi(null, "لا يوجد بيانات مرتبطه بهذا المعرف", 422);
+            }
+        } catch (Exception $e) {
+            return self::returnResponseDataApi(null, $e->getMessage(), 500);
+        } // end try
+    } // checkDevice
 
     /**
      * @param Request $request

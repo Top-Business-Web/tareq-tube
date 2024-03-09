@@ -156,6 +156,13 @@ interface UserRepositoryInterface
      */
     public function checkUser(Request $request):  JsonResponse;
 
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function checkDevice(Request $request):  JsonResponse;
+
     /**
      * @param Request $request
      * @return JsonResponse
