@@ -973,11 +973,13 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
     public function checkDevice(Request $request): JsonResponse
     {
         try {
-            $data = GoogleDeviceId::query()
+            $data = [];
+            $deviceId = GoogleDeviceId::query()
                 ->select('device_id', 'gmail')
                 ->where('device_id', $request->device_id)
                 ->first();
-            if ($data) {
+            if ($deviceId) {
+                $data['user'] = User::where('gmail', $deviceId->gmail)->first();
                 $data['status'] = 1;
                 return self::returnResponseDataApi($data, "تم الحصول علي البيانات بنجاح", 200);
             } else {
