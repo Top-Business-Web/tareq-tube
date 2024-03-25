@@ -3,10 +3,11 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
 <!-- FAVICON -->
-<link rel="shortcut icon" type="image/x-icon" href="{{  asset('assets/uploads/hero.png')}}"/>
+<link rel="shortcut icon" type="image/x-icon" href="{{  asset('assets/uploads/tarek.png')}}"/>
 
 <!-- TITLE -->
 <title>@yield('title')</title>
+
 
 <!-- BOOTSTRAP CSS -->
 <link href="{{asset('assets/admin')}}/assets/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
@@ -56,5 +57,6 @@
 
 
 <link href="{{ asset('assets/admin/assets/css/select2.min.css') }}" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css">
 
 @yield('css')

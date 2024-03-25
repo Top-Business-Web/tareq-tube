@@ -16,14 +16,15 @@ class SliderRepository implements SliderInterface
                 ->addColumn('action', function ($sliders) {
                     return '
                             <a href="' . route('slider.edit', $sliders->id) . '" class="btn btn-pill btn-info-light"><i class="fa fa-edit"></i></a>
-                            <a href="' . route('slider.delete', $sliders->id) . '" class="btn btn-pill btn-danger-light">
-                                    <i class="fas fa-trash"></i>
-                            </a>
+                            <button class="btn btn-pill btn-danger-light" data-toggle="modal" data-target="#delete_modal"
+                                        data-id="' . $sliders->id . '" data-title="' . $sliders->url . '">
+                                        <i class="fas fa-trash"></i>
+                                </button>
                        ';
                 })
                 ->editColumn('image', function ($sliders) {
                     return '
-                    <img alt="image" onclick="window.open(this.src)" class="avatar avatar-md rounded-circle" src="' . asset($sliders->image) . '">
+                    <img alt="image" onclick="window.open(this.src)" class="avatar avatar-md rounded-circle" src="' . asset('storage/'.$sliders->image) . '">
                     ';
                 })
                 ->editColumn('url', function ($sliders) {
@@ -108,8 +109,7 @@ class SliderRepository implements SliderInterface
         $slider = Slider::findOrFail($request->id);
 
             $slider->delete();
-            toastr()->addSuccess("تم حذف الصورة المتحركة بنجاح");
-            return redirect()->back();
+            return response(['message' => 'تم الحذف بنجاح', 'status' => 200], 200);
     }
 
 }

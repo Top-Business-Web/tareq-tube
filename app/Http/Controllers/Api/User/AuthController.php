@@ -31,6 +31,6 @@ class AuthController extends Controller
     public function deleteUser(): JsonResponse
     {
         return $this->userRepository->deleteAccount();
-    }
+    } // end deleteUser 
 
 }

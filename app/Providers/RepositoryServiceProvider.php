@@ -4,10 +4,11 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use App\Interfaces\Api\User\UserRepositoryInterface;
+use App\Interfaces\Api\User\PaymentRepositoryInterface;
 use App\Repository\Api\User\UserRepository as UserApiRepository;
+use App\Repository\Api\User\PaymentRepository as PaymentApiRepository;
 
-use App\Interfaces\{
-    AuthInterface,
+use App\Interfaces\{AuthInterface,
     CityInterface,
     InterestInterface,
     PackageInterface,
@@ -19,10 +20,13 @@ use App\Interfaces\{
     NotificationInterface,
     PackageUserInterface,
     SliderInterface,
-    UserActionInterface
-};
-use App\Repository\{
-    AdminRepository,
+    UserActionInterface,
+    TubeInterface,
+    ModelPriceInterface,
+    PaymentTransactionInterface,
+    SettingInterface,
+    WithdrawInterface, YoutubeKeyInterface};
+use App\Repository\{AdminRepository,
     AuthRepository,
     CityRepository,
     ConfigCountRepository,
@@ -34,8 +38,12 @@ use App\Repository\{
     PackageRepository,
     PackageUserRepository,
     SliderRepository,
-    UserActionRepository
-};
+    UserActionRepository,
+    TubeRepository,
+    ModelPriceRepository,
+    SettingRepository,
+    PaymentTransactionRepository,
+    WithdrawRepository, YoutubeKeyRepository};
 
 
 
@@ -62,11 +70,18 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(NotificationInterface::class,NotificationRepository::class);
         $this->app->bind(CouponInterface::class,CouponRepository::class);
         $this->app->bind(UserActionInterface::class,UserActionRepository::class);
+        $this->app->bind(TubeInterface::class,TubeRepository::class);
+        $this->app->bind(ModelPriceInterface::class,ModelPriceRepository::class);
+        $this->app->bind(SettingInterface::class,SettingRepository::class);
+        $this->app->bind(WithdrawInterface::class,WithdrawRepository::class);
+        $this->app->bind(PaymentTransactionInterface::class,PaymentTransactionRepository::class);
+        $this->app->bind(YoutubeKeyInterface::class,YoutubeKeyRepository::class);
         // ----------------------------------------------------------------
 
 
         // start Api classes and interfaces
         $this->app->bind(UserRepositoryInterface::class,UserApiRepository::class);
+        $this->app->bind(PaymentRepositoryInterface::class,PaymentApiRepository::class);
         // ----------------------------------------------------------------
 
     }

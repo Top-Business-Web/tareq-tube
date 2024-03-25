@@ -18,11 +18,15 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
  * @property integer limit
  * @property integer msg_limit
  * @property mixed youtube_link
+ * @property mixed|string $invite_token
  */
 class User extends Authenticatable implements JWTSubject
 {
     use HasFactory;
 
+    /**
+     * @var mixed|string
+     */
     protected $fillable = [
         'name',
         'image',
@@ -36,7 +40,11 @@ class User extends Authenticatable implements JWTSubject
         'limit',
         'msg_limit',
         'youtube_link',
-
+        'youtube_name',
+        'youtube_image',
+        'access_token',
+        'invite_token',
+        'channel_name',
     ];
 
     public function getJWTIdentifier()

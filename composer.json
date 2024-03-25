@@ -6,6 +6,7 @@
     "license": "MIT",
     "require": {
         "php": "^7.3|^8.1",
+        "ext-curl": "*",
         "ext-fileinfo": "*",
         "a6digital/laravel-default-profile-image": "^2.0",
         "buglinjo/laravel-webp": "^2.3",
@@ -16,14 +17,19 @@
         "laravel/sanctum": "^2.11",
         "laravel/tinker": "^2.5",
         "mcamara/laravel-localization": "^1.7",
+        "nafezly/payments": "^2.4",
+        "omnipay/omnipay": "^3.2",
         "php-flasher/flasher-sweetalert-laravel": "^1.15",
         "php-flasher/flasher-toastr-laravel": "^1.15",
+        "samir-hussein/paymob": "^2.0",
         "simplesoftwareio/simple-qrcode": "^4.2",
+        "twilio/sdk": "^7.16",
         "tymon/jwt-auth": "^1.0",
         "yajra/laravel-datatables": "^1.5",
         "yemeni-open-source/blade-realtime-input": "^5.1"
     },
     "require-dev": {
+        "bennett-treptow/laravel-migration-generator": "^4.3",
         "facade/ignition": "^2.5",
         "fakerphp/faker": "^1.9.1",
         "laravel/sail": "^1.0.1",
@@ -68,7 +74,10 @@
     "config": {
         "optimize-autoloader": true,
         "preferred-install": "dist",
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "php-http/discovery": true
+        }
     },
     "minimum-stability": "dev",
     "prefer-stable": true

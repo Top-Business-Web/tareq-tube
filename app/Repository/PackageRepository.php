@@ -16,9 +16,10 @@ class PackageRepository implements PackageInterface
                 ->addColumn('action', function ($packages) {
                     return '
                             <a href="' . route('package.edit', $packages->id) . '" class="btn btn-pill btn-info-light"><i class="fa fa-edit"></i></a>
-                            <a href="' . route('package.delete', $packages->id) . '" class="btn btn-pill btn-danger-light">
-                                    <i class="fas fa-trash"></i>
-                            </a>
+                            <button class="btn btn-pill btn-danger-light" data-toggle="modal" data-target="#delete_modal"
+                                        data-id="' . $packages->id . '" data-title="' . $packages->name . '">
+                                        <i class="fas fa-trash"></i>
+                                </button>
                        ';
                 })
                 ->escapeColumns([])
@@ -86,14 +87,9 @@ class PackageRepository implements PackageInterface
         // Find the admin user by ID
         $package = Package::findOrFail($request->id);
 
-            // Delete the admin user
-            $package->delete();
+        // Delete the admin user
+        $package->delete();
 
-            // Show a sweet alert with a cancel button
-            toastr()->addSuccess("تم حذف الباقة بنجاح");
-
-            // Redirect back after deletion
-            return redirect()->back();
+        return response(['message' => 'تم الحذف بنجاح', 'status' => 200], 200);
     }
-
 }

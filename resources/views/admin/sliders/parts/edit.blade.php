@@ -16,6 +16,7 @@
                 <div class="card-body">
                     <form method="POST" enctype="multipart/form-data" action="{{ route('slider.update', $sliderData['id']) }}">
                         @csrf
+                        @method('put')
                         <div class="form-group">
                             <div class="row">
                                 <div class="col-md-12">

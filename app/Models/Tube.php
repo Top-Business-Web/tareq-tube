@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use App\Models\User;
 
 /**
  * @method static get()
@@ -20,12 +21,39 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Tube extends Model
 {
     protected $table = 'tubes';
-  
+
     protected $fillable = [
       'type',
       'count',
       'point'
     ];
+
+    protected $appends = [
+        'vat_point',
+    ];
+
+    protected function getVatPointAttribute()
+    {
+        $vat = Setting::value('vat');
+        // point vat calculate
+        $point_vat = $this->points - ($this->points * ($vat / 100));
+
+        $point_gain = 0;
+
+        // view point calculate
+        if ($this->type == 'view') {
+            $point_gain = $point_vat / $this->viewCount->count;
+        } else {
+            $point_gain = $point_vat / $this->subCount->count;
+        }
+
+        return number_format($point_gain,0);
+    }
+
+    public function user() : BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
 
 
     public function subCount(): BelongsTo

@@ -23,7 +23,7 @@
                                     <select name="user_id" class="form-control">
                                         <option value="">كل المستخدمين</option>
                                         @foreach ($users as $user)
-                                            <option value="{{ $user->id }}">{{ $user->name }}</option>
+                                            <option value="{{ $user->id }}">{{ $user->gmail }}</option>
                                         @endforeach
                                     </select>
                                 </div>

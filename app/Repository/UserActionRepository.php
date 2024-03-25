@@ -15,18 +15,18 @@ class UserActionRepository implements UserActionInterface
             return DataTables::of($user_actions)
                 ->addColumn('action', function ($user_actions) {
                     return '
-                            <a href="' . route('userAction.delete', $user_actions->id) . '" class="btn btn-pill btn-danger-light">
-                                    <i class="fas fa-trash"></i>
-                            </a>
+                    <button class="btn btn-pill btn-danger-light" data-toggle="modal" data-target="#delete_modal"
+                        data-id="' . $user_actions->id . '" data-title="' . $user_actions->tube->url . '">
+                        <i class="fas fa-trash"></i>
+                    </button>
                        ';
                 })
                 ->editColumn('user_id', function ($user_actions) {
-                    return $user_actions->user->name;
-                })
+                    return $user_actions->user ? $user_actions->user->name : '_';
+                })                
                 ->editColumn('tube_id', function ($user_actions) {
-                    // Create a link for the tube_id
                     return '<a href="' . $user_actions->tube->url . '" target="_blank" class="tube-link">' . $user_actions->tube->url . '</a>';
-                })
+                })                
                 ->editColumn('status', function ($user_actions) {
                     // Create a button based on the status
                     $buttonStyle = $user_actions->status == 0 ? 'background-color: #4CAF50; color: #ffffff;' : 'background-color: #FF5252; color: #ffffff;';
@@ -46,17 +46,11 @@ class UserActionRepository implements UserActionInterface
 
     public function deleteUserAction($request)
     {
-        // Find the admin user by ID
         $user_action = UserAction::findOrFail($request->id);
 
-        // Delete the admin user
         $user_action->delete();
 
-        // Show a sweet alert with a cancel button
-        toastr()->addSuccess("تم حذف بنجاح");
-
-        // Redirect back after deletion
-        return redirect()->back();
+        return response(['message' => 'تم الحذف بنجاح', 'status' => 200], 200);
     }
 
 }

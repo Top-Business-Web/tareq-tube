@@ -6,6 +6,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @property int|mixed $user_id
+ * @property int|mixed $tube_id
+ * @property mixed $type
+ * @property int $status
+ * @property int $points
+ */
 class UserAction extends Model
 {
     use HasFactory;

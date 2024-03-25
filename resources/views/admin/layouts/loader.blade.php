@@ -22,5 +22,5 @@
     }
 </style>
 <div class="Global-Loader" id="global-loader">
-    <img style="width: 400px;" src="{{ asset('assets/admin/assets/images/loader11.gif')}}" class="loader-img" alt="Loader">
+    <img style="width: 400px;" src="{{ asset('assets/admin/assets/images/youtube.gif')}}" class="loader-img" alt="Loader">
 </div>

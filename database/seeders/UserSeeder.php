@@ -27,7 +27,9 @@ class UserSeeder extends Seeder
                 'points' => 0,
                 'limit' => 1,
                 'msg_limit' => 1,
-                'youtube_link' => 'https://youtube.com/'
+                'youtube_link' => 'https://youtube.com/',
+                'youtube_name' => 'youtube',
+                'youtube_image' => '2.jpg',
             ],
             [
                 'name' => 'john',
@@ -40,7 +42,9 @@ class UserSeeder extends Seeder
                 'points' => 100,
                 'limit' => 5,
                 'msg_limit' => 3,
-                'youtube_link' => 'https://youtube.com/john'
+                'youtube_link' => 'https://youtube.com/',
+                'youtube_name' => 'youtube',
+                'youtube_image' => '2.jpg',
             ],
             [
                 'name' => 'sara',
@@ -53,7 +57,9 @@ class UserSeeder extends Seeder
                 'points' => 50,
                 'limit' => 3,
                 'msg_limit' => 2,
-                'youtube_link' => 'https://youtube.com/sara'
+                'youtube_link' => 'https://youtube.com/',
+                'youtube_name' => 'youtube',
+                'youtube_image' => '2.jpg',
             ],
             [
                 'name' => 'mohamed',
@@ -66,7 +72,9 @@ class UserSeeder extends Seeder
                 'points' => 75,
                 'limit' => 2,
                 'msg_limit' => 1,
-                'youtube_link' => 'https://youtube.com/mohamed'
+                'youtube_link' => 'https://youtube.com/',
+                'youtube_name' => 'youtube',
+                'youtube_image' => '2.jpg',
             ],
             [
                 'name' => 'alice',
@@ -79,7 +87,9 @@ class UserSeeder extends Seeder
                 'points' => 20,
                 'limit' => 1,
                 'msg_limit' => 1,
-                'youtube_link' => 'https://youtube.com/alice'
+                'youtube_link' => 'https://youtube.com/',
+                'youtube_name' => 'youtube',
+                'youtube_image' => '2.jpg',
             ],
             [
                 'name' => 'emma',
@@ -92,7 +102,9 @@ class UserSeeder extends Seeder
                 'points' => 30,
                 'limit' => 2,
                 'msg_limit' => 1,
-                'youtube_link' => 'https://youtube.com/emma'
+                'youtube_link' => 'https://youtube.com/',
+                'youtube_name' => 'youtube',
+                'youtube_image' => '2.jpg',
             ],
             [
                 'name' => 'peter',
@@ -105,7 +117,9 @@ class UserSeeder extends Seeder
                 'points' => 15,
                 'limit' => 1,
                 'msg_limit' => 1,
-                'youtube_link' => 'https://youtube.com/peter'
+                'youtube_link' => 'https://youtube.com/',
+                'youtube_name' => 'youtube',
+                'youtube_image' => '2.jpg',
             ],
             [
                 'name' => 'linda',
@@ -118,7 +132,9 @@ class UserSeeder extends Seeder
                 'points' => 40,
                 'limit' => 3,
                 'msg_limit' => 2,
-                'youtube_link' => 'https://youtube.com/linda'
+                'youtube_link' => 'https://youtube.com/',
+                'youtube_name' => 'youtube',
+                'youtube_image' => '2.jpg',
             ],
             [
                 'name' => 'kevin',
@@ -131,7 +147,9 @@ class UserSeeder extends Seeder
                 'points' => 60,
                 'limit' => 2,
                 'msg_limit' => 1,
-                'youtube_link' => 'https://youtube.com/kevin'
+                'youtube_link' => 'https://youtube.com/',
+                'youtube_name' => 'youtube',
+                'youtube_image' => '2.jpg',
             ],
             [
                 'name' => 'olivia',
@@ -144,7 +162,9 @@ class UserSeeder extends Seeder
                 'points' => 25,
                 'limit' => 1,
                 'msg_limit' => 1,
-                'youtube_link' => 'https://youtube.com/olivia'
+                'youtube_link' => 'https://youtube.com/',
+                'youtube_name' => 'youtube',
+                'youtube_image' => '2.jpg',
             ],
         ];
         DB::table('users')->insert($data);
