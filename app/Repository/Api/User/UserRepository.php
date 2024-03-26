@@ -722,7 +722,7 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
             $user = User::find(Auth::user()->id);
             $checkSpin = UserSpin::query()
                 ->where('user_id', $user->id)
-                ->orderBy('created_at')
+                ->latest()
                 ->first();
             if ($checkSpin) {
                 $oldDay = Carbon::parse($checkSpin->created_at)->addDay();
@@ -749,7 +749,7 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
         $user = User::find(Auth::user()->id);
         $checkSpin = UserSpin::query()
             ->where('user_id', $user->id)
-            ->orderBy('created_at')
+            ->latest()
             ->first();
         if ($checkSpin) {
             $oldDay = Carbon::parse($checkSpin->created_at)->addDay();
