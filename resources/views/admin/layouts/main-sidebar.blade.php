@@ -59,10 +59,25 @@
         </li>
 
         <li class="slide">
-            <a class="side-menu__item" href="{{ route('config_count.index') }}">
+            <a class="side-menu__item" data-toggle="slide" href="#">
                 <i class="fa fa-dollar-sign side-menu__icon"></i>
                 <span class="side-menu__label">اسعار العمليات</span>
             </a>
+            <ul class="slide-menu">
+                <li><a href="{{ route('config_count.index',['type'=>'view']) }}" class="slide-item">المشاهدات</a></li>
+                <li><a href="{{ route('config_count.index',['type'=>'sub']) }}" class="slide-item">الاشتراكات</a></li>
+            </ul>
+        </li>
+
+        <li class="slide">
+            <a class="side-menu__item" data-toggle="slide" href="#">
+                <i class="fa fa-clock side-menu__icon"></i>
+                <span class="side-menu__label">اسعار الثواني</span>
+            </a>
+            <ul class="slide-menu">
+                <li><a href="{{ route('config_count.index',['type'=>'sec_view']) }}" class="slide-item">المشاهدات</a></li>
+                <li><a href="{{ route('config_count.index',['type'=>'sec_sub']) }}" class="slide-item">الاشتراكات</a></li>
+            </ul>
         </li>
 
         <li class="slide">
@@ -95,7 +110,7 @@
 
         <li class="slide">
             <a class="side-menu__item" href="{{ route('userAction.index') }}">
-               <i class="fa fa-user side-menu__icon"></i>
+                <i class="fa fa-user side-menu__icon"></i>
                 <span class="side-menu__label">تفاعل المستخدمين</span>
             </a>
         </li>

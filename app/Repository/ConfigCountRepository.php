@@ -5,42 +5,62 @@ namespace App\Repository;
 use App\Interfaces\ConfigCountInterface;
 use App\Models\ConfigCount;
 use App\Models\Package;
+use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 
 class ConfigCountRepository implements ConfigCountInterface
 {
     public function index($request)
     {
+        $type = $request->type;
+
+        if ($type == 'sub') {
+            $type_name = 'مشاركة';
+        } elseif ($type == 'sec_view') {
+            $type_name = 'ثواني المشاهدات';
+        } elseif ($type == 'sec_sub') {
+            $type_name = 'ثواني الاشتراكات';
+        } else {
+            $type_name = 'مشاهدة';
+        }
+
+        $config_count = ConfigCount::where('type', $type);
+
         if ($request->ajax()) {
-            $config_count = ConfigCount::get();
-            return DataTables::of($config_count)
-                ->addColumn('action', function ($config_count) {
+            $collect = $config_count->get();
+            return DataTables::of($collect)
+                ->addColumn('action', function ($config_count) use ($type) {
                     return '
-                            <a href="' . route('config_count.edit', $config_count->id) . '" class="btn btn-pill btn-info-light"><i class="fa fa-edit"></i></a>
-                            <button class="btn btn-pill btn-danger-light" data-toggle="modal" data-target="#delete_modal"
-                                        data-id="' . $config_count->id . '" data-title="' . $config_count->type . '">
-                                        <i class="fas fa-trash"></i>
-                                </button>
-                       ';
+                    <a href="' . route('config_count.edit', [$config_count->id, 'type' => $type]) . '" class="btn btn-pill btn-info-light"><i class="fa fa-edit"></i></a>
+                    <button class="btn btn-pill btn-danger-light" data-toggle="modal" data-target="#delete_modal"
+                        data-id="' . $config_count->id . '" data-title="' . $config_count->type . '">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                ';
                 })
                 ->editColumn('type', function ($config_count) {
                     if ($config_count->type == 'sub')
                         return 'مشاركة';
-                    elseif ($config_count->type == 'second')
-                        return 'ثواني';
+                    elseif ($config_count->type == 'sec_view')
+                        return 'ثواني المشاهدات';
+                    elseif ($config_count->type == 'sec_sub')
+                        return 'ثواني الاشتراكات';
                     else
                         return 'مشاهدة';
                 })
                 ->escapeColumns([])
                 ->make(true);
-        } else {
-            return view('admin/config_count/index');
+        }else{
+        return view('admin/config_count/index', compact('type', 'type_name'));
         }
+
     }
 
-    public function showCreate()
+
+    public function showCreate($request)
     {
-        return view('admin/config_count/parts/create');
+        $type = $request->type;
+        return view('admin/config_count/parts/create', compact('type'));
     }
 
     public function storeConfigCount($request)
@@ -66,7 +86,7 @@ class ConfigCountRepository implements ConfigCountInterface
 
     public function showEditConfigCount($id)
     {
-        $config_count = ConfigCount::findOrFail($id);
+        $config_count = ConfigCount::query()->findOrFail($id);
 
         $configCountData = $config_count->only(['id', 'type', 'count', 'point']);
 

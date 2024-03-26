@@ -1,10 +1,10 @@
 @extends('admin/layouts/master')
 
 @section('title')
-    {{ $setting->name_en ?? '' }} | اسعار العمليات
+    {{ $setting->name_en ?? '' }} | اسعار {{$type_name}}
 @endsection
 @section('page_name')
-    اسعار العمليات
+    اسعار {{$type_name}}
 @endsection
 @section('content')
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css"
@@ -14,8 +14,8 @@
         <div class="col-md-12 col-lg-12">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title"> اسعار العمليات {{ $setting->name_en ?? '' }}</h3>
-                    <a class="" href="{{ route('config_count.create') }}">
+                    <h3 class="card-title"> اسعار {{$type_name}} {{ $setting->name_en ?? '' }}</h3>
+                    <a class="" href="{{ route('config_count.create',['type'=>$type]) }}">
                         <button class="btn btn-secondary btn-icon text-white addBtn">
                             <span>
                                 <i class="fe fe-plus"></i>
@@ -97,7 +97,7 @@
                 searchable: false
             },
         ]
-        showData('{{ route('config_count.index') }}', columns);
+        showData('{{ route('config_count.index',['type'=>$type]) }}', columns);
 
         deleteScript('{{ route('config_count.delete', ':id') }}');
     </script>
