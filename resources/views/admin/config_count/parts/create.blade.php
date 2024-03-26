@@ -18,15 +18,7 @@
                         @csrf
                         <div class="form-group">
                             <div class="row">
-                                <div class="col-md-12">
-                                    <label for="name" class="form-control-label">النوع</label>
-                                    <select class="form-control" name="type">
-                                        <option selected>اختر</option>
-                                        <option value="sub">اشتراك</option>
-                                        <option value="second">ثواني</option>
-                                        <option value="view">مشاهدة</option>
-                                    </select>
-                                </div>
+                                <input type="hidden" name="type" value="{{ $type }}">
                             </div>
                             <div class="row">
                                 <div class="col-md-6">
@@ -40,7 +32,7 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <a href="{{ route('config_count.index') }}" class="btn btn-info text-white">رجوع للخلف</a>
+                            <a href="{{ route('config_count.index',['type'=>$type]) }}" class="btn btn-info text-white">رجوع للخلف</a>
                             <button type="submit" class="btn btn-primary" id="addButton">اضافة</button>
                         </div>
                     </form>
