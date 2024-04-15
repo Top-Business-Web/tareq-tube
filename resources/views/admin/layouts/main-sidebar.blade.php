@@ -66,6 +66,7 @@
             <ul class="slide-menu">
                 <li><a href="{{ route('config_count.index',['type'=>'view']) }}" class="slide-item">المشاهدات</a></li>
                 <li><a href="{{ route('config_count.index',['type'=>'sub']) }}" class="slide-item">الاشتراكات</a></li>
+                <li><a href="{{ route('config_count.index',['type'=>'app']) }}" class="slide-item">التحميلات</a></li>
             </ul>
         </li>
 
@@ -109,9 +110,9 @@
         </li>
 
         <li class="slide">
-            <a class="side-menu__item" href="{{ route('userAction.index') }}">
-                <i class="fa fa-user side-menu__icon"></i>
-                <span class="side-menu__label">تفاعل المستخدمين</span>
+            <a class="side-menu__item" href="{{ route('box.index') }}">
+                <i class="fa fa-boxes side-menu__icon"></i>
+                <span class="side-menu__label">الصناديق اليومية</span>
             </a>
         </li>
 

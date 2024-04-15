@@ -25,8 +25,8 @@ class ModelPriceRepository implements ModelPriceInterface
                 })
                 ->editColumn('type', function ($model_prices) {
                     // Create a button based on the type
-                    $buttonStyle = $model_prices->type == 'msg' ? 'background-color: #333333; color: #ffffff; border: 1px solid #333333;' : 'background-color: #ff5555; color: #ffffff; border: 1px solid #ff5555;';
-                    return '<button style="' . $buttonStyle . 'padding: 10px 20px; border-radius: 5px; cursor: pointer; font-size: 16px;">' . ($model_prices->type == 'msg' ? 'Message' : 'Points') . '</button>';
+
+                    return $model_prices->type == 'msg' ? '<h4>باقة الرسائل</h4>' : '<h4>باقة النقاط</h4>';
                 })
                 ->escapeColumns([])
                 ->make(true);

@@ -82,6 +82,10 @@ interface UserRepositoryInterface
      * @return JsonResponse
      */
     public function myMessages(): JsonResponse;
+    /**
+     * @return JsonResponse
+     */
+    public function myDownloads(): JsonResponse;
 
     /**
      * @return JsonResponse
@@ -168,5 +172,31 @@ interface UserRepositoryInterface
      * @return JsonResponse
      */
     public function withdraw(Request $request): JsonResponse;
+
+    /**
+     * @return JsonResponse
+     */
+    public function rewardBoxes(): JsonResponse;
+    /**
+     * @return JsonResponse
+     */
+    public function openDailyBox(): JsonResponse;
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function addLuckyBoxPoints(Request $request): JsonResponse;
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function openAdsWithPoints(): JsonResponse;
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function collectAdsWithPoints(): JsonResponse;
+
 }
 ###############|> Made By https://github.com/eldapour (eldapour) 🚀

@@ -27,25 +27,7 @@ class User extends Authenticatable implements JWTSubject
     /**
      * @var mixed|string
      */
-    protected $fillable = [
-        'name',
-        'image',
-        'gmail',
-        'password',
-        'google_id',
-        'city_id',
-        'is_admin',
-        'intrest_id',
-        'points',
-        'limit',
-        'msg_limit',
-        'youtube_link',
-        'youtube_name',
-        'youtube_image',
-        'access_token',
-        'invite_token',
-        'channel_name',
-    ];
+    protected $guarded = [];
 
     public function getJWTIdentifier()
     {
@@ -70,5 +52,9 @@ class User extends Authenticatable implements JWTSubject
     public function city()
     {
         return $this->belongsTo(City::class,'city_id','id')->select('id','name');
+    }
+    public function rewardBox()
+    {
+        return $this->belongsTo(RewardBox::class,'reward_box_id','id');
     }
 }

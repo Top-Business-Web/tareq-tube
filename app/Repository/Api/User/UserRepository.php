@@ -25,6 +25,7 @@ use App\Models\Message;
 use App\Models\ModelPrice;
 use App\Models\Notification;
 use App\Models\Package;
+use App\Models\RewardBox;
 use App\Models\Setting;
 use App\Models\Slider;
 use App\Models\Tube;
@@ -61,7 +62,7 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
             $validatorLogin = Validator::make($request->all(), [
                 'gmail' => 'required|email',
                 'device_id' => 'required',
-                'access_token'=> 'required'
+                'access_token' => 'required'
             ]);
 
             if ($validatorLogin->fails()) {
@@ -109,7 +110,7 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
                 $validatorRegister = Validator::make($request->all(), [
                     'gmail' => 'required|email',
                     'intrest_id' => 'required',
-                    'access_token'=>'required',
+                    'access_token' => 'required',
                     'device_id' => 'required|unique:google_device_ids,device_id,except,id'
                 ]);
 
@@ -228,6 +229,7 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
     {
         try {
             $data = Setting::first();
+            $data = self::withoutTimeStamp($data);
             return self::returnResponseDataApi($data, 'تم الحصول علي البيانات بنجاح');
         } catch (\Exception $e) {
             return self::returnResponseDataApi(null, $e->getMessage(), 500);
@@ -250,14 +252,18 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
             $message_count = Message::query()->where('user_id', Auth::guard('user-api')->user()->id)->count();
 
             $setting = Setting::query()->first([
-                'logo',
                 'phone',
                 'limit_user',
                 'point_user',
                 'vat',
                 'point_price',
                 'limit_balance',
-                'token_price'
+                'token_price',
+                'config_box_minute',
+                'config_box_min',
+                'config_box_max',
+                'ad_click_photo',
+                'ad_click_video'
             ]);
 
             $data = [
@@ -304,11 +310,12 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
             $userPoint = $user->points;
 
             $validator = Validator::make($request->all(), [
-                'type' => 'required|in:sub,view',
+                'type' => 'required|in:sub,view,app',
                 'url' => 'required|url',
                 'sub_count' => 'required_if:type,sub',
                 'view_count' => 'required_if:type,view',
-                'second_count' => 'required',
+                'app_count' => 'required_if:type,app',
+                'second_count' => 'required_if:type,view',
             ]);
 
             if ($validator->fails()) {
@@ -318,17 +325,29 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
 
             $sub_count = 0;
             $view_count = 0;
-            $second_count = ConfigCount::find($request->second_count)->point;
-
+            $app_count = 0;
+            if ($request->has('second_count') && $request->second_count != '') {
+                $second_count = ConfigCount::find($request->second_count)->point;
+            }
+            // if tube request Channel Subscription
             if ($request->has('sub_count') && $request->sub_count != '') {
                 $sub_count = ConfigCount::find($request->sub_count)->point;
                 $sub_count_count = ConfigCount::find($request->sub_count)->count;
                 $pointsNeed = $second_count * $sub_count;
             }
+
+            // if tube request Videos Views
             if ($request->has('view_count') && $request->view_count != '') {
                 $view_count = ConfigCount::find($request->view_count)->point;
                 $view_count_count = ConfigCount::find($request->view_count)->count;
                 $pointsNeed = $second_count * $view_count;
+            }
+
+            // if tube request Download Applications
+            if ($request->has('app_count') && $request->app_count != '') {
+                $app_count = ConfigCount::find($request->app_count)->point;
+                $app_count_count = ConfigCount::find($request->app_count)->count;
+                $pointsNeed = $app_count;
             }
 
             // if user not have VIP Package
@@ -343,7 +362,14 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
                         $createTube->sub_count = $request->type == 'view' ? null : $request->sub_count;
                         $createTube->second_count = $request->second_count;
                         $createTube->view_count = $request->view_count;
-                        $createTube->target = ($request->type == 'view') ? $view_count_count : $sub_count_count;
+                        $createTube->app_count = $request->app_count;
+                        if ($request->type == 'view')
+                            $createTube->target = $view_count_count;
+                        elseif ($request->type == 'sub')
+                            $createTube->target = $sub_count_count;
+                        else
+                            $createTube->target = $app_count_count;
+
                         $createTube->status = 0;
 
                         if ($createTube->save()) {
@@ -372,7 +398,13 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
                     $createTube->sub_count = $request->type == 'view' ? null : $request->sub_count;
                     $createTube->second_count = $request->second_count;
                     $createTube->view_count = $request->view_count;
-                    $createTube->target = ($request->type == 'view') ? $view_count_count : $sub_count_count;
+                    $createTube->app_count = $request->app_count;
+                    if ($request->type == 'view')
+                        $createTube->target = $view_count_count;
+                    elseif ($request->type == 'sub')
+                        $createTube->target = $sub_count_count;
+                    else
+                        $createTube->target = $app_count_count;
                     $createTube->status = 0;
 
                     if ($createTube->save()) {
@@ -391,7 +423,7 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
         } catch (\Exception $e) {
             return self::returnResponseDataApi(null, $e->getMessage(), 500);
         }
-    } // add subscribe
+    } // add user tubes
 
     /**
      * @param Request $request
@@ -526,6 +558,23 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
             return self::returnResponseDataApi(null, $e->getMessage(), 500);
         }
     }
+
+    /**
+     * @return JsonResponse
+     */
+    public function myDownloads(): JsonResponse
+    {
+        try {
+            $tubes = Tube::query()->where('user_id', Auth::guard('user-api')->user()->id)
+                ->where('type', 'app')
+                ->latest()
+                ->get();
+
+            return self::returnResponseDataApi(MyTubeResource::collection($tubes), 'تم الحصول علي البيانات بنجاح');
+        } catch (\Exception $e) {
+            return self::returnResponseDataApi(null, $e->getMessage(), 500);
+        }
+    } // my downloads
 
     /**
      * @return JsonResponse
@@ -824,7 +873,7 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
         try {
             $user = User::find(Auth::user()->id);
             $validator = Validator::make($request->all(), [
-                'type' => 'required|in:view,sub'
+                'type' => 'required|in:view,sub,app'
             ], [
                 'type.required' => 'حقل النوع مطلوب'
             ]);
@@ -891,8 +940,10 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
             // view point calculate
             if ($tube->type == 'view') {
                 $point_gain = $point_vat / $tube->viewCount->count;
-            } else {
+            } elseif ($tube->type == 'sub') {
                 $point_gain = $point_vat / $tube->subCount->count;
+            } else {
+                $point_gain = $point_vat / $tube->appCount->count;
             }
 
             $point_gain = number_format($point_gain, 0);
@@ -1045,5 +1096,192 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
             return self::returnResponseDataApi(null, $e->getMessage(), 500);
         } // end try
     } // end withdraw
+
+    public function rewardBoxes(): JsonResponse
+    {
+        try {
+            $user = Auth::guard('user-api')->user();
+            $boxes = RewardBox::query()->get();
+            foreach ($boxes as $box) {
+                self::withoutTimeStamp($box);
+            }
+            if ($user->reward_box_id != null) {
+                $user_box = User::where('id', $user->id)->select('reward_box_id')->first()->rewardBox;
+                $box_open_time = Carbon::parse($user->reward_box_open);
+                $yesterday = Carbon::now()->subDay();
+
+                if ($box_open_time->diffInDays($yesterday) == 0 && $user_box->id != 7) {
+                    foreach ($boxes as $box) {
+                        if ($box->id <= $user_box->id) {
+                            $box['opened'] = 1;
+                        } else {
+                            $box['opened'] = 0;
+                        }
+
+                        if ($box->id == $user_box->id + 1) {
+                            $box['next'] = 1;
+                        } else {
+                            $box['next'] = 0;
+                        }
+                    }
+                } elseif ($box_open_time->diffInDays($yesterday) == 0 && $user_box->id == 7) {
+                    foreach ($boxes as $box) {
+                        $box['opened'] = 0;
+                        if ($box->id == 1) {
+                            $box['next'] = 1;
+                        } else {
+                            $box['next'] = 0;
+                        }
+                    }
+                } else {
+                    foreach ($boxes as $box) {
+                        $box['opened'] = 0;
+                        if ($box->id == 1) {
+                            $box['next'] = 1;
+                        } else {
+                            $box['next'] = 0;
+                        }
+                    }
+                }
+
+            } else {
+                foreach ($boxes as $box) {
+                    $box['opened'] = 0;
+                    if ($box->id == 1) {
+                        $box['next'] = 1;
+                    } else {
+                        $box['next'] = 0;
+                    }
+                }
+            }
+
+            return self::returnResponseDataApi($boxes, 'تم الحصول علي البيانات بنجاح');
+        } catch
+        (\Exception $e) {
+            return self::returnResponseDataApi(null, $e->getMessage(), 500);
+        }
+    } // end rewardBoxes
+
+    public function openDailyBox(): JsonResponse
+    {
+        try {
+            $user = User::find(Auth::guard('user-api')->user()->id);
+            if ($user->reward_box_open == Carbon::now()->format('Y-m-d')) {
+                return self::returnResponseDataApi(['status' => 0], 'تم فتح الصندوق اليومي بالفعل');
+            }
+            $old_box = $user->reward_box_id;
+
+            $box_open_time = Carbon::parse($user->reward_box_open);
+            $yesterday = Carbon::now()->subDay();
+            if ($box_open_time->diffInDays($yesterday) == 0) {
+                if ($old_box != 7) {
+                    $user->reward_box_id = $old_box + 1;
+                    $user->reward_box_open = Carbon::now();
+                    if ($user->save()) {
+                        $dailyPrize = RewardBox::query()->findOrFail($user->reward_box_id)->prize;
+                        $user->points += $dailyPrize;
+                        $user->save();
+                        return self::returnResponseDataApi(['status' => 1], 'تم فتح الصندوق اليومي بنجاح');
+                    } else {
+                        return self::returnResponseDataApi(['status' => 0], 'هناك خطا ما', 422);
+                    }
+                } else {
+                    $user->reward_box_id = 1;
+                    $user->reward_box_open = Carbon::now();
+                    if ($user->save()) {
+                        $dailyPrize = RewardBox::query()->findOrFail($user->reward_box_id)->prize;
+                        $user->points += $dailyPrize;
+                        $user->save();
+                        return self::returnResponseDataApi(['status' => 1], 'تم فتح الصندوق اليومي بنجاح');
+                    } else {
+                        return self::returnResponseDataApi(['status' => 0], 'هناك خطا ما', 422);
+                    }
+                }
+            } else {
+                $user->reward_box_id = 1;
+                $user->reward_box_open = Carbon::now();
+                if ($user->save()) {
+                    $dailyPrize = RewardBox::query()->findOrFail($user->reward_box_id)->prize;
+                    $user->points += $dailyPrize;
+                    $user->save();
+                    return self::returnResponseDataApi(['status' => 1], 'تم فتح الصندوق اليومي بنجاح');
+                } else {
+                    return self::returnResponseDataApi(['status' => 0], 'هناك خطا ما', 422);
+                }
+            }
+
+        } catch (Exception $e) {
+            return self::returnResponseDataApi(null, $e->getMessage(), 500);
+        }
+    } // end openDailyBox
+
+    public function addLuckyBoxPoints(Request $request): JsonResponse
+    {
+        try {
+            $user = User::find(auth()->user()->id);
+
+            $box_min = Setting::first()->value('config_box_min');
+            $box_max = Setting::first()->value('config_box_max');
+            $rand_points = rand($box_min, $box_max);
+            $lucky_box_config = Setting::first()->value('config_box_minute');
+
+            // condition check and open box
+            if (Carbon::parse($user->box_open_time)->addMinutes($lucky_box_config)->format('Y-m-d H:i:s') < Carbon::now()->format('Y-m-d H:i:s')) {
+                $user->box_open_time = Carbon::now()->format('Y-m-d H:i:s');
+                $user->points += $rand_points;
+                $user->save();
+                return self::returnResponseDataApi(['status' => 1], 'تم فتح صندوق الحظ بنجاح');
+            } else {
+                return self::returnResponseDataApi(['status' => 0], 'تم فتح صندوق الحظ بالفعل');
+            }
+
+        } catch (Exception $e) {
+            return self::returnResponseDataApi(null, $e->getMessage(), 500);
+        }
+    }
+
+    public function openAdsWithPoints(): JsonResponse
+    {
+        try {
+            $user = User::find(auth()->user()->id);
+            $ads_minutes = Setting::first()->value('ad_time');
+            $ads_points = Setting::first()->value('ad_point');
+            $old_open = Carbon::parse($user->open_ad_time)->addMinutes($ads_minutes)->format('Y-m-d H:i:s');
+            $next_open = Carbon::now()->format('Y-m-d H:i:s');
+
+            // condition check and open ads
+            if ($old_open <= $next_open) {
+                return self::returnResponseDataApi(['status' => 1], 'تم فتح الاعلان البيني بنجاح');
+            } else {
+                return self::returnResponseDataApi(['status' => 0], 'تم فتح الاعلان البيني بالفعل');
+            }
+        } catch (Exception $e) {
+            return self::returnResponseDataApi(null, $e->getMessage(), 500);
+        }
+    }
+
+    public function collectAdsWithPoints(): JsonResponse
+    {
+        try {
+            $user = User::find(auth()->user()->id);
+            $ads_minutes = Setting::first()->value('ad_time');
+            $ads_points = Setting::first()->value('ad_point');
+            $old_open = Carbon::parse($user->open_ad_time)->addMinutes($ads_minutes)->format('Y-m-d H:i:s');
+            $next_open = Carbon::now()->format('Y-m-d H:i:s');
+
+            // condition check and open ads
+            if ($old_open <= $next_open) {
+                $user->open_ad_time = Carbon::now()->format('Y-m-d H:i:s');
+                $user->points += $ads_points;
+                $user->save();
+                return self::returnResponseDataApi(['status' => 1], 'تم تحصيل نقاط الاعلان البيني بنجاح');
+            } else {
+                return self::returnResponseDataApi(['status' => 0], 'تم تحصيل نقاط الاعلان البيني بالفعل');
+            }
+        } catch (Exception $e) {
+            return self::returnResponseDataApi(null, $e->getMessage(), 500);
+        }
+    }
+
 } // eldapour
 ###############|> Made By https://github.com/eldapour (eldapour) 🚀

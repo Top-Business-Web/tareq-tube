@@ -20,6 +20,8 @@ class ConfigCountRepository implements ConfigCountInterface
             $type_name = 'ثواني المشاهدات';
         } elseif ($type == 'sec_sub') {
             $type_name = 'ثواني الاشتراكات';
+        }elseif ($type == 'app') {
+            $type_name = 'التحميلات';
         } else {
             $type_name = 'مشاهدة';
         }
@@ -45,6 +47,8 @@ class ConfigCountRepository implements ConfigCountInterface
                         return 'ثواني المشاهدات';
                     elseif ($config_count->type == 'sec_sub')
                         return 'ثواني الاشتراكات';
+                    elseif ($config_count->type == 'app')
+                        return 'التحميلات';
                     else
                         return 'مشاهدة';
                 })

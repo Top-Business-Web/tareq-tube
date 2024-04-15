@@ -32,4 +32,13 @@ class ResponseApi
         $data = array('title' => $title, 'body' => $body);
         return $this->sendFirebaseNotification($data, $user_id, $created, $interest_id);
     }
+
+    public static function withoutTimeStamp($data)
+    {
+        if (isset($data['created_at']) || isset($data['updated_at'])) {
+            unset($data['created_at']);
+            unset($data['updated_at']);
+        }
+        return $data;
+    }
 }
