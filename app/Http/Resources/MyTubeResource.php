@@ -14,11 +14,19 @@ class MyTubeResource extends JsonResource
      */
     public function toArray($request)
     {
+
+        if($this->type == 'sub'){
+            $target = ($this->subCount->count -  $this->target) .'/'. $this->subCount->count;
+        }elseif($this->type == 'view') {
+            $target = ($this->viewCount->count - $this->target) .'/'. $this->viewCount->count;
+        }else {
+            $target = ($this->appCount->count - $this->target) .'/'. $this->appCount->count;
+        }
         return [
             "id" => $this->id,
             "type" => $this->type,
             "url" => $this->url,
-            "target" => ($this->sub_count != null) ? ($this->subCount->count -  $this->target) .'/'. $this->subCount->count  : ($this->viewCount->count - $this->target) .'/'. $this->viewCount->count,
+            "target" => $target,
             "status" => $this->status,
             "created_at" => $this->created_at->format('Y-m-d H:i:s'),
             "updated_at" => $this->updated_at->format('Y-m-d H:i:s'),

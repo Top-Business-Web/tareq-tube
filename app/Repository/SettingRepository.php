@@ -14,7 +14,7 @@ class SettingRepository implements SettingInterface
     {
         $setting = Setting::first();
 
-        $settingData = $setting->only(['id', 'logo', 'phone', 'limit_user', 'point_user', 'vat', 'privacy', 'point_price', 'token_price', 'limit_balance']);
+        $settingData = $setting;
 
         return view('admin/settings/index', compact('settingData'));
     }

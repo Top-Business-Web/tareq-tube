@@ -6,8 +6,8 @@ use Illuminate\Support\Facades\{
     Artisan,
 };
 use illuminate\Filesystem\symlink;
-use App\Http\Controllers\Admin\{
-    AuthController,
+use App\Http\Controllers\Admin\{AuthController,
+    BoxController,
     MainController,
     UserController,
     AdminController,
@@ -26,8 +26,7 @@ use App\Http\Controllers\Admin\{
     PaymentTransactionController,
     SettingController,
     WithdrawController,
-    YoutubeKeyController
-};
+    YoutubeKeyController};
 
 Route::group(['prefix' => 'admin'], function () {
     Route::get('login', [AuthController::class, 'index'])->name('admin.login');
@@ -77,6 +76,9 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:user'], function () {
     Route::put('city/update/{id}', [CityController::class, 'updateCity'])->name('city.update');
     Route::delete('city/{id}/delete', [CityController::class, 'deleteCity'])->name('city.delete');
 
+    #============================ Box Route =====================================
+    Route::get('boxes', [BoxController::class, 'index'])->name('box.index');
+    Route::post('box/update/{id}', [BoxController::class, 'updateBox'])->name('box.update');
 
     #============================ Interest ==================================
     Route::get('interests', [InterestController::class, 'index'])->name('interest.index');
@@ -138,7 +140,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:user'], function () {
     Route::delete('coupon/{id}/delete', [CouponController::class, 'deleteCoupon'])->name('coupon.delete');
 
     #============================ User Action =====================================
-    Route::get('user_actions', [UserActionController::class, 'index'])->name('userAction.index');
+//    Route::get('user_actions', [UserActionController::class, 'index'])->name('userAction.index');
     Route::delete('user_actions/{id}/delete', [UserActionController::class, 'deleteUserAction'])->name('userAction.delete');
 
     #============================ Tube =====================================

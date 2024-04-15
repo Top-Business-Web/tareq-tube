@@ -43,8 +43,10 @@ class Tube extends Model
         // view point calculate
         if ($this->type == 'view') {
             $point_gain = $point_vat / $this->viewCount->count;
-        } else {
+        } elseif($this->type == 'sub') {
             $point_gain = $point_vat / $this->subCount->count;
+        }else{
+            $point_gain = $point_vat / $this->appCount->count;
         }
 
         return number_format($point_gain,0);
@@ -69,6 +71,10 @@ class Tube extends Model
     public function viewCount(): BelongsTo
     {
         return $this->belongsTo(ConfigCount::class,'view_count','id')->select('id','type','count','point');
+    }
+    public function appCount(): BelongsTo
+    {
+        return $this->belongsTo(ConfigCount::class,'app_count','id')->select('id','type','count','point');
     }
 
 }

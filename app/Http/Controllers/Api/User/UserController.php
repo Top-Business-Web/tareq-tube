@@ -101,34 +101,59 @@ class UserController extends Controller
         return $this->userRepositoryInterface->getTubeRandom($request);
     } #|> get tube random
 
-    public function myMessages()
+    public function myMessages(): JsonResponse
     {
         return $this->userRepositoryInterface->myMessages();
     } #|> user messages
+    public function myDownloads(): JsonResponse
+    {
+        return $this->userRepositoryInterface->myDownloads();
+    } #|> user downloads
 
-    public function getMessages()
+    public function getMessages(): JsonResponse
     {
         return $this->userRepositoryInterface->getMessages();
     } #|> get messages
 
-    public function userViewTube(Request $request)
+    public function userViewTube(Request $request): JsonResponse
     {
         return $this->userRepositoryInterface->userViewTube($request);
     } #|> userViewTube
 
-    public function checkUser(Request $request)
+    public function checkUser(Request $request): JsonResponse
     {
         return $this->userRepositoryInterface->checkUser($request);
     } #|> check user
-    public function checkDevice(Request $request)
+    public function checkDevice(Request $request): JsonResponse
     {
         return $this->userRepositoryInterface->checkDevice($request);
     } #|> check user
 
-    public function withdraw(Request $request)
+    public function withdraw(Request $request): JsonResponse
     {
         return $this->userRepositoryInterface->withdraw($request);
     } #|> withdraw user
+
+    public function rewardBoxes(): JsonResponse
+    {
+        return $this->userRepositoryInterface->rewardBoxes();
+    } #|> rewardBoxes
+    public function openDailyBox(): JsonResponse
+    {
+        return $this->userRepositoryInterface->openDailyBox();
+    } #|> openDailyBox
+    public function addLuckyBoxPoints(Request $request): JsonResponse
+    {
+        return $this->userRepositoryInterface->addLuckyBoxPoints($request);
+    } #|> addLucky
+ public function openAdsWithPoints(): JsonResponse
+    {
+        return $this->userRepositoryInterface->openAdsWithPoints();
+    } #|> openAds
+    public function collectAdsWithPoints(): JsonResponse
+    {
+        return $this->userRepositoryInterface->collectAdsWithPoints();
+    } #|> collect Ads with Points
 
 }
 ###############|> Made By https://github.com/eldapour (eldapour) 🚀

@@ -9,6 +9,7 @@ use App\Repository\Api\User\UserRepository as UserApiRepository;
 use App\Repository\Api\User\PaymentRepository as PaymentApiRepository;
 
 use App\Interfaces\{AuthInterface,
+    BoxInterface,
     CityInterface,
     InterestInterface,
     PackageInterface,
@@ -25,9 +26,11 @@ use App\Interfaces\{AuthInterface,
     ModelPriceInterface,
     PaymentTransactionInterface,
     SettingInterface,
-    WithdrawInterface, YoutubeKeyInterface};
+    WithdrawInterface,
+    YoutubeKeyInterface};
 use App\Repository\{AdminRepository,
     AuthRepository,
+    BoxRepository,
     CityRepository,
     ConfigCountRepository,
     CouponRepository,
@@ -43,7 +46,8 @@ use App\Repository\{AdminRepository,
     ModelPriceRepository,
     SettingRepository,
     PaymentTransactionRepository,
-    WithdrawRepository, YoutubeKeyRepository};
+    WithdrawRepository,
+    YoutubeKeyRepository};
 
 
 
@@ -76,6 +80,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(WithdrawInterface::class,WithdrawRepository::class);
         $this->app->bind(PaymentTransactionInterface::class,PaymentTransactionRepository::class);
         $this->app->bind(YoutubeKeyInterface::class,YoutubeKeyRepository::class);
+        $this->app->bind(BoxInterface::class,BoxRepository::class);
         // ----------------------------------------------------------------
 
 

@@ -53,7 +53,14 @@ Route::group(['middleware' => 'jwt'], function () {
     Route::get('/getLinkInvite', [UserController::class, 'getLinkInvite']);
     Route::get('/getVipList', [UserController::class, 'getVipList']);
     Route::get('/myMessages', [UserController::class, 'myMessages']);
+    Route::get('/myDownloads', [UserController::class, 'myDownloads']);
     Route::get('/getMessages', [UserController::class, 'getMessages']);
+    Route::get('/getRewardBoxes', [UserController::class, 'rewardBoxes']);
+    Route::get('/openDailyBox', [UserController::class, 'openDailyBox']);
+    Route::get('/addLuckyBoxPoints', [UserController::class, 'addLuckyBoxPoints']);
+    Route::get('/openAdsWithPoints', [UserController::class, 'openAdsWithPoints']);
+    Route::get('/collectAdsWithPoints', [UserController::class, 'collectAdsWithPoints']);
+
 
     #|> Auth User
     Route::post('logout', [AuthController::class, 'logout']);

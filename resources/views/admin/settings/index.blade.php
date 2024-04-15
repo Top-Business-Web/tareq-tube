@@ -24,7 +24,7 @@
         <div class="col-md-12 col-lg-12">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title"> اعدادات {{ $setting->name_en ?? '' }}</h3>
+                    <h3 class="card-title"> اعدادات التطبيق{{ $setting->name_en ?? '' }}</h3>
                 </div>
                 <div class="card-body">
                     <form method="POST" enctype="multipart/form-data"
@@ -86,7 +86,58 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <label for="name_ar" class="form-control-label">الخصوصية</label>
-                                    <textarea class="form-control" row="8">{{ $settingData['privacy'] }}</textarea>
+                                    <textarea class="form-control" rows="10">{{ $settingData['privacy'] }}</textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <label for="config_box_minute" class="form-control-label">عدد دقائق صندوق
+                                        الحظ</label>
+                                    <input type="number" class="form-control" name="config_box_minute"
+                                           value="{{ $settingData['config_box_minute'] }}">
+                                </div>
+                                <div class="col-md-2">
+                                    <label for="config_box_min" class="form-control-label">الحد الادني صندوق
+                                        الحظ</label>
+                                    <input type="number" class="form-control" name="config_box_min"
+                                           value="{{ $settingData['config_box_min'] }}">
+                                </div>
+                                <div class="col-md-2">
+                                    <label for="config_box_max" class="form-control-label">الحد الاقصي صندوق
+                                        الحظ</label>
+                                    <input type="number" class="form-control" name="config_box_max"
+                                           value="{{ $settingData['config_box_max'] }}">
+                                </div>
+                                <div class="col-md-2">
+                                    <label for="ad_click_photo" class="form-control-label">عدد نقرات الاعلان (بدون
+                                        فيديو)</label>
+                                    <input type="number" class="form-control" name="ad_click_photo"
+                                           value="{{ $settingData['ad_click_photo'] }}">
+                                </div>
+
+                                <div class="col-md-2">
+                                    <label for="ad_click_photo" class="form-control-label">عدد نقرات الاعلان
+                                        (فيديو)</label>
+                                    <input type="number" class="form-control" name="ad_click_video"
+                                           value="{{ $settingData['ad_click_video'] }}">
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label for="ad_click_photo" class="form-control-label">
+                                        نقاط الاعلان البيني
+                                    </label>
+                                    <input type="number" class="form-control" name="ad_point"
+                                           value="{{ $settingData['ad_point'] }}">
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="ad_click_photo" class="form-control-label">
+                                        عدد دقائق الاعلان البيني
+                                    </label>
+                                    <input type="number" class="form-control" name="ad_time"
+                                           value="{{ $settingData['ad_time'] }}">
                                 </div>
                             </div>
                         </div>
@@ -106,9 +157,9 @@
     {{--    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"--}}
     {{--        integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw=="--}}
     {{--        crossorigin="anonymous" referrerpolicy="no-referrer"></script>--}}
-    {{----}}
+    {{-- --}}
     <script>
-        $('.dropify').dropify()
-        {{--        editScript();--}}
+        $('.dropify').dropify();
+        {{--  editScript(); --}}
     </script>
 @endsection
