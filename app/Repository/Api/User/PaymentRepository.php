@@ -28,7 +28,7 @@ class PaymentRepository extends ResponseApi implements PaymentRepositoryInterfac
      */
     public function goPay(Request $request): JsonResponse
     {
-//        try {
+        try {
             // handle payment requests
             $model_id = $request->model_id;
             $model_type = $request->model_type;
@@ -58,9 +58,9 @@ class PaymentRepository extends ResponseApi implements PaymentRepositoryInterfac
             ];
 
             return $this->pay($data);
-//        } catch (\Exception $e) {
-//            return self::returnResponseDataApi(null, $e->getMessage(), 500);
-//        }
+        } catch (\Exception $e) {
+            return self::returnResponseDataApi(null, $e->getMessage(), 500);
+        }
     } // goPay
 
     /**
@@ -69,7 +69,7 @@ class PaymentRepository extends ResponseApi implements PaymentRepositoryInterfac
      */
     public function pay(array $data): JsonResponse
     {
-//        try {
+        try {
 
 
             $order_id = $data['order_id'];
@@ -82,7 +82,7 @@ class PaymentRepository extends ResponseApi implements PaymentRepositoryInterfac
                 'amount_cents' => $total_price * 100, //put your price
                 'currency' => 'EGP',
                 'delivery_needed' => false, // another option true
-                'merchant_order_id' => $order_id,
+                'merchant_order_id' => $order_id . '-' . Carbon::now()->format('YmdHis'),
                 'items' => [] // create all items information or leave it empty
             ]);
 
@@ -108,14 +108,12 @@ class PaymentRepository extends ResponseApi implements PaymentRepositoryInterfac
                 ]
             ]);
 
-            $PaymentKey = json_decode($PaymentKey);
-
             $url = "https://accept.paymobsolutions.com/api/acceptance/iframes/817230?payment_token=" . $PaymentKey->token;
 
             return self::returnResponseDataApi(['payment_url' => $url], "تم استلام لينك الدفع بنجاح ", 200);
-//        } catch (\Exception $e) {
-//            return self::returnResponseDataApi(null, $e->getMessage(), 500);
-//        }
+        } catch (\Exception $e) {
+            return self::returnResponseDataApi(null, $e->getMessage(), 500);
+        }
     } // pay
 
     /**
@@ -124,7 +122,7 @@ class PaymentRepository extends ResponseApi implements PaymentRepositoryInterfac
      */
     public function callback(Request $request): JsonResponse
     {
-//        try {
+        try {
 
             $data = [
                 'status' => $request['success'],
@@ -137,9 +135,9 @@ class PaymentRepository extends ResponseApi implements PaymentRepositoryInterfac
             } else {
                 return self::returnResponseDataApi(['status' => 0], 'عملية دفع فاشلة اتصل بالدعم', 422);
             }
-//        } catch (\Exception $e) {
-//            return self::returnResponseDataApi(null, $e->getMessage(), 500);
-//        }
+        } catch (\Exception $e) {
+            return self::returnResponseDataApi(null, $e->getMessage(), 500);
+        }
     } // call callback
 
     /**
@@ -148,9 +146,10 @@ class PaymentRepository extends ResponseApi implements PaymentRepositoryInterfac
      */
     public function checkout(array $data): JsonResponse
     {
-//        try {
-
-            $order = Payment::find($data['order_id']);
+        try {
+            $parts = explode('-', $data['order_id']);
+            $order_id = $parts[0];
+            $order = Payment::find($order_id);
 
             // update payment status
             $order->transaction_id = $data['id'];
@@ -159,7 +158,7 @@ class PaymentRepository extends ResponseApi implements PaymentRepositoryInterfac
 
             // payment log
             $paymentLog = PaymentTransaction::query()
-                ->where(['payment_id'=>$order->id,'status'=> 0])
+                ->where(['payment_id' => $order->id, 'status' => 0])
                 ->first();
             $paymentLog->status = 1;
             $paymentLog->save();
@@ -176,7 +175,7 @@ class PaymentRepository extends ResponseApi implements PaymentRepositoryInterfac
                         'title' => 'عملية شراء ناجحة',
                         'body' => 'عملية شراء رسائل ناجحة رصيدك الان من الرسائل :' . $user->msg_limit,
                     ];
-                    self::sendFcm($fcmData['title'],$fcmData['body'],$user->id);
+                    self::sendFcm($fcmData['title'], $fcmData['body'], $user->id);
                     return self::returnResponseDataApi(['status' => 1], 'عملية شراء رسائل ناجحة');
                 } else {
                     $model->count;
@@ -188,7 +187,7 @@ class PaymentRepository extends ResponseApi implements PaymentRepositoryInterfac
                         'title' => 'عملية شراء ناجحة',
                         'body' => 'عملية شراء نقاط ناجحة رصيدك الان من النقاط :' . $user->points,
                     ];
-                    self::sendFcm($fcmData['title'],$fcmData['body'],$user->id);
+                    self::sendFcm($fcmData['title'], $fcmData['body'], $user->id);
                     return self::returnResponseDataApi(['status' => 1], 'عملية شراء نقاط ناجحة');
                 }
 
@@ -215,14 +214,14 @@ class PaymentRepository extends ResponseApi implements PaymentRepositoryInterfac
                     'title' => 'عملية شراء ناجحة',
                     'body' => 'عملية شراء باقة VIP ناجحة .',
                 ];
-                self::sendFcm($fcmData['title'],$fcmData['body'],$user->id);
+                self::sendFcm($fcmData['title'], $fcmData['body'], $user->id);
                 return self::returnResponseDataApi(['status' => 1], 'عملية شراء باقة VIP ناجحة');
 
             } else {
                 return self::returnResponseDataApi(['status' => 0], 'عملية دفع فاشلة اتصل بالدعم', 422);
             }
-//        } catch (\Exception $e) {
-//            return self::returnResponseDataApi(null, $e->getMessage(), 500);
-//        }
+        } catch (\Exception $e) {
+            return self::returnResponseDataApi(null, $e->getMessage(), 500);
+        }
     } // checkout data
 }
