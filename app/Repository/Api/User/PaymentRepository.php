@@ -28,12 +28,12 @@ class PaymentRepository extends ResponseApi implements PaymentRepositoryInterfac
      */
     public function goPay(Request $request): JsonResponse
     {
-        try {
+//        try {
             // handle payment requests
             $model_id = $request->model_id;
             $model_type = $request->model_type;
             $amount = $request->amount;
-            $user = \auth('user-api')->user();
+            $user = Auth::guard('user-api')->user();
 
             // create payment
             $newPayment = new Payment();
@@ -58,9 +58,9 @@ class PaymentRepository extends ResponseApi implements PaymentRepositoryInterfac
             ];
 
             return $this->pay($data);
-        } catch (\Exception $e) {
-            return self::returnResponseDataApi(null, $e->getMessage(), 500);
-        }
+//        } catch (\Exception $e) {
+//            return self::returnResponseDataApi(null, $e->getMessage(), 500);
+//        }
     } // goPay
 
     /**
