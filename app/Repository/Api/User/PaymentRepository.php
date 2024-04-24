@@ -33,7 +33,7 @@ class PaymentRepository extends ResponseApi implements PaymentRepositoryInterfac
             $model_id = $request->model_id;
             $model_type = $request->model_type;
             $amount = $request->amount;
-            $user = \auth()->user();
+            $user = \auth('user-api')->user();
 
             // create payment
             $newPayment = new Payment();
@@ -69,7 +69,7 @@ class PaymentRepository extends ResponseApi implements PaymentRepositoryInterfac
      */
     public function pay(array $data): JsonResponse
     {
-        try {
+//        try {
 
 
             $order_id = $data['order_id'];
@@ -111,9 +111,9 @@ class PaymentRepository extends ResponseApi implements PaymentRepositoryInterfac
             $url = "https://accept.paymobsolutions.com/api/acceptance/iframes/817230?payment_token=" . $PaymentKey->token;
 
             return self::returnResponseDataApi(['payment_url' => $url], "تم استلام لينك الدفع بنجاح ", 200);
-        } catch (\Exception $e) {
-            return self::returnResponseDataApi(null, $e->getMessage(), 500);
-        }
+//        } catch (\Exception $e) {
+//            return self::returnResponseDataApi(null, $e->getMessage(), 500);
+//        }
     } // pay
 
     /**
@@ -122,7 +122,7 @@ class PaymentRepository extends ResponseApi implements PaymentRepositoryInterfac
      */
     public function callback(Request $request): JsonResponse
     {
-        try {
+//        try {
 
             $data = [
                 'status' => $request['success'],
@@ -135,9 +135,9 @@ class PaymentRepository extends ResponseApi implements PaymentRepositoryInterfac
             } else {
                 return self::returnResponseDataApi(['status' => 0], 'عملية دفع فاشلة اتصل بالدعم', 422);
             }
-        } catch (\Exception $e) {
-            return self::returnResponseDataApi(null, $e->getMessage(), 500);
-        }
+//        } catch (\Exception $e) {
+//            return self::returnResponseDataApi(null, $e->getMessage(), 500);
+//        }
     } // call callback
 
     /**
@@ -146,7 +146,7 @@ class PaymentRepository extends ResponseApi implements PaymentRepositoryInterfac
      */
     public function checkout(array $data): JsonResponse
     {
-        try {
+//        try {
 
             $order = Payment::find($data['order_id']);
 
@@ -219,8 +219,8 @@ class PaymentRepository extends ResponseApi implements PaymentRepositoryInterfac
             } else {
                 return self::returnResponseDataApi(['status' => 0], 'عملية دفع فاشلة اتصل بالدعم', 422);
             }
-        } catch (\Exception $e) {
-            return self::returnResponseDataApi(null, $e->getMessage(), 500);
-        }
+//        } catch (\Exception $e) {
+//            return self::returnResponseDataApi(null, $e->getMessage(), 500);
+//        }
     } // checkout data
 }
