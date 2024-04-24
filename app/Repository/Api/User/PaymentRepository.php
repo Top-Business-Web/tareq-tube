@@ -33,7 +33,7 @@ class PaymentRepository extends ResponseApi implements PaymentRepositoryInterfac
             $model_id = $request->model_id;
             $model_type = $request->model_type;
             $amount = $request->amount;
-            $user = Auth::user();
+            $user = \auth()->user();
 
             // create payment
             $newPayment = new Payment();
