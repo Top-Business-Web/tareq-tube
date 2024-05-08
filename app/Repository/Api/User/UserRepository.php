@@ -1249,9 +1249,7 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
             $old_open = Carbon::parse($user->open_ad_time)->addMinutes($ads_minutes)->format('Y-m-d H:i:s');
             $next_open = Carbon::now()->format('Y-m-d H:i:s');
 
-//            dd($user , $ads_minutes , $ads_points , $old_open , $next_open);
-//
-            // Condition check and open ads
+            // condition check and open ads
             if ($old_open <= $next_open) {
                 return self::returnResponseDataApi(['status' => 1], 'تم فتح الاعلان البيني بنجاح');
             } else {
