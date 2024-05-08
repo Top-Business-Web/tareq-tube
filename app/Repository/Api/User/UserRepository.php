@@ -1243,12 +1243,12 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
     public function openAdsWithPoints(): JsonResponse
     {
         try {
+
             $user = User::find(auth()->user()->id);
             $ads_minutes = Setting::first()->value('ad_time');
             $ads_points = Setting::first()->value('ad_point');
             $old_open = Carbon::parse($user->open_ad_time)->addMinutes($ads_minutes)->format('Y-m-d H:i:s');
             $next_open = Carbon::now()->format('Y-m-d H:i:s');
-
             // condition check and open ads
             if ($old_open >= $next_open) {
                 return self::returnResponseDataApi(['status' => 1], 'تم فتح الاعلان البيني بنجاح');
@@ -1270,7 +1270,7 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
             $next_open = Carbon::now()->format('Y-m-d H:i:s');
 
             // condition check and open ads
-            if ($old_open <= $next_open) {
+            if ($old_open >= $next_open) {
                 $user->open_ad_time = Carbon::now()->format('Y-m-d H:i:s');
                 $user->points += $ads_points;
                 $user->save();
