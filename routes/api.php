@@ -89,9 +89,9 @@ Route::get('setting', [ConfigController::class, 'setting']);
 Route::post('goPay', [PaymentController::class, 'goPay'])->middleware('jwt');
 #|> callback payment true or false
 Route::get('payment/callback', [PaymentController::class, 'callback']);
+
 #|> check out & finish payment
 Route::post('checkout', [PaymentController::class, 'checkout']);
-
 ############|> END PAYMENT ROUTES
 
 
