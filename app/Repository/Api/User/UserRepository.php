@@ -432,18 +432,18 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
      * @param Request $request
      * @return JsonResponse
      */
-    public function addApp(Request $request): JsonResponse
+    public function addApp(Request $request): JsonRespons
     {
         try {
             $user = User::find(Auth::guard('user-api')->user()->id);
             $userPoint = $user->points;
 
             $validator = Validator::make($request->all(), [
-                'type' => 'required|in:app',
+                'type' => 'required|in:sub,view',
                 'url' => 'required|url',
                 'app_count' => 'required_if:type,app',
-                'text' => 'required',
-                'image' => 'required',
+                'text' => 'required_if:type,app',
+                'image' => 'nullable'
             ]);
 
             if ($validator->fails()) {
@@ -453,6 +453,10 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
 
 
             $app_count = 0;
+
+
+
+
             // if tube request Download Applications
             if ($request->has('app_count') && $request->app_count != '') {
                 $app_count = ConfigCount::find($request->app_count)->point;
@@ -469,6 +473,9 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
                         $createTube->points = $pointsNeed;
                         $createTube->user_id = $user->id;
                         $createTube->url = $request->url;
+                        $createTube->sub_count = $request->type == 'view' ? null : $request->sub_count;
+                        $createTube->second_count = $request->second_count;
+                        $createTube->view_count = $request->view_count;
                         $createTube->app_count = $request->app_count;
                         if ($request->type == 'app')
                             $createTube->target = $app_count_count;
@@ -527,6 +534,7 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
             return self::returnResponseDataApi(null, $e->getMessage(), 500);
         }
     } // add user tubes
+
 
 
     /**
