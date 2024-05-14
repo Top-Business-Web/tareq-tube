@@ -932,6 +932,50 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
      * @param Request $request
      * @return JsonResponse
      */
+    public function getTubeViewAndSub(Request $request): JsonResponse
+    {
+        try {
+            $user = User::find(Auth::user()->id);
+            $validator = Validator::make($request->all(), [
+                'type' => 'required|in:view,sub'
+            ], [
+                'type.required' => 'حقل النوع مطلوب'
+            ]);
+
+            if ($validator->fails()) {
+                $error = $validator->errors()->first();
+                return self::returnResponseDataApi(null, $error, 422);
+            }
+
+            $userVideos = UserAction::query()
+                ->where('user_id', $user->id)
+                ->where('type', $request->type)
+                ->where('status', '1')
+                ->pluck('tube_id');
+
+            $videos = Tube::query()
+                ->where('user_id', '!=', $user->id)
+                ->whereNotIn('id', $userVideos)
+                ->where('type', $request->type)
+                ->get();
+
+            if ($videos->count() > 0) {
+                $rundomVideos = $videos->random();
+                return self::returnResponseDataApi($rundomVideos, 'تم الحصول على البيانات بنجاح', 200);
+            } else {
+                return self::returnResponseDataApi(null, 'لا يوجد بيانات', 200);
+            }
+        } catch (Exception $e) {
+            return self::returnResponseDataApi(null, $e->getMessage(), 500);
+        }
+    }
+
+
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
     public function userViewTube(Request $request): JsonResponse
     {
         try {
