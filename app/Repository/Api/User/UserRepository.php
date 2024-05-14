@@ -817,12 +817,16 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
      * @param Request $request
      * @return JsonResponse
      */
-    public function addPointCopun(Request $request): JsonResponse
+    use Illuminate\Pagination\Paginator;
+
+    public function getTubeRandom(Request $request): JsonResponse
     {
         try {
             $user = User::find(Auth::user()->id);
             $validator = Validator::make($request->all(), [
-                'copun' => 'required|exists:copons,code'
+                'type' => 'required|in:view,sub,app'
+            ], [
+                'type.required' => 'حقل النوع مطلوب'
             ]);
 
             if ($validator->fails()) {
@@ -830,39 +834,48 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
                 return self::returnResponseDataApi(null, $error, 422);
             }
 
-            $copon = Coupon::query()->where('code', $request->copun)->first();
+            $userVideos = UserAction::query()
+                ->where('user_id', $user->id)
+                ->where('type', $request->type)
+                ->where('status', '1')
+                ->pluck('tube_id');
 
-            if ($copon) {
-                // user used coupons count
-                $usersCoponCount = CouponUser::query()->where('copon_id', $copon->id)->count();
-                // check if user used coupon
-                $checkUserCopon = CouponUser::query()
-                    ->where('copon_id', $copon->id)
-                    ->where('user_id', $user->id)
-                    ->first();
-                if ($checkUserCopon) {
-                    return self::returnResponseDataApi(null, 'تم استخدام هذا الكوبون من قبل', 422);
-                }
+            $videosQuery = Tube::query()
+                ->where('user_id', '!=', $user->id)
+                ->whereNotIn('id', $userVideos)
+                ->where('type', $request->type);
 
-                if ($usersCoponCount >= $copon->limit) {
-                    return self::returnResponseDataApi(null, 'تم تخطي حد الاستخدام لهذا الكوبون', 422);
-                }
+            $videosPaginator = $videosQuery->paginate(10); // Adjust the number of items per page as needed
 
-                $createCouponUser = new CouponUser();
-                $createCouponUser->user_id = $user->id;
-                $createCouponUser->copon_id = $copon->id;
-                $createCouponUser->save();
-
-                $user->points += $copon->points;
-                $user->save();
-                return self::returnResponseDataApi(new UserResource($user), 'تم الحصول علي النقاط بنجاح', 200);
-            } else {
-                return self::returnResponseDataApi(null, 'الكوبون غير صحيح', 422);
+            // Get next page URL
+            $nextPageUrl = null;
+            if ($videosPaginator->hasMorePages()) {
+                $nextPageUrl = $videosPaginator->nextPageUrl();
             }
+
+            // Custom pagination data
+            $paginationData = [
+                'total' => $videosPaginator->total(),
+                'per_page' => $videosPaginator->perPage(),
+                'current_page' => $videosPaginator->currentPage(),
+                'last_page' => $videosPaginator->lastPage(),
+                'next_page_url' => $nextPageUrl,
+            ];
+
+            // Create custom response data
+            $responseData = [
+                'data' => $videosPaginator->items(),
+                'pagination' => $paginationData,
+                'message' => 'تم الحصول على البيانات بنجاح',
+                'code' => 200,
+            ];
+
+            return response()->json($responseData, 200);
         } catch (Exception $e) {
             return self::returnResponseDataApi(null, $e->getMessage(), 500);
         }
-    } //
+    }
+    //
 
     /**
      * @param Request $request
@@ -873,7 +886,49 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
         try {
             $user = User::find(Auth::user()->id);
             $validator = Validator::make($request->all(), [
-                'type' => 'required|in:view,sub,app'
+                'type' => 'required|in:app'
+            ], [
+                'type.required' => 'حقل النوع مطلوب'
+            ]);
+
+            if ($validator->fails()) {
+                $error = $validator->errors()->first();
+                return self::returnResponseDataApi(null, $error, 422);
+            }
+
+            $userVideos = UserAction::query()
+                ->where('user_id', $user->id)
+                ->where('type', $request->type)
+                ->where('status', '1')
+                ->pluck('tube_id');
+
+            $videos = Tube::query()
+                ->where('user_id', '!=', $user->id)
+                ->whereNotIn('id', $userVideos)
+                ->where('type', $request->type)
+                ->paginate(10);
+
+            if ($videos->count() > 0) {
+//                $randomVideo = $videos->random();
+//                dd($videos);
+//                return response()->json($videos, 200);
+
+                return self::returnResponseDataApi($videos, 'تم الحصول على البيانات بنجاح', 200);
+//
+            } else {
+                return self::returnResponseDataApi(null, 'لا يوجد بيانات', 200);
+            }
+        } catch (Exception $e) {
+            return self::returnResponseDataApi(null, $e->getMessage(), 500);
+        }
+    } // getTubeRandom
+
+     public function getTubeRandom2(Request $request): JsonResponse
+    {
+        try {
+            $user = User::find(Auth::user()->id);
+            $validator = Validator::make($request->all(), [
+                'type' => 'required|in:view,sub'
             ], [
                 'type.required' => 'حقل النوع مطلوب'
             ]);
