@@ -99,6 +99,11 @@ class UserController extends Controller
     public function getTubeRandom(Request $request): JsonResponse
     {
         return $this->userRepositoryInterface->getTubeRandom($request);
+    }
+
+    public function getTubeRandom2(Request $request): JsonResponse
+    {
+        return $this->userRepositoryInterface->getTubeRandom2($request);
     } #|> get tube random
 
     public function myMessages(): JsonResponse
