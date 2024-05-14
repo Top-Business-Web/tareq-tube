@@ -881,47 +881,6 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
      * @param Request $request
      * @return JsonResponse
      */
-    public function getTubeRandom(Request $request): JsonResponse
-    {
-        try {
-            $user = User::find(Auth::user()->id);
-            $validator = Validator::make($request->all(), [
-                'type' => 'required|in:app'
-            ], [
-                'type.required' => 'حقل النوع مطلوب'
-            ]);
-
-            if ($validator->fails()) {
-                $error = $validator->errors()->first();
-                return self::returnResponseDataApi(null, $error, 422);
-            }
-
-            $userVideos = UserAction::query()
-                ->where('user_id', $user->id)
-                ->where('type', $request->type)
-                ->where('status', '1')
-                ->pluck('tube_id');
-
-            $videos = Tube::query()
-                ->where('user_id', '!=', $user->id)
-                ->whereNotIn('id', $userVideos)
-                ->where('type', $request->type)
-                ->paginate(10);
-
-            if ($videos->count() > 0) {
-//                $randomVideo = $videos->random();
-//                dd($videos);
-//                return response()->json($videos, 200);
-
-                return self::returnResponseDataApi($videos, 'تم الحصول على البيانات بنجاح', 200);
-//
-            } else {
-                return self::returnResponseDataApi(null, 'لا يوجد بيانات', 200);
-            }
-        } catch (Exception $e) {
-            return self::returnResponseDataApi(null, $e->getMessage(), 500);
-        }
-    } // getTubeRandom
 
      public function getTubeRandom2(Request $request): JsonResponse
     {
