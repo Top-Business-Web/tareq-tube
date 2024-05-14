@@ -873,7 +873,6 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
     public function getTubeRandom(Request $request): JsonResponse
     {
         try {
-
             $user = User::find(Auth::user()->id);
             $validator = Validator::make($request->all(), [
                 'type' => 'required|in:app',
@@ -899,7 +898,10 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
                 ->whereNotIn('id', $userVideos)
                 ->where('type', $request->type);
 
-            $videosPaginator = $videosQuery->paginate(10); // Adjust the number of items per page as needed
+            $videosPaginator = $videosQuery->paginate($request->per_page); // Use per_page parameter
+
+            // Set the current page based on the request
+            $videosPaginator->setCurrentPage($request->current_page);
 
             // Get next page URL
             $nextPageUrl = null;
@@ -911,7 +913,7 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
             $paginationData = [
                 'total' => $videosPaginator->total(),
                 'per_page' => $request->per_page,
-                'current_page' => $request->current_page,
+                'current_page' => $videosPaginator->currentPage(),
                 'last_page' => $videosPaginator->lastPage(),
                 'next_page_url' => $nextPageUrl,
             ];
@@ -928,7 +930,8 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
         } catch (Exception $e) {
             return self::returnResponseDataApi(null, $e->getMessage(), 500);
         }
-    } // getTubeRandom
+    }
+
 
     /**
      * @param Request $request
