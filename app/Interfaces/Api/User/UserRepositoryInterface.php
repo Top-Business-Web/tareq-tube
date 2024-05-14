@@ -54,7 +54,7 @@ interface UserRepositoryInterface
      * @param Request $request
      * @return JsonResponse
      */
-    public function addApp(Request $request): JsonResponse;
+//    public function addApp(Request $request): JsonResponse;
 
     /**
      * addMessage function
