@@ -307,11 +307,9 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
      */
     public function addTube(Request $request): JsonRespons
     {
-
         try {
             $user = User::find(Auth::guard('user-api')->user()->id);
             $userPoint = $user->points;
-
 
             $validator = Validator::make($request->all(), [
                 'type' => 'required|in:sub,view',
