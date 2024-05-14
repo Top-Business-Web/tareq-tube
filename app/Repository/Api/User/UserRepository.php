@@ -305,14 +305,14 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
      * @param Request $request
      * @return JsonResponse
      */
-    public function addTube(Request $request): JsonResponse
+    public function addTube(Request $request): JsonRespons
     {
         try {
             $user = User::find(Auth::guard('user-api')->user()->id);
             $userPoint = $user->points;
 
             $validator = Validator::make($request->all(), [
-                'type' => 'required|in:sub,view,app',
+                'type' => 'required|in:sub,view',
                 'url' => 'required|url',
                 'sub_count' => 'required_if:type,sub',
                 'view_count' => 'required_if:type,view',
@@ -426,6 +426,108 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
             return self::returnResponseDataApi(null, $e->getMessage(), 500);
         }
     } // add user tubes
+
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function addApp(Request $request): JsonResponse
+    {
+        try {
+            $user = User::find(Auth::guard('user-api')->user()->id);
+            $userPoint = $user->points;
+
+            $validator = Validator::make($request->all(), [
+                'type' => 'required|in:app',
+                'url' => 'required|url',
+                'app_count' => 'required_if:type,app',
+                'text' => 'required',
+                'image' => 'required',
+            ]);
+
+            if ($validator->fails()) {
+                $error = $validator->errors()->first();
+                return self::returnResponseDataApi(null, $error, 422);
+            }
+
+
+            $app_count = 0;
+            // if tube request Download Applications
+            if ($request->has('app_count') && $request->app_count != '') {
+                $app_count = ConfigCount::find($request->app_count)->point;
+                $app_count_count = ConfigCount::find($request->app_count)->count;
+                $pointsNeed = $app_count;
+            }
+
+            // if user not have VIP Package
+            if ($user->is_vip != 1) {
+                if ($user->limit > 0) {
+                    if ($userPoint >= $pointsNeed) {
+                        $createTube = new Tube();
+                        $createTube->type = $request->type;
+                        $createTube->points = $pointsNeed;
+                        $createTube->user_id = $user->id;
+                        $createTube->url = $request->url;
+                        $createTube->app_count = $request->app_count;
+                        if ($request->type == 'app')
+                            $createTube->target = $app_count_count;
+
+                        $createTube->status = 0;
+
+                        if ($createTube->save()) {
+                            $user->points -= $pointsNeed;
+                            $user->limit -= 1;
+                            $user->save();
+
+                            return self::returnResponseDataApi(new TubeResource($createTube), 'تم الانشاء بنجاح', 201);
+                        } else {
+                            return self::returnResponseDataApi(null, 'هناك خطا ما', 500);
+                        }
+                    } else {
+                        return self::returnResponseDataApi(null, 'نقاطك لا تكفي لاتمام العملية تحتاج الي ' . $pointsNeed - $userPoint . ' من النقاط ', 422);
+                    }
+                } else {
+                    return self::returnResponseDataApi(null, 'تم الانتهاء من الباقة الحالية قم بشراء باقة جديدة', 422);
+                }
+            } else {
+                // if user have VIP Package
+                if ($userPoint >= $pointsNeed) {
+                    $createTube = new Tube();
+                    $createTube->type = $request->type;
+                    $createTube->points = $pointsNeed;
+                    $createTube->user_id = $user->id;
+                    $createTube->url = $request->url;
+                    $createTube->sub_count = $request->type == 'view' ? null : $request->sub_count;
+                    $createTube->second_count = $request->second_count;
+                    $createTube->view_count = $request->view_count;
+                    $createTube->app_count = $request->app_count;
+                    if ($request->type == 'view')
+                        $createTube->target = $view_count_count;
+                    elseif ($request->type == 'sub')
+                        $createTube->target = $sub_count_count;
+                    else
+                        $createTube->target = $app_count_count;
+                    $createTube->status = 0;
+
+                    if ($createTube->save()) {
+                        $user->points -= $pointsNeed;
+                        $user->limit -= 1;
+                        $user->save();
+
+                        return self::returnResponseDataApi(new TubeResource($createTube), 'تم الانشاء بنجاح', 201);
+                    } else {
+                        return self::returnResponseDataApi(null, 'هناك خطا ما', 500);
+                    }
+                } else {
+                    return self::returnResponseDataApi(null, 'نقاطك لا تكفي لاتمام العملية تحتاج الي ' . $pointsNeed - $userPoint . ' من النقاط ', 422);
+                }
+            }
+        } catch (\Exception $e) {
+            return self::returnResponseDataApi(null, $e->getMessage(), 500);
+        }
+    } // add user tubes
+
 
     /**
      * @param Request $request
