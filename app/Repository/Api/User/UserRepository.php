@@ -898,16 +898,11 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
                 ->whereNotIn('id', $userVideos)
                 ->where('type', $request->type);
 
-            $videosPaginator = $videosQuery->paginate($request->per_page); // Use per_page parameter
-
-            // Set the current page based on the request
-            $videosPaginator->setCurrentPage($request->current_page);
+            // Paginate the query based on the parameters
+            $videosPaginator = $videosQuery->paginate($request->per_page, ['*'], 'page', $request->current_page);
 
             // Get next page URL
-            $nextPageUrl = null;
-            if ($videosPaginator->hasMorePages()) {
-                $nextPageUrl = $videosPaginator->nextPageUrl();
-            }
+            $nextPageUrl = $videosPaginator->nextPageUrl();
 
             // Custom pagination data
             $paginationData = [
