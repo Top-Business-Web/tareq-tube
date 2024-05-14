@@ -510,10 +510,6 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
                     $createTube->view_count = $request->view_count;
                     $createTube->app_count = $request->app_count;
                     if ($request->type == 'view')
-                        $createTube->target = $view_count_count;
-                    elseif ($request->type == 'sub')
-                        $createTube->target = $sub_count_count;
-                    else
                         $createTube->target = $app_count_count;
                     $createTube->status = 0;
 
