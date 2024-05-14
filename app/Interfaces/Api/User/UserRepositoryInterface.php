@@ -152,7 +152,7 @@ interface UserRepositoryInterface
      * @param Request $request
      * @return JsonResponse
      */
-    public function getTubeRandom2(Request $request): JsonResponse;
+//    public function getTubeRandom2(Request $request): JsonResponse;
 
     /**
      * @param Request $request
