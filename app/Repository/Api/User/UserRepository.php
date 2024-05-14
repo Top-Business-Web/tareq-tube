@@ -483,6 +483,9 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
                         $createTube->type = $request->type;
                         $createTube->points = $pointsNeed;
                         $createTube->user_id = $user->id;
+                        $createTube->app_name = $request->app_name;
+                        $createTube->app_image = $request->app_image;
+
                         $createTube->url = $request->url;
                         $createTube->sub_count = $request->type == 'view' ? null : $request->sub_count;
                         $createTube->second_count = $request->second_count;
@@ -520,6 +523,9 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
                     $createTube->points = $pointsNeed;
                     $createTube->user_id = $user->id;
                     $createTube->url = $request->url;
+                    $createTube->app_name = $request->app_name;
+                    $createTube->app_image = $request->app_image;
+
                     $createTube->sub_count = $request->type == 'view' ? null : $request->sub_count;
                     $createTube->second_count = $request->second_count;
                     $createTube->view_count = $request->view_count;
@@ -1046,6 +1052,7 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
             ];
 
             return response()->json($responseData, 200);
+
         } catch (Exception $e) {
             return self::returnResponseDataApi(null, $e->getMessage(), 500);
         }
@@ -1085,7 +1092,7 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
 
             if ($videos->count() > 0) {
                 $rundomVideos = $videos->random();
-                return self::returnResponseDataApi($rundomVideos, 'تم الحصول على البيانات بنجاح', 200);
+                return self::returnResponseDataApi(new TubeResource($rundomVideos), 'تم الحصول على البيانات بنجاح', 200);
             } else {
                 return self::returnResponseDataApi(null, 'لا يوجد بيانات', 200);
             }
