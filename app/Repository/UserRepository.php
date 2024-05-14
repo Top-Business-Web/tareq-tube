@@ -61,6 +61,7 @@ class UserRepository extends ResponseApi implements UserInterface
 
     public function delete($request)
     {
+
         User::where('id', $request->id)->delete();
         return response(['message' => 'تم الحذف بنجاح', 'status' => 200], 200);
     }
