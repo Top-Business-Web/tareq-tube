@@ -887,7 +887,7 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
                 ->where('user_id', $user->id)
                 ->where('type', $request->type)
                 ->where('status', '1')
-                ->pluck('tube_id')->toArray();
+                ->pluck('tube_id');
 
             $videos = Tube::query()
                 ->where('user_id', '!=', $user->id)
