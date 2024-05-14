@@ -25,7 +25,9 @@ class Tube extends Model
     protected $fillable = [
       'type',
       'count',
-      'point'
+      'point',
+      'app_name',
+       'app_image'
     ];
 
     protected $appends = [
