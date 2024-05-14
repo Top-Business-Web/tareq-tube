@@ -39,8 +39,8 @@ Route::group(['middleware' => 'jwt'], function () {
     Route::post('/addPointSpin', [UserController::class, 'addPointSpin']);
     Route::post('/checkPointSpin', [UserController::class, 'checkPointSpin']);
     Route::post('/addPointCopun', [UserController::class, 'addPointCopun']);
-    Route::post('/getTubeRandom', [UserController::class, 'getTubeRandom']);
-    Route::post('/getTubeViewAndSub', [UserController::class, 'getTubeViewAndSub']);
+    Route::post('/getTubeApp', [UserController::class, 'getTubeRandom']);
+    Route::post('/getTubeRandom', [UserController::class, 'getTubeViewAndSub']);
     Route::post('/userViewTube', [UserController::class, 'userViewTube']);
     Route::post('/addLinkPoints', [UserController::class, 'addLinkPoints']);
     Route::post('/withdraw', [UserController::class, 'withdraw']);
