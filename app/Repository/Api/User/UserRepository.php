@@ -818,7 +818,6 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
      * @param Request $request
      * @return JsonResponse
      */
-    use Illuminate\Pagination\Paginator;
 
     public function getTubeRandom(Request $request): JsonResponse
     {
