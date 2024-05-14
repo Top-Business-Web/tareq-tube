@@ -34,6 +34,7 @@ Route::group(['middleware' => 'jwt'], function () {
 
     #|> ROUTE POST DATA
     Route::post('/addTube', [UserController::class, 'addTube']);
+    Route::post('/addApp', [UserController::class, 'addApp']);
     Route::post('/addMessage', [UserController::class, 'addMessage']);
     Route::post('/addChannel', [UserController::class, 'addChannel']);
     Route::post('/addPointSpin', [UserController::class, 'addPointSpin']);
