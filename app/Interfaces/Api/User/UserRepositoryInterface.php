@@ -148,11 +148,18 @@ interface UserRepositoryInterface
      */
     public function getTubeRandom(Request $request): JsonResponse;
 
+
     /**
      * @param Request $request
      * @return JsonResponse
      */
-//    public function getTubeRandom2(Request $request): JsonResponse;
+    public function getTubeViewAndSub(Request $request): JsonResponse;
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+
 
     /**
      * @param Request $request
