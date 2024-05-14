@@ -893,14 +893,14 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
                 ->where('user_id', '!=', $user->id)
                 ->whereNotIn('id', $userVideos)
                 ->where('type', $request->type)
-                ->get();
+                ->paginate(10);
 
             if ($videos->count() > 0) {
 //                $randomVideo = $videos->random();
 //                dd($videos);
-                return response()->json($videos, 200);
+//                return response()->json($videos, 200);
 
-//                return self::returnResponseDataApi($videos, 'تم الحصول على البيانات بنجاح', 200);
+                return self::returnResponseDataApi($videos, 'تم الحصول على البيانات بنجاح', 200);
 //
             } else {
                 return self::returnResponseDataApi(null, 'لا يوجد بيانات', 200);
