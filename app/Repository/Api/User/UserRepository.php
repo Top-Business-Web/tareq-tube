@@ -435,7 +435,7 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
             $userPoint = $user->points;
 
             $validator = Validator::make($request->all(), [
-                'type' => 'required|in:sub,view,app',
+                'type' => 'required|in:app',
                 'url' => 'required|url',
                 'sub_count' => 'required_if:type,sub',
                 'view_count' => 'required_if:type,view',
