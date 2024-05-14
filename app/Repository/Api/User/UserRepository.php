@@ -897,8 +897,8 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
 
             if ($videos->count() > 0) {
 //                $randomVideo = $videos->random();
-                dd($videos);
-                return self::returnResponseDataApi(new TubeResource($videos), 'تم الحصول على البيانات بنجاح', 200);
+//                dd($videos);
+                return self::returnResponseDataApi($videos, 'تم الحصول على البيانات بنجاح', 200);
             } else {
                 return self::returnResponseDataApi(null, 'لا يوجد بيانات', 200);
             }
