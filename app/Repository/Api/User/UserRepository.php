@@ -896,8 +896,8 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
                 ->get();
 
             if ($videos->count() > 0) {
-                $randomVideo = $videos->random();
-                return self::returnResponseDataApi(new TubeResource($randomVideo), 'تم الحصول على البيانات بنجاح', 200);
+//                $randomVideo = $videos->random();
+                return self::returnResponseDataApi(new TubeResource($videos), 'تم الحصول على البيانات بنجاح', 200);
             } else {
                 return self::returnResponseDataApi(null, 'لا يوجد بيانات', 200);
             }
@@ -1243,7 +1243,7 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
     public function openAdsWithPoints(): JsonResponse
     {
         try {
-            $user = User::find(auth()->user()->id);
+            $user = User::find(auth('user-api')->user()->id);
             $ads_minutes = Setting::first()->value('ad_time');
             $ads_points = Setting::first()->value('ad_point');
             $old_open = Carbon::parse($user->open_ad_time)->addMinutes($ads_minutes)->format('Y-m-d H:i:s');
@@ -1263,7 +1263,7 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
     public function collectAdsWithPoints(): JsonResponse
     {
         try {
-            $user = User::find(auth()->user()->id);
+            $user = User::find(auth('user-api')->user()->id);
             $ads_minutes = Setting::first()->value('ad_time');
             $ads_points = Setting::first()->value('ad_point');
             $old_open = Carbon::parse($user->open_ad_time)->addMinutes($ads_minutes)->format('Y-m-d H:i:s');
