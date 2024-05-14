@@ -305,7 +305,7 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
      * @param Request $request
      * @return JsonResponse
      */
-    public function addTube(Request $request): JsonRespons
+    public function addTube(Request $request): JsonRespone
     {
         try {
             $user = User::find(Auth::guard('user-api')->user()->id);
@@ -432,7 +432,7 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
      * @param Request $request
      * @return JsonResponse
      */
-    public function addApp(Request $request): JsonRespons
+    public function addApp(Request $request): JsonRespone
     {
         try {
             $user = User::find(Auth::guard('user-api')->user()->id);
