@@ -448,11 +448,22 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
                 'view_count' => 'required_if:type,view',
                 'app_count' => 'required_if:type,app',
                 'second_count' => 'required_if:type,view',
+                'app_name' => 'required',
+                'app_image' => 'required|image',
             ]);
 
             if ($validator->fails()) {
                 $error = $validator->errors()->first();
                 return self::returnResponseDataApi(null, $error, 422);
+            }
+
+            $image=null;
+
+            if ($request->app_image){
+
+                $imageName=time().'.'.$image->getClientOriginalExtension();
+                $image->move('addAppImage',$imageName);
+
             }
 
             $sub_count = 0;
@@ -491,7 +502,7 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
                         $createTube->points = $pointsNeed;
                         $createTube->user_id = $user->id;
                         $createTube->app_name = $request->app_name;
-                        $createTube->app_image = $request->app_image;
+                        $createTube->app_image = $imageName;
 
                         $createTube->url = $request->url;
                         $createTube->sub_count = $request->type == 'view' ? null : $request->sub_count;
