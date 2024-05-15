@@ -449,7 +449,7 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
                 'app_count' => 'required_if:type,app',
                 'second_count' => 'required_if:type,view',
                 'app_name' => 'required',
-                'app_image' => 'image',
+                'app_image' => 'nullable|image',
             ]);
 
             if ($validator->fails()) {
