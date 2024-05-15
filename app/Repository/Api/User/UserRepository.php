@@ -459,17 +459,27 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
                 $error = $validator->errors()->first();
                 return self::returnResponseDataApi(null, $error, 422);
             }
-            if ($image) {
-                $imageName = time() . '.' . $image->getClientOriginalExtension();
-                $image->move('addAppImage', $imageName);
-                $imagePath = 'addAppImage/' . $imageName;
-            }
+//            if ($image) {
+//                $imageName = time() . '.' . $image->getClientOriginalExtension();
+//                $image->move('addAppImage', $imageName);
+//                $imagePath = 'addAppImage/' . $imageName;
+//            }
+//
+//// Check if the image was uploaded successfully
+//            if ($imageName && $imagePath) {
+//                // Construct the full URL of the image
+//                $baseUrl = 'https://adpay.topbusiness.io/api'; // Replace 'example.com' with your domain name
+//                $fullImagePath = $baseUrl . '/' . $imagePath;
 
-// Check if the image was uploaded successfully
-            if ($imageName && $imagePath) {
-                // Construct the full URL of the image
-                $baseUrl = 'https://adpay.topbusiness.io/api'; // Replace 'example.com' with your domain name
-                $fullImagePath = $baseUrl . '/' . $imagePath;
+                $inputs = $request->all();
+                $imagePath=null;
+
+
+            if ($request->hasFile('app_image')) {
+                $imagePath = $request->file('app_image')->store('uploads/addAppImage', 'public');
+                $inputs['app_image'] = $imagePath;
+            } else {
+                unset($inputs['app_image']);
 
 
 // Check if the image was uploaded successfully
@@ -524,7 +534,7 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
                             $createTube->points = $pointsNeed;
                             $createTube->user_id = $user->id;
                             $createTube->app_name = $request->app_name;
-                            $createTube->app_image = $fullImagePath;
+                            $createTube->app_image = $imagePath;
 
                             $createTube->url = $request->url;
                             $createTube->sub_count = $request->type == 'view' ? null : $request->sub_count;
@@ -1525,7 +1535,7 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
         } catch (Exception $e) {
             return self::returnResponseDataApi(null, $e->getMessage(), 500);
         }
-    }
+
 
 } // eldapour
 ###############|> Made By https://github.com/eldapour (eldapour) 🚀
