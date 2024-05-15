@@ -458,12 +458,28 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
             }
             $image = $request->file('app_image');
             $imageName = null; // Initialize $imageName here
+            $imagePath = null; // Initialize $imagePath here
 
             if ($image) {
                 $imageName = time().'.'.$image->getClientOriginalExtension();
                 $image->move('addAppImage', $imageName);
+                $imagePath = 'addAppImage/'.$imageName;
             }
 
+// Check if the image was uploaded successfully
+            if ($imageName && $imagePath) {
+                return response()->json([
+                    'image_path' => $imagePath,
+                    'message' => 'Image uploaded successfully',
+                    'code' => 200
+                ]);
+            } else {
+                return response()->json([
+                    'image_path' => null,
+                    'message' => 'Failed to upload image',
+                    'code' => 500
+                ]);
+            }
 
 
             $sub_count = 0;
