@@ -524,7 +524,7 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
                             $createTube->points = $pointsNeed;
                             $createTube->user_id = $user->id;
                             $createTube->app_name = $request->app_name;
-                            $createTube->app_image = $imagePath;
+                            $createTube->app_image = $fullImagePath;
 
                             $createTube->url = $request->url;
                             $createTube->sub_count = $request->type == 'view' ? null : $request->sub_count;
