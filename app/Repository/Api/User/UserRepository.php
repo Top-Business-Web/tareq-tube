@@ -1536,6 +1536,6 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
             return self::returnResponseDataApi(null, $e->getMessage(), 500);
         }
 
-
+    }
 } // eldapour
 ###############|> Made By https://github.com/eldapour (eldapour) 🚀
