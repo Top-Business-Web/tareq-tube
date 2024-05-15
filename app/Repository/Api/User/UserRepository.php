@@ -451,20 +451,26 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
                 'app_name' => 'required',
                 'app_image' => 'nullable|image',
             ]);
+            $image = $request->file('app_image');
+            $imageName = null; // Initialize $imageName here
+            $imagePath = null; // Initialize $imagePath here
 
             if ($validator->fails()) {
                 $error = $validator->errors()->first();
                 return self::returnResponseDataApi(null, $error, 422);
             }
-            $image = $request->file('app_image');
-            $imageName = null; // Initialize $imageName here
-            $imagePath = null; // Initialize $imagePath here
-
             if ($image) {
-                $imageName = time().'.'.$image->getClientOriginalExtension();
+                $imageName = time() . '.' . $image->getClientOriginalExtension();
                 $image->move('addAppImage', $imageName);
-                $imagePath = 'addAppImage/'.$imageName;
+                $imagePath = 'addAppImage/' . $imageName;
             }
+
+// Check if the image was uploaded successfully
+            if ($imageName && $imagePath) {
+                // Construct the full URL of the image
+                $baseUrl = 'https://adpay.topbusiness.io/api'; // Replace 'example.com' with your domain name
+                $fullImagePath = $baseUrl . '/' . $imagePath;
+
 
 // Check if the image was uploaded successfully
 //            if ($imageName && $imagePath) {
@@ -482,45 +488,84 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
 //            }
 
 
-            $sub_count = 0;
-            $view_count = 0;
-            $app_count = 0;
-            if ($request->has('second_count') && $request->second_count != '') {
-                $second_count = ConfigCount::find($request->second_count)->point;
-            }
-            // if tube request Channel Subscription
-            if ($request->has('sub_count') && $request->sub_count != '') {
-                $sub_count = ConfigCount::find($request->sub_count)->point;
-                $sub_count_count = ConfigCount::find($request->sub_count)->count;
-                $pointsNeed = $second_count * $sub_count;
-            }
+                $sub_count = 0;
+                $view_count = 0;
+                $app_count = 0;
+                if ($request->has('second_count') && $request->second_count != '') {
+                    $second_count = ConfigCount::find($request->second_count)->point;
+                }
+                // if tube request Channel Subscription
+                if ($request->has('sub_count') && $request->sub_count != '') {
+                    $sub_count = ConfigCount::find($request->sub_count)->point;
+                    $sub_count_count = ConfigCount::find($request->sub_count)->count;
+                    $pointsNeed = $second_count * $sub_count;
+                }
 
-            // if tube request Videos Views
-            if ($request->has('view_count') && $request->view_count != '') {
-                $view_count = ConfigCount::find($request->view_count)->point;
-                $view_count_count = ConfigCount::find($request->view_count)->count;
-                $pointsNeed = $second_count * $view_count;
-            }
+                // if tube request Videos Views
+                if ($request->has('view_count') && $request->view_count != '') {
+                    $view_count = ConfigCount::find($request->view_count)->point;
+                    $view_count_count = ConfigCount::find($request->view_count)->count;
+                    $pointsNeed = $second_count * $view_count;
+                }
 
-            // if tube request Download Applications
-            if ($request->has('app_count') && $request->app_count != '') {
-                $app_count = ConfigCount::find($request->app_count)->point;
-                $app_count_count = ConfigCount::find($request->app_count)->count;
-                $pointsNeed = $app_count;
-            }
+                // if tube request Download Applications
+                if ($request->has('app_count') && $request->app_count != '') {
+                    $app_count = ConfigCount::find($request->app_count)->point;
+                    $app_count_count = ConfigCount::find($request->app_count)->count;
+                    $pointsNeed = $app_count;
+                }
 
-            // if user not have VIP Package
-            if ($user->is_vip != 1) {
-                if ($user->limit > 0) {
+                // if user not have VIP Package
+                if ($user->is_vip != 1) {
+                    if ($user->limit > 0) {
+                        if ($userPoint >= $pointsNeed) {
+                            $createTube = new Tube();
+                            $createTube->type = $request->type;
+                            $createTube->points = $pointsNeed;
+                            $createTube->user_id = $user->id;
+                            $createTube->app_name = $request->app_name;
+                            $createTube->app_image = $imagePath;
+
+                            $createTube->url = $request->url;
+                            $createTube->sub_count = $request->type == 'view' ? null : $request->sub_count;
+                            $createTube->second_count = $request->second_count;
+                            $createTube->view_count = $request->view_count;
+                            $createTube->app_count = $request->app_count;
+                            if ($request->type == 'view')
+                                $createTube->target = $view_count_count;
+                            elseif ($request->type == 'sub')
+                                $createTube->target = $sub_count_count;
+                            else
+                                $createTube->target = $app_count_count;
+
+                            $createTube->status = 0;
+
+                            if ($createTube->save()) {
+                                $user->points -= $pointsNeed;
+                                $user->limit -= 1;
+                                $user->save();
+
+                                return self::returnResponseDataApi(new TubeResource($createTube), 'تم الانشاء بنجاح', 201);
+                            } else {
+                                return self::returnResponseDataApi(null, 'هناك خطا ما', 500);
+                            }
+                        } else {
+                            return self::returnResponseDataApi(null, 'نقاطك لا تكفي لاتمام العملية تحتاج الي ' . $pointsNeed - $userPoint . ' من النقاط ', 422);
+                        }
+                    } else {
+                        return self::returnResponseDataApi(null, 'تم الانتهاء من الباقة الحالية قم بشراء باقة جديدة', 422);
+                    }
+                } else {
+                    // if user have VIP Package
                     if ($userPoint >= $pointsNeed) {
                         $createTube = new Tube();
                         $createTube->type = $request->type;
                         $createTube->points = $pointsNeed;
                         $createTube->user_id = $user->id;
-                        $createTube->app_name = $request->app_name;
-                        $createTube->app_image = $imagePath;
-
                         $createTube->url = $request->url;
+                        $createTube->app_name = $request->app_name;
+                        $createTube->app_image = $request->app_image;
+
                         $createTube->sub_count = $request->type == 'view' ? null : $request->sub_count;
                         $createTube->second_count = $request->second_count;
                         $createTube->view_count = $request->view_count;
@@ -531,7 +576,6 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
                             $createTube->target = $sub_count_count;
                         else
                             $createTube->target = $app_count_count;
-
                         $createTube->status = 0;
 
                         if ($createTube->save()) {
@@ -546,49 +590,18 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
                     } else {
                         return self::returnResponseDataApi(null, 'نقاطك لا تكفي لاتمام العملية تحتاج الي ' . $pointsNeed - $userPoint . ' من النقاط ', 422);
                     }
-                } else {
-                    return self::returnResponseDataApi(null, 'تم الانتهاء من الباقة الحالية قم بشراء باقة جديدة', 422);
-                }
-            } else {
-                // if user have VIP Package
-                if ($userPoint >= $pointsNeed) {
-                    $createTube = new Tube();
-                    $createTube->type = $request->type;
-                    $createTube->points = $pointsNeed;
-                    $createTube->user_id = $user->id;
-                    $createTube->url = $request->url;
-                    $createTube->app_name = $request->app_name;
-                    $createTube->app_image = $request->app_image;
-
-                    $createTube->sub_count = $request->type == 'view' ? null : $request->sub_count;
-                    $createTube->second_count = $request->second_count;
-                    $createTube->view_count = $request->view_count;
-                    $createTube->app_count = $request->app_count;
-                    if ($request->type == 'view')
-                        $createTube->target = $view_count_count;
-                    elseif ($request->type == 'sub')
-                        $createTube->target = $sub_count_count;
-                    else
-                        $createTube->target = $app_count_count;
-                    $createTube->status = 0;
-
-                    if ($createTube->save()) {
-                        $user->points -= $pointsNeed;
-                        $user->limit -= 1;
-                        $user->save();
-
-                        return self::returnResponseDataApi(new TubeResource($createTube), 'تم الانشاء بنجاح', 201);
-                    } else {
-                        return self::returnResponseDataApi(null, 'هناك خطا ما', 500);
-                    }
-                } else {
-                    return self::returnResponseDataApi(null, 'نقاطك لا تكفي لاتمام العملية تحتاج الي ' . $pointsNeed - $userPoint . ' من النقاط ', 422);
                 }
             }
-        } catch (\Exception $e) {
-            return self::returnResponseDataApi(null, $e->getMessage(), 500);
         }
-    } // add user tubes
+        catch
+            (\Exception $e) {
+                return self::returnResponseDataApi(null, $e->getMessage(), 500);
+            }
+        }
+
+
+
+        // add user tubes
 
 
     /**
