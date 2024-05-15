@@ -245,11 +245,15 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
     {
 
         try {
+
             $subscribe_count = Tube::query()->where('user_id', Auth::guard('user-api')->user()->id)
                 ->where('type', 'sub')
                 ->count();
             $views_count = Tube::query()->where('user_id', Auth::guard('user-api')->user()->id)
-                ->where('type', 'view')
+                ->where('type', 'view');
+
+            $apps_count = Tube::query()->where('user_id', Auth::guard('user-api')->user()->id)
+                ->where('type', 'app')
                 ->count();
             $message_count = Message::query()->where('user_id', Auth::guard('user-api')->user()->id)->count();
 
@@ -273,6 +277,7 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
                 'user' => new UserResource(\Auth::user()),
                 'subscribe_count' => $subscribe_count,
                 'views_count' => $views_count,
+                'apps_count' => $apps_count,
                 'message_count' => $message_count,
                 'setting' => $setting,
             ];
