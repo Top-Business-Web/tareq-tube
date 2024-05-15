@@ -467,19 +467,19 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
             }
 
 // Check if the image was uploaded successfully
-            if ($imageName && $imagePath) {
-                return response()->json([
-                    'image_path' => $imagePath,
-                    'message' => 'Image uploaded successfully',
-                    'code' => 200
-                ]);
-            } else {
-                return response()->json([
-                    'image_path' => null,
-                    'message' => 'Failed to upload image',
-                    'code' => 500
-                ]);
-            }
+//            if ($imageName && $imagePath) {
+//                return response()->json([
+//                    'image_path' => $imagePath,
+//                    'message' => 'Image uploaded successfully',
+//                    'code' => 200
+//                ]);
+//            } else {
+//                return response()->json([
+//                    'image_path' => null,
+//                    'message' => 'Failed to upload image',
+//                    'code' => 500
+//                ]);
+//            }
 
 
             $sub_count = 0;
@@ -518,7 +518,7 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
                         $createTube->points = $pointsNeed;
                         $createTube->user_id = $user->id;
                         $createTube->app_name = $request->app_name;
-                        $createTube->app_image = $imageName;
+                        $createTube->app_image = $imagePath;
 
                         $createTube->url = $request->url;
                         $createTube->sub_count = $request->type == 'view' ? null : $request->sub_count;
