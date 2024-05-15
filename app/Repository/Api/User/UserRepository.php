@@ -460,10 +460,10 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
 
             $imagePath = null;
 
-
             if ($request->hasFile('app_image')) {
-
                 $imagePath = $request->file('app_image')->store('uploads/addAppImage', 'public');
+                // Get the full URL using Laravel's asset helper
+                $imagePath = asset('storage/' . $imagePath);
             }
 
 
