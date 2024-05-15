@@ -250,7 +250,9 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
                 ->where('type', 'sub')
                 ->count();
             $views_count = Tube::query()->where('user_id', Auth::guard('user-api')->user()->id)
-                ->where('type', 'view');
+                ->where('type', 'view')
+                ->count();
+
 
             $apps_count = Tube::query()->where('user_id', Auth::guard('user-api')->user()->id)
                 ->where('type', 'app')
