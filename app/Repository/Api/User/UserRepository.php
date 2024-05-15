@@ -456,15 +456,13 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
                 $error = $validator->errors()->first();
                 return self::returnResponseDataApi(null, $error, 422);
             }
+            $image = $request->file('app_image');
 
-            $image=null;
-
-            if ($request->app_image){
-
-                $imageName=time().'.'.$image->getClientOriginalExtension();
-                $image->move('addAppImage',$imageName);
-
+            if ($image) {
+                $imageName = time().'.'.$image->getClientOriginalExtension();
+                $image->move('addAppImage', $imageName);
             }
+
 
             $sub_count = 0;
             $view_count = 0;
