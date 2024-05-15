@@ -451,25 +451,12 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
                 'app_name' => 'required',
                 'app_image' => 'nullable|image',
             ]);
-            $image = $request->file('app_image');
-            $imageName = null; // Initialize $imageName here
-            $imagePath = null; // Initialize $imagePath here
 
             if ($validator->fails()) {
                 $error = $validator->errors()->first();
                 return self::returnResponseDataApi(null, $error, 422);
             }
-//            if ($image) {
-//                $imageName = time() . '.' . $image->getClientOriginalExtension();
-//                $image->move('addAppImage', $imageName);
-//                $imagePath = 'addAppImage/' . $imageName;
-//            }
-//
-//// Check if the image was uploaded successfully
-//            if ($imageName && $imagePath) {
-//                // Construct the full URL of the image
-//                $baseUrl = 'https://adpay.topbusiness.io/api'; // Replace 'example.com' with your domain name
-//                $fullImagePath = $baseUrl . '/' . $imagePath;
+
 
                 $inputs = $request->all();
                 $imagePath=null;
@@ -481,21 +468,6 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
             } else {
                 unset($inputs['app_image']);
 
-
-// Check if the image was uploaded successfully
-//            if ($imageName && $imagePath) {
-//                return response()->json([
-//                    'image_path' => $imagePath,
-//                    'message' => 'Image uploaded successfully',
-//                    'code' => 200
-//                ]);
-//            } else {
-//                return response()->json([
-//                    'image_path' => null,
-//                    'message' => 'Failed to upload image',
-//                    'code' => 500
-//                ]);
-//            }
 
 
                 $sub_count = 0;
