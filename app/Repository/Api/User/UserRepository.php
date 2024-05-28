@@ -243,7 +243,6 @@ class UserRepository extends ResponseApi implements UserRepositoryInterface
      */
     public function getHome(): JsonResponse
     {
-
         try {
 
             $subscribe_count = Tube::query()->where('user_id', Auth::guard('user-api')->user()->id)
