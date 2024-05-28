@@ -23,7 +23,20 @@ class UserResource extends JsonResource
         }else {
             $lucky_box_status = 0;
         }
-        return [
+         if ($this->open_ad_time > Carbon::now() !== null) {
+
+             $next_open_time= Carbon::parse($this->box_open_time) ->addMinutes($lucky_box_config)->format('Y-m-d H:i:s');
+
+
+         }
+
+
+
+
+
+
+
+             return [
 
             'name' => $this->name,
             'image' => $this->image,
@@ -45,6 +58,8 @@ class UserResource extends JsonResource
             'channel_name' => $this->channel_name,
             'status' => $this->status,
             'box_open_time' => $this->box_open_time,
+            'next_open_time' => $next_open_time ?? null,
+
             'open_ad_time' => $this->open_ad_time,
             'reward_box_open' => $this->reward_box_open,
             'reward_box_id' => $this->reward_box_id,
